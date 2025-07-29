@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="read_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,12 +27,21 @@
     <ClCompile Include="SSD.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SSD\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Read.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SSD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Read.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

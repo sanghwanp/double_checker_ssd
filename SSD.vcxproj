@@ -123,14 +123,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Read.cpp" />
     <ClCompile Include="read_test.cpp" />
     <ClCompile Include="SSD.cpp" />
+    <ClCompile Include="SSD\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Read.h" />
     <ClInclude Include="SSD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
