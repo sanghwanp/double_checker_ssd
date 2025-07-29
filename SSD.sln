@@ -13,6 +13,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shell", "Shell\Shell.vcxproj", "{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShellUnitTest", "ShellUnitTest\ShellUnitTest.vcxproj", "{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4} = {B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
