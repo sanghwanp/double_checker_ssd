@@ -1,6 +1,6 @@
 #include "SSD.h"
 #include "gmock/gmock.h"
-TEST(TS, TC1) {
+TEST(SSD_TS, BasicReadOperation) {
   SSD ssd;
   const int NO_DATA = 0x00000000;
   const int lba = 0;
