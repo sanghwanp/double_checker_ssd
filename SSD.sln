@@ -82,11 +82,9 @@ Global
 		{41A0F681-E539-4881-8407-D6B02363157A}.Release|x86.ActiveCfg = Release|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.Release|x86.Build.0 = Release|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x64.ActiveCfg = debug_SSD|x64
-		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x64.Build.0 = debug_SSD|x64
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x86.ActiveCfg = debug_SSD|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x86.Build.0 = debug_SSD|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x64.ActiveCfg = debug_SSDUnitTest|x64
-		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x64.Build.0 = debug_SSDUnitTest|x64
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x86.ActiveCfg = debug_SSDUnitTest|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x86.Build.0 = debug_SSDUnitTest|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
@@ -106,15 +104,12 @@ Global
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Release|x86.ActiveCfg = Release|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Release|x86.Build.0 = Release|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x64.ActiveCfg = debug_SSD|x64
-		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x64.Build.0 = debug_SSD|x64
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x86.ActiveCfg = debug_SSD|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x86.Build.0 = debug_SSD|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x64.ActiveCfg = debug_SSDUnitTest|x64
-		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x64.Build.0 = debug_SSDUnitTest|x64
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x86.ActiveCfg = debug_SSDUnitTest|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x86.Build.0 = debug_SSDUnitTest|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
-		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x64.Build.0 = debug_TestShell|x64
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
 		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
