@@ -1,0 +1,131 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SSD", "SSD\SSD.vcxproj", "{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SSDUnitTest", "SSDUnitTest\SSDUnitTest.vcxproj", "{41A0F681-E539-4881-8407-D6B02363157A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A} = {7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shell", "Shell\Shell.vcxproj", "{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShellUnitTest", "ShellUnitTest\ShellUnitTest.vcxproj", "{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug_SSD|x64 = debug_SSD|x64
+		debug_SSD|x86 = debug_SSD|x86
+		debug_SSDUnitTest|x64 = debug_SSDUnitTest|x64
+		debug_SSDUnitTest|x86 = debug_SSDUnitTest|x86
+		debug_TestShell|x64 = debug_TestShell|x64
+		debug_TestShell|x86 = debug_TestShell|x86
+		debug_TestShellUnit_test|x64 = debug_TestShellUnit_test|x64
+		debug_TestShellUnit_test|x86 = debug_TestShellUnit_test|x86
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSD|x64.ActiveCfg = debug_SSD|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSD|x64.Build.0 = debug_SSD|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSD|x86.ActiveCfg = debug_SSD|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSD|x86.Build.0 = debug_SSD|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSDUnitTest|x64.ActiveCfg = debug_SSDUnitTest|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSDUnitTest|x64.Build.0 = debug_SSDUnitTest|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSDUnitTest|x86.ActiveCfg = debug_SSDUnitTest|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_SSDUnitTest|x86.Build.0 = debug_SSDUnitTest|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Debug|x64.ActiveCfg = Debug|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Debug|x64.Build.0 = Debug|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Debug|x86.ActiveCfg = Debug|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Debug|x86.Build.0 = Debug|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Release|x64.ActiveCfg = Release|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Release|x64.Build.0 = Release|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Release|x86.ActiveCfg = Release|Win32
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Release|x86.Build.0 = Release|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSD|x64.ActiveCfg = debug_SSD|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSD|x86.ActiveCfg = debug_SSD|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSD|x86.Build.0 = debug_SSD|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSDUnitTest|x64.ActiveCfg = debug_SSDUnitTest|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSDUnitTest|x64.Build.0 = debug_SSDUnitTest|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSDUnitTest|x86.ActiveCfg = debug_SSDUnitTest|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_SSDUnitTest|x86.Build.0 = debug_SSDUnitTest|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.Debug|x64.ActiveCfg = Debug|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.Debug|x64.Build.0 = Debug|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.Debug|x86.ActiveCfg = Debug|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.Debug|x86.Build.0 = Debug|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.Release|x64.ActiveCfg = Release|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.Release|x64.Build.0 = Release|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.Release|x86.ActiveCfg = Release|Win32
+		{41A0F681-E539-4881-8407-D6B02363157A}.Release|x86.Build.0 = Release|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x64.ActiveCfg = debug_SSD|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x64.Build.0 = debug_SSD|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x86.ActiveCfg = debug_SSD|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSD|x86.Build.0 = debug_SSD|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x64.ActiveCfg = debug_SSDUnitTest|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x64.Build.0 = debug_SSDUnitTest|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x86.ActiveCfg = debug_SSDUnitTest|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_SSDUnitTest|x86.Build.0 = debug_SSDUnitTest|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x64.Build.0 = debug_TestShell|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.Build.0 = debug_TestShellUnit_test|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Debug|x64.ActiveCfg = Debug|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Debug|x64.Build.0 = Debug|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Debug|x86.ActiveCfg = Debug|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Debug|x86.Build.0 = Debug|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Release|x64.ActiveCfg = Release|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Release|x64.Build.0 = Release|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Release|x86.ActiveCfg = Release|Win32
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Release|x86.Build.0 = Release|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x64.ActiveCfg = debug_SSD|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x64.Build.0 = debug_SSD|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x86.ActiveCfg = debug_SSD|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSD|x86.Build.0 = debug_SSD|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x64.ActiveCfg = debug_SSDUnitTest|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x64.Build.0 = debug_SSDUnitTest|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x86.ActiveCfg = debug_SSDUnitTest|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_SSDUnitTest|x86.Build.0 = debug_SSDUnitTest|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x64.Build.0 = debug_TestShell|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShellUnit_test|x64.Build.0 = debug_TestShellUnit_test|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Debug|x64.ActiveCfg = Debug|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Debug|x64.Build.0 = Debug|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Debug|x86.ActiveCfg = Debug|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Debug|x86.Build.0 = Debug|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Release|x64.ActiveCfg = Release|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Release|x64.Build.0 = Release|x64
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Release|x86.ActiveCfg = Release|Win32
+		{7E5C8CC4-A2D1-4B97-851D-1C9913CEECCD}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4A635982-EB91-42D2-91DB-FEE47D30309D}
+	EndGlobalSection
+EndGlobal
