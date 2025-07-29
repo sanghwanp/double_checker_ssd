@@ -2,12 +2,15 @@
 #include <vector>
 class SSD {
  public:
+  const int STORAGE_SIZE = 100;
+  const int STORAGE_INIT_VALUE = 0;
   SSD() { clear(); }
   void clear() {
     storage.clear();
-    storage.resize(100, 0);
+    storage.resize(STORAGE_SIZE, STORAGE_INIT_VALUE);
   }
-  int read(int lba) { return storage[lba]; }
+  unsigned int read(int lba) { return storage[lba]; }
 
-  std::vector<int> storage;
+private:
+  std::vector<unsigned int> storage;
 };
