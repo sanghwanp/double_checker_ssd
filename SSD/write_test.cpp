@@ -4,6 +4,9 @@
 using namespace testing;
 typedef unsigned int uint;
 
+const int MAX_LBA = 99;
+const int MAX_DATA_LEN = 10;
+
 class WriteTestFixture : public Test {
  public:
   const int WRITE = 1;
@@ -19,26 +22,35 @@ struct Command {
   int cmdType;
   int lba;
   uint data;
+  std::istringstream iss;
+  std::string typeStr;
+  std::string dataStr;
 
   Command() : cmdType{0}, lba{0}, data{0} {}
   Command(int t, int l, uint d) : cmdType{t}, lba{l}, data{d} {}
 
-  void Parse(std::string cmdStr) {
-    char type;
-    std::string dataStr;
-    std::istringstream iss(cmdStr);
-
-    iss >> type >> lba >> dataStr;
-
-    // Set cmdType: W = 1, R = 0
-    if (type == 'W') {
-      cmdType = 1;
-      data = std::stoul(dataStr, nullptr, 16);  // hex parsing
-    } else {
-      throw std::invalid_argument("Invalid command type");
+  bool CheckErrorCmd() {
+    if (typeStr != "W") {
+      return true;
     }
+    if (lba < 0 || lba > MAX_LBA) {
+      return true;
+    }
+    if (dataStr.length() > MAX_DATA_LEN) {
+      return true;
+    }
+    return false;
   }
 
+  void Parse(std::string cmdStr) {
+    iss = std::istringstream(cmdStr);
+    iss >> typeStr >> lba >> dataStr;
+
+    if (CheckErrorCmd()) throw std::invalid_argument("Invalid command type");
+
+    cmdType = 1;
+    data = std::stoul(dataStr, nullptr, 16);  // hex parsing
+  }
 };
 
 TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
@@ -56,13 +68,11 @@ TEST_F(WriteTestFixture, 02_Invalid_CmdType) {
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_TYPE); }, std::invalid_argument);
 }
 
-
 TEST_F(WriteTestFixture, 03_Invalid_Lba) {
   Command cmd;
 
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_LBA); }, std::invalid_argument);
 }
-
 
 TEST_F(WriteTestFixture, 04_Invalid_Data) {
   Command cmd;
