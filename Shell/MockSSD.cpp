@@ -1,8 +1,5 @@
 #include "MockSSD.h"
 
-void MockSSD::SSDWrite(int lba, const string& value) {
+void MockSSD::SSDWrite(int lba, const string& value) {}
 
-}
-string MockSSD::SSDRead(int lba) {
-
-}
+string MockSSD::SSDRead(int lba) { return ""; }
