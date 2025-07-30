@@ -4,7 +4,7 @@
 
 CommandRead::CommandRead(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
-bool CommandRead::Call(std::vector<std::string> program) {
+bool CommandRead::Call(const std::vector<std::string>& program) {
   // program example:
   // {"read", 1}
 
@@ -28,4 +28,4 @@ bool CommandRead::Call(std::vector<std::string> program) {
   return true;
 }
 
-bool CommandRead::IsInvalidLBA(int lba) { return lba < MIN_LBA || lba > MAX_LBA; }
+bool CommandRead::IsInvalidLBA(unsigned int lba) { return lba > MAX_LBA; }

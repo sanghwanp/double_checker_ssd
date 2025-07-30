@@ -8,14 +8,13 @@
 class CommandRead {
  public:
   CommandRead(SSDInterface* ssdInterface);
-  bool Call(std::vector<std::string> program);
+  bool Call(const std::vector<std::string>& program);
 
  private:
-  bool IsInvalidLBA(int lba);
+  bool IsInvalidLBA(unsigned int lba);
 
   SSDInterface* ssd;
   const int LBA_INDEX = 1;
   const int PROGRAM_SIZE = 2;
-  const int MIN_LBA = 0;
-  const int MAX_LBA = 99;
+  const unsigned int MAX_LBA = 99;
 };
