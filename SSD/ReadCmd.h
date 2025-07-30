@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-
 #include "ReadArguments.h"
 
 #define interface struct
@@ -18,8 +17,9 @@ private:
   unsigned int ReadFromSsd(int reqLba);
   const std::string SSD_NAND_TXT_FILEPATH = "../SSD/ssd_nand.txt";
   unsigned int outputData;
+  //const int LBA_SIZE = 100;
 
 private:
 	bool DoesFileExist(const std::string & fileName);
-	void CreateFileOrThrows(const std::string &fileName);
+	void CreateFile(const std::string &fileName);
 };

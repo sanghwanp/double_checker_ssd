@@ -13,13 +13,15 @@ class ReadArguments {
   virtual ~ReadArguments() = default;
 
  public:
+  static unsigned int LBA_SIZE();
+
+ public:
   unsigned int GetLba() const;
-  void ParseOrThrows(std::string cmdStr);
+  void Parse(std::string cmdStr);
 
  private:
   CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType
   unsigned int lba;
-  const unsigned int MAX_LBA = 99;
   const unsigned int VALID_READ_ARGS_COUNT = 2U;
 
  private:

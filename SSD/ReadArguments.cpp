@@ -1,4 +1,6 @@
 #include "ReadArguments.h"
+unsigned int ReadArguments::LBA_SIZE() { return 100; }
+
 ReadArguments::ReadArguments() {}
 
 unsigned int ReadArguments::GetLba() const { return lba; }
@@ -23,7 +25,7 @@ std::vector<std::string> ReadArguments::GetTokens(const std::string& cmdStr) {
   return result;
 }
 
-void ReadArguments::ParseOrThrows(std::string argsStr) {
+void ReadArguments::Parse(std::string argsStr) {
   std::vector<std::string> tokens = GetTokens(argsStr);
   ValidateTokenCount(tokens);
 
@@ -48,7 +50,7 @@ void ReadArguments::ValidateCmdTypeRead(CmdType cmdType) {
 }
 
 void ReadArguments::ValidateLba(int lba) {
-  if (lba > MAX_LBA) {
+  if (lba >= LBA_SIZE()) {
     throw std::invalid_argument("Invalid Arguments: LBA - out of bound");
   }
 }

@@ -20,11 +20,11 @@ bool ReadCmd::DoesFileExist(const std::string &fileName) {
   return false;
 }
 
-void ReadCmd::CreateFileOrThrows(const std::string &fileName) {
+void ReadCmd::CreateFile(const std::string &fileName) {
   std::ofstream ofs;
   ofs.open(fileName);
   if (ofs.is_open()) {
-    for (int i = 0; i < 100; i++) ofs << "0x00000000\n";
+    for (int i = 0; i < ReadArguments::LBA_SIZE(); i++) ofs << "0x00000000\n";
     ofs.close();
     return;
   }
@@ -34,7 +34,7 @@ void ReadCmd::CreateFileOrThrows(const std::string &fileName) {
 
 unsigned int ReadCmd::ReadFromSsd(int reqLba) {
   if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
-    CreateFileOrThrows(SSD_NAND_TXT_FILEPATH);
+    CreateFile(SSD_NAND_TXT_FILEPATH);
   }
 
   std::ifstream ifs(SSD_NAND_TXT_FILEPATH);
