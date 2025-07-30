@@ -16,19 +16,19 @@ class ReadTestFixture : public Test {
 
   ReadArguments readArgs;
   SSD ssd;
-  void ParsingArgs(const std::string &args) { readArgs.ParseAndValidate(args); }
 };
 
-class WriteCmdMock: public ICmd {
-	MOCK_METHOD(void, Run, (unsigned int lba, int hexaData), ());
+class WriteCmdMock : public ICmd {
+  MOCK_METHOD(void, Run, (unsigned int lba, int hexaData), ());
 };
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
-  EXPECT_THROW({ ParsingArgs(INVALID_ARGS_TYPE); }, std::invalid_argument);
+  EXPECT_THROW(
+      { readArgs.ParseAndValidate(INVALID_ARGS_TYPE); }, std::invalid_argument);
 }
 
 TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
-  //ParsingArgs(BASIC_ARGS);
+  // readArgs.ParseAndValidate(BASIC_ARGS);
   readArgs.ParseAndValidate(BASIC_ARGS);
 
   unsigned int data = ssd.Read(readArgs);
@@ -36,17 +36,20 @@ TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
 }
 
 TEST_F(ReadTestFixture, TC03_Read_ThrowException_WhenIvalidArgsLba) {
-  EXPECT_THROW({ ParsingArgs(INVALID_ARGS_LBA); }, std::invalid_argument);
+  EXPECT_THROW(
+      { readArgs.ParseAndValidate(INVALID_ARGS_LBA); }, std::invalid_argument);
 }
 
 TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
-  EXPECT_THROW({ ParsingArgs(INVALID_ARGS_COUNT); }, std::invalid_argument);
+  EXPECT_THROW(
+      { readArgs.ParseAndValidate(INVALID_ARGS_COUNT); },
+      std::invalid_argument);
 }
 
-//TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
+// TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
 //	WriteCmdMock mock;
 //	SSD ssd(&mock);
 //	//ICmd cmd(&mock);
 //	EXPECT_CALL(mock, Run(1,0x2))
 //		WillReturn
-//}
+// }
