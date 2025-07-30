@@ -4,6 +4,9 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="MockSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -26,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="CmdWrite.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

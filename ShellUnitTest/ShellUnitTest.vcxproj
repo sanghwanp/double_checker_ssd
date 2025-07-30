@@ -219,6 +219,7 @@
     <ClCompile Include="gTestCmdRead.cpp" />
     <ClCompile Include="gTestCommandWrite.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
+    <ClCompile Include="gTestParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
