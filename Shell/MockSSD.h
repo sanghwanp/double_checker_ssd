@@ -6,7 +6,9 @@ class MockSSD : public SSDInterface {
  public:
   void Write(int lba, const string& value) override;
   string Read(int lba) override;
+  bool IsInvalidLBA(int lba);
+  bool IsInvalidValue(const string& value);
 
  private:
-  std::unordered_map<int, std::string> storage;
+  std::unordered_map<int, string> storage;
 };

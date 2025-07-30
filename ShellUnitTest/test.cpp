@@ -50,3 +50,31 @@ TEST(MockSSD, MultipleLBA_WritesAndReads) {
   EXPECT_EQ(ssd.Read(10), "0xBBBBBBBB");
   EXPECT_EQ(ssd.Read(50), "0xCCCCCCCC");
 }
+
+TEST(MockSSDTest, IsInvalidValue_Valid) {
+  MockSSD ssd;
+  EXPECT_FALSE(ssd.IsInvalidValue("0x12345678"));
+  EXPECT_FALSE(ssd.IsInvalidValue("0xabcdef12"));
+  EXPECT_FALSE(ssd.IsInvalidValue("0xABCDEF12"));
+}
+
+TEST(MockSSDTest, IsInvalidValue_InvalidPrefix) {
+  MockSSD ssd;
+  EXPECT_TRUE(ssd.IsInvalidValue("12345678"));
+  EXPECT_TRUE(ssd.IsInvalidValue("0X12345678"));
+  EXPECT_TRUE(ssd.IsInvalidValue("0y12345678"));
+}
+
+TEST(MockSSDTest, IsInvalidValue_WrongLength) {
+  MockSSD ssd;
+  EXPECT_TRUE(ssd.IsInvalidValue("0x1234567"));
+  EXPECT_TRUE(ssd.IsInvalidValue("0x123456789"));
+  EXPECT_TRUE(ssd.IsInvalidValue("0x"));
+}
+
+TEST(MockSSDTest, IsInvalidValue_InvalidChars) {
+  MockSSD ssd;
+  EXPECT_TRUE(ssd.IsInvalidValue("0x12345G7"));
+  EXPECT_TRUE(ssd.IsInvalidValue("0x12#45678"));
+  EXPECT_TRUE(ssd.IsInvalidValue("0x1234567!"));
+}
