@@ -203,12 +203,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|x64'">
     <ClCompile>
       <PreprocessorDefinitions>MAIN_SELECT=4;</PreprocessorDefinitions>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdWrite.cpp" />
     <ClCompile Include="CmdRead.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="MockSSD.cpp" />
     <ClCompile Include="MockSSD.h" />
     <ClCompile Include="SSDInterface.h" />
@@ -216,6 +218,7 @@
   <ItemGroup>
     <ClInclude Include="CmdWrite.h" />
     <ClInclude Include="CmdRead.h" />
+    <ClInclude Include="Parser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
