@@ -13,7 +13,7 @@ class SSD {
     storage.resize(STORAGE_SIZE, STORAGE_INIT_VALUE);
   }
 
-  unsigned int read(int lba) { return readCmd.run(lba, storage); }
+  unsigned int read(int lba) { return readCmd.Run(lba, storage); }
 
  private:
   std::vector<unsigned int> storage;
