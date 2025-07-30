@@ -135,6 +135,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)；</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -149,6 +150,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)；</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -163,6 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)；</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,6 +180,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)；</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -188,6 +192,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSDUnitTest|x64'">
     <ClCompile>
       <PreprocessorDefinitions>MAIN_SELECT=2;%(PreprocessorDefinitions)；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -196,6 +201,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSD|x64'">
     <ClCompile>
       <PreprocessorDefinitions>MAIN_SELECT=1;；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -204,6 +210,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShell|x64'">
     <ClCompile>
       <PreprocessorDefinitions>MAIN_SELECT=3;；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -212,6 +219,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSD|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -220,6 +228,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSDUnitTest|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -228,6 +237,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShell|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -236,6 +246,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|Win32'">
     <ClCompile>
       <PreprocessorDefinitions>；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -244,6 +255,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|x64'">
     <ClCompile>
       <PreprocessorDefinitions>；</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -264,6 +276,9 @@
     <ClInclude Include="ReadCmd.h" />
     <ClInclude Include="SSD.h" />
     <ClInclude Include="Write.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ssd_nand.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

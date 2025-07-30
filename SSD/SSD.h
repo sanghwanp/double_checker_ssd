@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include "ReadArguments.h"
 #include "ReadCmd.h"
 
 class SSD {
@@ -9,7 +10,7 @@ class SSD {
 
  public:
   void Clear();
-  unsigned int Read(int lba) const;
+  unsigned int Read(ReadArguments& readArgs);
 
  private:
   const int STORAGE_SIZE = 100;
