@@ -14,11 +14,19 @@ class ReadArguments {
 
  public:
   unsigned int GetLba() const;
-  void ParseAndValidate(std::string cmdStr);
-  void ValidateArguments();
-  std::vector<std::string> GetTokensAndValidateTokenCount(
-      const std::string& cmdStr);
-  bool IsCmdTypeReadStr(const std::string& cmdTypeStr);
+  CmdType GetCmdType(const std::string &cmdTypeStr) {
+    if (cmdTypeStr == "R" || cmdTypeStr == "read") {
+      return CMD_TYPE_READ;
+    }
+
+    return CMD_TYPE_OTHER;
+  }
+  void ParseOrThrows(std::string cmdStr);
+  void ValidateTokenCount(const std::vector<std::string> &tokens);
+  void ValidateCmdTypeRead(CmdType cmdType);
+  void ValidateLba(int lba);
+  std::vector<std::string> GetTokens(const std::string &cmdStr);
+  bool IsCmdTypeReadStr(const std::string &cmdTypeStr);
 
  private:
   CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType
