@@ -209,6 +209,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="gTestCommandWrite.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
