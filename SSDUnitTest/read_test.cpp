@@ -18,9 +18,11 @@ class ReadTestFixture : public Test {
   SSD ssd;
 };
 
+#if 0 //[RED] ??? -- main? merge? ?? ?? off
 class WriteCmdMock : public ICmd {
-  MOCK_METHOD(void, Run, (unsigned int lba, int hexaData), ());
+  MOCK_METHOD(void, Run, (WriteArguments*), (override));
 };
+#endif
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
   EXPECT_THROW(
@@ -46,10 +48,38 @@ TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
       std::invalid_argument);
 }
 
-// TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
-//	WriteCmdMock mock;
-//	SSD ssd(&mock);
-//	//ICmd cmd(&mock);
-//	EXPECT_CALL(mock, Run(1,0x2))
-//		WillReturn
-// }
+#if 0 //[RED] ??? -- main? merge? ?? ?? off
+ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
+  WriteCmdMock mock;
+  ReadCmd readCmd;
+  SSD ssd;
+
+  ssd.SetWriteCmd(&mock);
+  ssd.SetReadCmd(&readCmd);
+
+  std::ostringstream oss;
+  for(int i=0; i<5; i++) {
+      oss.str("");
+      oss.clear();
+      oss << "0x"
+          << std::uppercase
+          << std::hex
+          << std::setw(8)
+          << std::setfill('0')
+          << i;
+      const std::string writeArg{ oss.str() };
+      WriteArguments writeArgs;
+      writeArgs.ParseAndValidate{ writeArg };
+      
+      EXPECT_CALL(mock, Run(writeArgs)).Return
+      
+  }
+
+  mock.Run(writeArgs);
+
+
+  SSD ssd(&readCmd, &mock);
+  // ICmd cmd(&mock);
+  //EXPECT_CALL(mock, Run(Write)).WillOnce();
+ }
+#endif
