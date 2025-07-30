@@ -26,11 +26,11 @@ bool MockSSD::IsInvalidValue(const string& value) {
 
   for (int i = 2; i < 10; ++i) {
     char c = value[i];
-    bool is_digit = ('0' <= c && c <= '9');
-    bool is_upper = ('A' <= c && c <= 'F');
-    bool is_lower = ('a' <= c && c <= 'f');
-    if (!(is_digit || is_upper || is_lower)) return true;
-  }
+
+    bool isDigit = ('0' <= c && c <= '9');
+    bool isUpper = ('A' <= c && c <= 'F');
+    bool isLower = ('a' <= c && c <= 'f');
+    if (!(isDigit || isUpper || isLower)) return true;
 
   return false;
 }
