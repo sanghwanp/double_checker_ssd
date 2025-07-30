@@ -26,11 +26,11 @@ class WriteTestFixture : public Test {
 
   uint GetData(int lba) { return mock.nand[lba]; }
 
-  Command cmd;
+  CommandArguments cmd;
   WriteCmdMock mock;
 };
 
-TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
+TEST_F(WriteTestFixture, TC01_Parse_Write_Cmd) {
   cmd.Parse(BASIC_CMD);
 
   EXPECT_EQ(cmd.cmdType, WRITE);
@@ -38,7 +38,7 @@ TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
   EXPECT_EQ(cmd.data, DATA);
 }
 
-TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
+TEST_F(WriteTestFixture, TC02_Invalid_Cmd) {
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_TYPE); }, std::invalid_argument);
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_LBA); }, std::invalid_argument);
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_DATA); }, std::invalid_argument);
@@ -47,7 +47,7 @@ TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_3); }, std::invalid_argument);
 }
 
-TEST_F(WriteTestFixture, 03_Write_Data_First) {
+TEST_F(WriteTestFixture, TC03_Write_Data_First) {
   // EXPECT_CALL(mock, CheckFirst).Times(1).WillOnce(Return(true));
   // EXPECT_CALL(mock, Init).Times(1);
   mock.Init();

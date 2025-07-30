@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 
+#include "ICommand.h"
 #include "ReadCmd.h"
 
 class SSD {
@@ -13,9 +14,15 @@ class SSD {
     storage.resize(STORAGE_SIZE, STORAGE_INIT_VALUE);
   }
 
+  void Run(std::string cmdStr);
+  bool IsValidArgs(std::string cmdStr);
+  CommandArguments Parse(std::string cmdStr);
+  
+
   unsigned int Read(int lba) { return readCmd.Run(lba, storage); }
 
  private:
   std::vector<unsigned int> storage;
   ReadCmd readCmd;
+  CommandArguments args;
 };

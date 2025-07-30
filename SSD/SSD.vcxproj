@@ -250,6 +250,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ICommand.cpp" />
     <ClCompile Include="ReadArguments.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReadCmd.cpp" />
@@ -260,6 +261,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommonConfig.h" />
+    <ClInclude Include="ICommand.h" />
     <ClInclude Include="ReadArguments.h" />
     <ClInclude Include="ReadCmd.h" />
     <ClInclude Include="SSD.h" />

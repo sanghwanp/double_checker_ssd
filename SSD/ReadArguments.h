@@ -15,7 +15,7 @@ class ReadArguments {
  public:
   unsigned int GetLba() const;
   void Parse(std::string cmdStr);
-  bool CheckErrorCmd();
+  bool CheckCommandError();
 
  private:
   CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType

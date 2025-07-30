@@ -6,7 +6,7 @@ bool WriteCmd::CheckFirst() {
 }
 void WriteCmd::Init() { memset(nand, 0x0, NAND_SIZE); }
 
-void WriteCmd::Run(Command cmd) {
+void WriteCmd::Run(CommandArguments cmd) {
 
   // 1. Read File
   std::ifstream inFile(FILE_NAME);

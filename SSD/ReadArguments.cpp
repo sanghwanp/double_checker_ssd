@@ -23,12 +23,12 @@ void ReadArguments::Parse(std::string cmdStr) {
     lba = std::stoul(lbaStr);
   }
 
-  if (CheckErrorCmd()) {
+  if (CheckCommandError()) {
     throw std::invalid_argument("Invalid Arguments");
   }
 }
 
-bool ReadArguments::CheckErrorCmd() {
+bool ReadArguments::CheckCommandError() {
   if (cmdType != CMD_TYPE_READ) return true;
   if (lba > MAX_LBA) return true;
   return false;
