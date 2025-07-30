@@ -4,12 +4,7 @@
 using namespace testing;
 
 int main() {
-  //InitGoogleMock();
-  //return RUN_ALL_TESTS();
-
   InitGoogleMock();
-  int result = RUN_ALL_TESTS();
-  std::cin.get();
-  return result;
+  return RUN_ALL_TESTS();
 }
 #endif
