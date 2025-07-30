@@ -2,7 +2,5 @@
 #include <vector>
 class ReadCmd {
  public:
-  unsigned int Run(int lba, const std::vector<unsigned int>& storage) {
-    return storage[lba];
-  }
+	 unsigned int Run(int lba, const std::vector<unsigned int> &storage);
 };
