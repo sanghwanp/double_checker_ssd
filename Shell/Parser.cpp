@@ -3,7 +3,6 @@
 
 #include "Parser.h"
 
-// ���ڿ��� ���� �������� �и�
 std::vector<std::string> Parser::SplitArgs(const std::string& input) {
   std::vector<std::string> result;
   std::string temp;
@@ -22,7 +21,8 @@ std::vector<std::string> Parser::SplitArgs(const std::string& input) {
 }
 
 IParam* Parser::GenCommandParam(std::vector<std::string> tokens) {
-  auto it = commandSpecs.find(tokens[0]);
+  auto it = commandParamSpecs.find(tokens[0]);
+  if (it == commandParamSpecs.end()) return GetInvalidCommand();
   return it->second.paramObj(tokens);
 }
 
@@ -30,7 +30,7 @@ IParam* Parser::Parse(const std::string& input) {
   vector<std::string> tokens;
   IParam* cmdParam;
 
-  if (input == "") {
+  if (true == input.empty()) {
     return GetInvalidCommand();
   }
 
@@ -49,10 +49,10 @@ IParam* Parser::Parse(const std::string& input) {
 bool Parser::IsValidCommandStructure(const vector<std::string>& tokens) {
     if (tokens.empty()) return false;
 
-    auto it = commandSpecs.find(tokens[0]);
-    if (it == commandSpecs.end()) return false;
+    auto it = commandParamSpecs.find(tokens[0]);
+    if (it == commandParamSpecs.end()) return false;
 
-    const CommandSpec& spec = it->second;
+    const CommandParamSpec& spec = it->second;
 
     if (tokens.size() != spec.argCount) return false;
     return spec.validator(tokens);

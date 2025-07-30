@@ -11,7 +11,7 @@
 using std::string;
 using std::vector;
 
-struct CommandSpec {
+struct CommandParamSpec {
   int argCount;
   TestShellCMD eCmd;
   std::function<IParam*(const std::vector<std::string>&)> paramObj;
@@ -31,7 +31,7 @@ class Parser {
  private:
   IParam* GetInvalidCommand() { return new IParam(TestShellCMD::eInvalidCmd); }
 
-  const std::unordered_map<std::string, CommandSpec> commandSpecs = {
+  const std::unordered_map<std::string, CommandParamSpec> commandParamSpecs = {
       {"write",
        {3, TestShellCMD::eWriteCmd,
         [&](const std::vector<std::string>& tokens) {
