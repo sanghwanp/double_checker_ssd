@@ -1,239 +1,179 @@
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <random>
 
 #if (MAIN_SELECT == 3)
+std::vector<unsigned int> ssd(100);
+
+void write(int lba, unsigned int data) {
+  ssd[lba] = data;
+  std::cout << "[Write] Done\n";
+}
+
+unsigned int read(int lba) {
+  std::cout << "[Read] LBA " << std::setw(2) << std::setfill('0') << std::dec
+            << lba << " : 0x" << std::setw(8) << std::uppercase << std::hex
+            << ssd[lba] << std::endl;
+  return ssd[lba];
+}
+
+void fullwrite(unsigned int data) {
+  std::fill(ssd.begin(), ssd.end(), data);
+  std::cout << "[Fullwrite] Done\n";
+}
+
+void fullread() {
+  for (int lba = 0; lba < 100; ++lba) {
+    std::cout << "[Fullread] LBA " << std::setw(2) << std::setfill('0')
+              << std::dec << lba << " : 0x" << std::setw(8) << std::uppercase
+              << std::hex << ssd[lba] << std::endl;
+  }
+}
+
+void ts1() {
+  /*
+  1. 0 ~ 4번 LBA까지 Write 명령어를 수행한다
+  2. 0 ~ 4번 LBA까지 ReadCompare 수행
+  3. 5 ~ 9번 LBA까지 다른 값으로Write 명령어를 수행한다
+  4. 5 ~ 9번 LBA까지 ReadCompare 수행
+  5. 10 ~ 14번 LBA까지 다른 값으로 Write 명령어를 수행한다.
+  6. 10 ~ 14번 LBA까지 ReadCompare 수행
+  7. 위와같은규칙으로전체영역에대해Full Write + Read Compare를 수행한다
+  */
+  unsigned int data;
+  for (int idx = 0; idx < 100; idx += 5) {
+    data = idx;
+    write(idx + 0, data);
+    write(idx + 1, data);
+    write(idx + 2, data);
+    write(idx + 3, data);
+    write(idx + 4, data);
+    if (data != read(idx + 0)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(idx + 1)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(idx + 2)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(idx + 3)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(idx + 4)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+  }
+}
+
+void ts2() {
+  /*
+  Loop는 30회
+  1. 4번 LBA에 값을적는다.
+  2. 0번 LBA에 같은 값을 적는다.
+  3. 3번 LBA에 같은 값을 적는다.
+  4. 1번 LBA에 같은 값을 적는다.
+  5. 2번 LBA에 같은 값을 적는다.
+  6. LBA 0 ~4번, ReadCompare
+*/
+  unsigned int data;
+  for (int idx = 0; idx < 30; ++idx) {
+    data = idx;
+    write(4, data);
+    write(0, data);
+    write(3, data);
+    write(1, data);
+    write(2, data);
+    if (data != read(0)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(1)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(2)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(3)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(4)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+  }
+}
+
+void ts3() {
+  /*
+  Loop 200회
+  1. 0번 LBA에 랜덤값을 적는다.
+  2. 99번 LBA에 랜덤값을 적는다.
+  3. LBA 0번과 99번, ReadCompare를 수행
+ */
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<unsigned int> distrib(0, 0xffffffff);
+  unsigned int data;
+
+  for (int idx = 0; idx < 200; ++idx) {
+    data = distrib(gen);
+    write(0, data);
+    write(99, data);
+
+    if (data != read(0)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+    if (data != read(99)) {
+      std::cout << "FAIL" << std::endl;
+      return;
+    }
+  }
+}
+
 int main() {
   std::string command;
-  int fulldata = 0;
+  std::string lba;
+  std::string data;
+
+  std::fill(ssd.begin(), ssd.end(), 0);
 
   while (true) {
     std::cout << "Shell> ";
-    std::getline(std::cin, command);
-
+    std::cin >> command;
     if (command == "exit") {
       std::cout << "Shutting down\n";
       break;
-    } else if (command == "write 3 0xAAAABBBB") {
-      std::cout << "[Write] Done\n";
-    } else if (command == "read 0") {
-      std::cout << "[Read] LBA 00 : 0x00000000\n";
-    } else if (command == "write 4 0xAAAABBBB") {
-      std::cout << "[Write] Done\n";
-    } else if (command == "read 4") {
-      std::cout << "[Read] LBA 04 : 0xAAAABBBB\n";
-    } else if (command == "fullwrite 0xABCDFFFF") {
-      fulldata = 0;
-      std::cout << "[Fullwrite] Done\n";
-    } else if (command == "fullwrite 0xAAAABBBB") {
-      fulldata = 0xAAAABBBB;
-      std::cout << "[Fullwrite] Done\n";
+    } else if (command == "write") {
+      std::cin >> lba;
+      std::cin >> data;
+      write(stoi(lba), stoul(data, nullptr, 16));
+    } else if (command == "read") {
+      std::cin >> lba;
+      read(stoi(lba));
+    } else if (command == "fullwrite") {
+      std::cin >> data;
+      fullwrite(stoul(data, nullptr, 16));
     } else if (command == "fullread") {
-      if (fulldata != 0) {
-        std::cout << "[Fullread] LBA 00 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 01 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 02 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 03 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 04 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 05 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 06 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 07 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 08 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 09 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 10 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 11 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 12 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 13 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 14 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 15 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 16 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 17 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 18 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 19 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 20 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 21 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 22 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 23 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 24 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 25 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 26 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 27 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 28 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 29 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 30 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 31 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 32 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 33 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 34 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 35 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 36 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 37 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 38 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 39 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 40 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 41 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 42 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 43 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 44 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 45 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 46 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 47 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 48 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 49 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 50 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 51 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 52 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 53 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 54 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 55 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 56 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 57 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 58 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 59 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 60 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 61 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 62 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 63 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 64 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 65 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 66 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 67 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 68 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 69 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 70 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 71 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 72 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 73 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 74 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 75 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 76 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 77 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 78 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 79 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 80 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 81 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 82 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 83 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 84 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 85 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 86 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 87 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 88 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 89 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 90 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 91 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 92 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 93 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 94 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 95 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 96 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 97 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 98 : 0xAAAABBBB\n"
-                     "[Fullread] LBA 99 : 0xAAAABBBB"
-                  << std::endl;
-      } else {
-        std::cout << "[Fullread] LBA 00 : 0x00000000\n"
-                     "[Fullread] LBA 01 : 0x00000000\n"
-                     "[Fullread] LBA 02 : 0x00000000\n"
-                     "[Fullread] LBA 03 : 0x00000000\n"
-                     "[Fullread] LBA 04 : 0x00000000\n"
-                     "[Fullread] LBA 05 : 0x00000000\n"
-                     "[Fullread] LBA 06 : 0x00000000\n"
-                     "[Fullread] LBA 07 : 0x00000000\n"
-                     "[Fullread] LBA 08 : 0x00000000\n"
-                     "[Fullread] LBA 09 : 0x00000000\n"
-                     "[Fullread] LBA 10 : 0x00000000\n"
-                     "[Fullread] LBA 11 : 0x00000000\n"
-                     "[Fullread] LBA 12 : 0x00000000\n"
-                     "[Fullread] LBA 13 : 0x00000000\n"
-                     "[Fullread] LBA 14 : 0x00000000\n"
-                     "[Fullread] LBA 15 : 0x00000000\n"
-                     "[Fullread] LBA 16 : 0x00000000\n"
-                     "[Fullread] LBA 17 : 0x00000000\n"
-                     "[Fullread] LBA 18 : 0x00000000\n"
-                     "[Fullread] LBA 19 : 0x00000000\n"
-                     "[Fullread] LBA 20 : 0x00000000\n"
-                     "[Fullread] LBA 21 : 0x00000000\n"
-                     "[Fullread] LBA 22 : 0x00000000\n"
-                     "[Fullread] LBA 23 : 0x00000000\n"
-                     "[Fullread] LBA 24 : 0x00000000\n"
-                     "[Fullread] LBA 25 : 0x00000000\n"
-                     "[Fullread] LBA 26 : 0x00000000\n"
-                     "[Fullread] LBA 27 : 0x00000000\n"
-                     "[Fullread] LBA 28 : 0x00000000\n"
-                     "[Fullread] LBA 29 : 0x00000000\n"
-                     "[Fullread] LBA 30 : 0x00000000\n"
-                     "[Fullread] LBA 31 : 0x00000000\n"
-                     "[Fullread] LBA 32 : 0x00000000\n"
-                     "[Fullread] LBA 33 : 0x00000000\n"
-                     "[Fullread] LBA 34 : 0x00000000\n"
-                     "[Fullread] LBA 35 : 0x00000000\n"
-                     "[Fullread] LBA 36 : 0x00000000\n"
-                     "[Fullread] LBA 37 : 0x00000000\n"
-                     "[Fullread] LBA 38 : 0x00000000\n"
-                     "[Fullread] LBA 39 : 0x00000000\n"
-                     "[Fullread] LBA 40 : 0x00000000\n"
-                     "[Fullread] LBA 41 : 0x00000000\n"
-                     "[Fullread] LBA 42 : 0x00000000\n"
-                     "[Fullread] LBA 43 : 0x00000000\n"
-                     "[Fullread] LBA 44 : 0x00000000\n"
-                     "[Fullread] LBA 45 : 0x00000000\n"
-                     "[Fullread] LBA 46 : 0x00000000\n"
-                     "[Fullread] LBA 47 : 0x00000000\n"
-                     "[Fullread] LBA 48 : 0x00000000\n"
-                     "[Fullread] LBA 49 : 0x00000000\n"
-                     "[Fullread] LBA 50 : 0x00000000\n"
-                     "[Fullread] LBA 51 : 0x00000000\n"
-                     "[Fullread] LBA 52 : 0x00000000\n"
-                     "[Fullread] LBA 53 : 0x00000000\n"
-                     "[Fullread] LBA 54 : 0x00000000\n"
-                     "[Fullread] LBA 55 : 0x00000000\n"
-                     "[Fullread] LBA 56 : 0x00000000\n"
-                     "[Fullread] LBA 57 : 0x00000000\n"
-                     "[Fullread] LBA 58 : 0x00000000\n"
-                     "[Fullread] LBA 59 : 0x00000000\n"
-                     "[Fullread] LBA 60 : 0x00000000\n"
-                     "[Fullread] LBA 61 : 0x00000000\n"
-                     "[Fullread] LBA 62 : 0x00000000\n"
-                     "[Fullread] LBA 63 : 0x00000000\n"
-                     "[Fullread] LBA 64 : 0x00000000\n"
-                     "[Fullread] LBA 65 : 0x00000000\n"
-                     "[Fullread] LBA 66 : 0x00000000\n"
-                     "[Fullread] LBA 67 : 0x00000000\n"
-                     "[Fullread] LBA 68 : 0x00000000\n"
-                     "[Fullread] LBA 69 : 0x00000000\n"
-                     "[Fullread] LBA 70 : 0x00000000\n"
-                     "[Fullread] LBA 71 : 0x00000000\n"
-                     "[Fullread] LBA 72 : 0x00000000\n"
-                     "[Fullread] LBA 73 : 0x00000000\n"
-                     "[Fullread] LBA 74 : 0x00000000\n"
-                     "[Fullread] LBA 75 : 0x00000000\n"
-                     "[Fullread] LBA 76 : 0x00000000\n"
-                     "[Fullread] LBA 77 : 0x00000000\n"
-                     "[Fullread] LBA 78 : 0x00000000\n"
-                     "[Fullread] LBA 79 : 0x00000000\n"
-                     "[Fullread] LBA 80 : 0x00000000\n"
-                     "[Fullread] LBA 81 : 0x00000000\n"
-                     "[Fullread] LBA 82 : 0x00000000\n"
-                     "[Fullread] LBA 83 : 0x00000000\n"
-                     "[Fullread] LBA 84 : 0x00000000\n"
-                     "[Fullread] LBA 85 : 0x00000000\n"
-                     "[Fullread] LBA 86 : 0x00000000\n"
-                     "[Fullread] LBA 87 : 0x00000000\n"
-                     "[Fullread] LBA 88 : 0x00000000\n"
-                     "[Fullread] LBA 89 : 0x00000000\n"
-                     "[Fullread] LBA 90 : 0x00000000\n"
-                     "[Fullread] LBA 91 : 0x00000000\n"
-                     "[Fullread] LBA 92 : 0x00000000\n"
-                     "[Fullread] LBA 93 : 0x00000000\n"
-                     "[Fullread] LBA 94 : 0x00000000\n"
-                     "[Fullread] LBA 95 : 0x00000000\n"
-                     "[Fullread] LBA 96 : 0x00000000\n"
-                     "[Fullread] LBA 97 : 0x00000000\n"
-                     "[Fullread] LBA 98 : 0x00000000\n"
-                     "[Fullread] LBA 99 : 0x00000000"
-                  << std::endl;
-      }
+      fullread();
+    } else if (command == "1_" || command == "1_FullWriteAndReadCompare") {
+      ts1();
+    } else if (command == "2_" || command == "2_PartialLBAWrite") {
+      ts2();
+    } else if (command == "3_" || command == "3_WriteReadAging") {
+      ts3();
     } else {
       std::cout << "INVALID COMMAND" << std::endl;
     }
