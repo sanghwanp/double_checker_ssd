@@ -1,5 +1,5 @@
-#include "gtest/gtest.h"
 #include "../Shell/MockSSD.h"
+#include "gtest/gtest.h"
 
 TEST(MockSSDTest, WriteThenReadSameLBA) {
   MockSSD ssd;
@@ -49,6 +49,19 @@ TEST(MockSSD, MultipleLBA_WritesAndReads) {
   EXPECT_EQ(ssd.Read(0), "0xAAAAAAAA");
   EXPECT_EQ(ssd.Read(10), "0xBBBBBBBB");
   EXPECT_EQ(ssd.Read(50), "0xCCCCCCCC");
+}
+
+TEST(MockSSDTest, IsInalidLBA_Valid) {
+  MockSSD ssd;
+  EXPECT_FALSE(ssd.IsInvalidLBA(100));
+  EXPECT_FALSE(ssd.IsInvalidLBA(0));
+  EXPECT_FALSE(ssd.IsInvalidLBA(50));
+}
+
+TEST(MockSSDTest, IsInalidLBA_InValid) {
+  MockSSD ssd;
+  EXPECT_TRUE(ssd.IsInvalidLBA(200));
+  EXPECT_TRUE(ssd.IsInvalidLBA(-10));
 }
 
 TEST(MockSSDTest, IsInvalidValue_Valid) {
