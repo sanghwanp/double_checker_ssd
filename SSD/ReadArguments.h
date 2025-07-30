@@ -4,15 +4,15 @@
 #define interface struct
 
 class ReadArguments {
+  enum CmdType { CMD_TYPE_OTHER, CMD_TYPE_WRITE, CMD_TYPE_READ };
+
  public:
-  int cmdType=CMD_TYPE_OTHER;  // 2: ReadCmdType
-  int lba;
-  std::istringstream iss;
+  int GetLba() const { return lba; }
 
   virtual ~ReadArguments() = default;
   void Parse(std::string cmdStr) {
     std::string typeStr;
-    iss = std::istringstream(cmdStr);
+    std::istringstream iss(cmdStr);
     iss >> typeStr;
 
     if (typeStr == "R" || typeStr == "read") {
@@ -33,7 +33,9 @@ class ReadArguments {
 
   ReadArguments() {}
 
-private:
+ private:
+  CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType
+  int lba;
+
   const int MAX_LBA = 99;
-  const int CMD_TYPE_OTHER=0, CMD_TYPE_WRITE=1, CMD_TYPE_READ=2;
 };
