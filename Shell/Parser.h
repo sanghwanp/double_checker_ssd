@@ -18,6 +18,15 @@ struct CommandParamSpec {
   std::function<bool(const std::vector<std::string>&)> validator;
 };
 
+struct ScriptSpec {
+  int argCount;
+  TestShellCMD eCmd;
+  std::function<IParam*(const std::vector<std::string>&)> paramObj;
+  std::function<bool(const std::vector<std::string>&)> validator;
+};
+
+
+
 class Parser {
  public:
   std::vector<std::string> SplitArgs(const std::string& input);
@@ -27,9 +36,13 @@ class Parser {
   bool IsDec(const std::string& str);
   bool IsHex(const std::string& str);
   IParam* GenCommandParam(std::vector<std::string> tokens);
+  bool IsValidScriptCommandStructure(const vector<std::string>& tokens);
 
  private:
   IParam* GetInvalidCommand() { return new IParam(TestShellCMD::eInvalidCmd); }
+  string ExtractScriptNumberIfValidFormat(const std::string& str);
+  IParam* Parser::GenScriptParam(std::vector<std::string>& tokens);
+
 
   const std::unordered_map<std::string, CommandParamSpec> commandParamSpecs = {
       {"write",
@@ -68,6 +81,13 @@ class Parser {
        {1, TestShellCMD::eFullread,
         [](const std::vector<std::string>& tokens) {
           return new IParam(TestShellCMD::eFullread);
+        },
+        [](const std::vector<std::string>&) { return true; }}},
+      {"script",
+       {1, TestShellCMD::eScriptCmd,
+        [&](const std::vector<std::string>& tokens) {
+          return new ScriptParam(TestShellCMD::eScriptCmd,
+                                 ExtractScriptNumberIfValidFormat(tokens[0]));
         },
         [](const std::vector<std::string>&) { return true; }}}};
 };

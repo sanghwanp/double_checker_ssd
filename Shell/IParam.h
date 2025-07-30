@@ -8,6 +8,7 @@ enum TestShellCMD {
   eExitCmd,
   eFullwrite,
   eFullread,
+  eScriptCmd,
   eInvalidCmd
 };
 
@@ -37,4 +38,14 @@ class FullWriteParam : public IParam {
  public:
   FullWriteParam(TestShellCMD cmd, string data) : IParam(cmd), data(data) {}
   string data;
+};
+
+class ScriptParam : public IParam {
+ public:
+  ScriptParam(TestShellCMD cmd, string number)
+      : IParam(cmd), scriptNumber(number) {
+    nScriptNumber = scriptNumber.empty() ? 0 : std::stoi(scriptNumber);
+  }
+  string scriptNumber;
+  int nScriptNumber;
 };

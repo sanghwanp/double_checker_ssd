@@ -1,11 +1,11 @@
 #include <string>
-
 #include "../Shell/Parser.h"
 #include "gmock/gmock.h"
 
 using std::string;
+using ::testing::Test;
 
-class FixtureParser : public ::testing::Test {
+class FixtureParser : public ::Test {
  public:
   Parser parser;
   string testStr;
@@ -115,4 +115,50 @@ TEST_F(FixtureParser, fullread_command_parse) {
   SetupInputString("fullread");
   cmd = parser.Parse(testStr);
   EXPECT_EQ(cmd->eCmd, eFullread);
+}
+
+TEST_F(FixtureParser, script_command_parse) {
+  SetupInputString("1_");
+  cmd = parser.Parse(testStr);
+  ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(cmd);
+
+  EXPECT_EQ(scriptCmd->eCmd, eScriptCmd);
+  EXPECT_EQ(scriptCmd->scriptNumber, "1");
+  EXPECT_EQ(scriptCmd->nScriptNumber, 1);
+}
+
+TEST_F(FixtureParser, script_command_parse_largeNumber) {
+  SetupInputString("123123_");
+  cmd = parser.Parse(testStr);
+  ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(cmd);
+
+  EXPECT_EQ(scriptCmd->eCmd, eScriptCmd);
+  EXPECT_EQ(scriptCmd->scriptNumber, "123123");
+  EXPECT_EQ(scriptCmd->nScriptNumber, 123123);
+}
+
+TEST_F(FixtureParser, script_command_parse_full_name1) {
+  SetupInputString("1_FullWriteAndReadCompare");
+  cmd = parser.Parse(testStr);
+  ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(cmd);
+
+  EXPECT_EQ(scriptCmd->eCmd, eScriptCmd);
+  EXPECT_EQ(scriptCmd->scriptNumber, "1");
+  EXPECT_EQ(scriptCmd->nScriptNumber, 1);
+}
+
+TEST_F(FixtureParser, script_command_parse_full_name2) {
+  SetupInputString("2_PartialLBAWrite");
+  cmd = parser.Parse(testStr);
+  ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(cmd);
+
+  EXPECT_EQ(scriptCmd->eCmd, eScriptCmd);
+  EXPECT_EQ(scriptCmd->scriptNumber, "2");
+  EXPECT_EQ(scriptCmd->nScriptNumber, 2);
+}
+
+TEST_F(FixtureParser, script_command_parse_invalid_name) {
+  SetupInputString("_Partial");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eInvalidCmd);
 }
