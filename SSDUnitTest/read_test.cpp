@@ -17,16 +17,17 @@ class ReadTestFixture : public Test {
   const std::string INVALID_ARGS_DATA = BASIC_ARGS + " 1";
 
   ReadArguments readArgs;
+  SSD ssd;
+  void ParsingArgs(const std::string &args) { readArgs.Parse(args); }
 };
 
-TEST_F(ReadTestFixture, TC01_Read_ReturnStoredValue_WhenWrittenBefore) {
-  readArgs.Parse(BASIC_ARGS);
-
-  SSD ssd;
-  unsigned int data = ssd.Read(readArgs.lba);
-  EXPECT_EQ(data, INIT_DATA);
+TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
+  EXPECT_THROW({ ParsingArgs(INVALID_ARGS_TYPE); }, std::invalid_argument);
 }
 
-TEST_F(ReadTestFixture, TC02_Read_ThrowException_WhenInvalidArgsType) {
-  EXPECT_THROW({ readArgs.Parse(INVALID_ARGS_TYPE); }, std::invalid_argument);
+TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
+  ParsingArgs(BASIC_ARGS);
+
+  unsigned int data = ssd.Read(readArgs.GetLba());
+  EXPECT_EQ(data, INIT_DATA);
 }
