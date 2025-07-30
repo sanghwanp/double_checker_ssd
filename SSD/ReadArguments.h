@@ -1,6 +1,8 @@
 #pragma once
 #include <sstream>
 #include <string>
+#include <cstring>
+#include <vector>
 #define interface struct
 
 class ReadArguments {
@@ -11,13 +13,22 @@ class ReadArguments {
 
   virtual ~ReadArguments() = default;
   void Parse(std::string cmdStr) {
-    std::string typeStr;
     std::istringstream iss(cmdStr);
-    iss >> typeStr;
+
+    std::vector<std::string> tokens;
+    std::string token;
+    while(iss >> token) {
+        tokens.push_back(token);
+    }
+    if(tokens.size()!=2) {
+        throw std::invalid_argument("Invalid Arguments: argc must be 2");
+    }
+    std::string typeStr = tokens[0];
 
     if (typeStr == "R" || typeStr == "read") {
       cmdType = CMD_TYPE_READ;
-      iss >> lba;
+      std::string lbaStr = tokens[1];
+      lba = std::stoi(lbaStr);
     }
 
     if (CheckErrorCmd()) {

@@ -14,7 +14,7 @@ class ReadTestFixture : public Test {
   const std::string BASIC_ARGS = "R 0";
   const std::string INVALID_ARGS_TYPE = "F 0";
   const std::string INVALID_ARGS_LBA = "R 100";
-  const std::string INVALID_ARGS_DATA = BASIC_ARGS + " 1";
+  const std::string INVALID_ARGS_COUNT = BASIC_ARGS + " 1";
 
   ReadArguments readArgs;
   SSD ssd;
@@ -30,4 +30,12 @@ TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
 
   unsigned int data = ssd.Read(readArgs.GetLba());
   EXPECT_EQ(data, INIT_DATA);
+}
+
+TEST_F(ReadTestFixture, TC03_Read_ThrowException_WhenIvalidArgsLba) {
+	EXPECT_THROW({ ParsingArgs(INVALID_ARGS_LBA); }, std::invalid_argument);
+}
+
+TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
+	EXPECT_THROW({ ParsingArgs(INVALID_ARGS_COUNT); }, std::invalid_argument);
 }
