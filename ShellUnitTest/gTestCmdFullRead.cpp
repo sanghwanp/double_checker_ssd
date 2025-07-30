@@ -22,7 +22,7 @@ class FullReadTestFixture : public Test {
   std::string GetExpectedStr(
       const std::unordered_map<int, std::string> values = {}) {
     std::ostringstream ossExpected;
-    for (unsigned int lba = 0; lba <= 99; lba++) {
+    for (unsigned int lba = MIN_LBA; lba <= MAX_LBA; lba++) {
       ossExpected << COUT_HEADER << std::setfill('0') << std::setw(2) << lba
                   << " : ";
 
