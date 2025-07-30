@@ -1,8 +1,8 @@
-#include<string>
+#include <string>
 using std::string;
 
 class SSDInterface {
  public:
-  virtual void SsdWrite(int lba, const std::string& value) = 0;
-  virtual string SsdRead(int lba) = 0;
+  virtual void Write(int lba, const string& value) = 0;
+  virtual string Read(int lba) = 0;
 };
