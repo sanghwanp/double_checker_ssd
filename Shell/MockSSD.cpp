@@ -27,9 +27,9 @@ bool MockSSD::IsInvalidValue(const string& value) {
 
   for (int i = 2; i < 10; ++i) {
     char c = value[i];
-    bool is_digit = ('0' <= c && c <= '9');
-    bool is_upper = ('A' <= c && c <= 'F');
-    if (!(is_digit || is_upper)) return true;
+    bool isDigit = ('0' <= c && c <= '9');
+    bool isUpper = ('A' <= c && c <= 'F');
+    if (!(isDigit || isUpper )) return true;
   }
 
   return false;
