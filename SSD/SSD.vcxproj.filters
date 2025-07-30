@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Read.cpp">
+    <ClCompile Include="ReadCmd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SSD.cpp">
@@ -33,18 +33,24 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="ReadArguments.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Read.h">
+    <ClInclude Include="ReadCmd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SSD.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Write.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ReadArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
