@@ -14,7 +14,7 @@ bool CommandRead::Call(const std::vector<std::string>& program) {
     return false;
   }
 
-  int lba = std::stoi(program[LBA_INDEX]);
+  unsigned int lba = std::stoi(program[LBA_INDEX]);
   if (IsInvalidLBA(lba)) {
     // ERROR VALUE: false
     return false;
