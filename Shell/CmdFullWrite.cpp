@@ -25,7 +25,6 @@ bool CommandFullWrite::Call(std::vector<std::string> program) {
   for (int lba = 0; lba < 100; ++lba) {
     ssd->Write(lba, value);
   }
-
   printSuccessMessage();
   return true;
 }

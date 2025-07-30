@@ -18,5 +18,5 @@ class CommandFullWrite {
   const int COMMAND_INDEX = 0;
   const int VALUE_INDEX = 1;
   const std::string INVALID_COMMAND_MESSAGE = "INVALID COMMAND\n";
-  const std::string SUCCESS_MESSAGE = "[Write] Done\n";
+  const std::string SUCCESS_MESSAGE = "[Fullwrite] Done\n";
 };
