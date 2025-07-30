@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="debug_SSDUnitTest|Win32">
-      <Configuration>debug_SSDUnitTest</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_SSDUnitTest|x64">
-      <Configuration>debug_SSDUnitTest</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_SSD|Win32">
-      <Configuration>debug_SSD</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_SSD|x64">
-      <Configuration>debug_SSD</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_TestShellUnit_test|Win32">
-      <Configuration>debug_TestShellUnit_test</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_TestShellUnit_test|x64">
-      <Configuration>debug_TestShellUnit_test</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_TestShell|Win32">
-      <Configuration>debug_TestShell</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="debug_TestShell|x64">
-      <Configuration>debug_TestShell</Configuration>
-      <Platform>x64</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
@@ -53,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b57b6220-7db3-4554-9d6c-7a9dcf0d00d4}</ProjectGuid>
-    <RootNamespace>SSDTestShell</RootNamespace>
+    <ProjectGuid>{282eb032-faa3-4d19-bdeb-f8655b797ba3}</ProjectGuid>
+    <RootNamespace>ShellUserTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Shell</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -84,32 +51,6 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|Win32'">
-    <PlatformToolset>v143</PlatformToolset>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|x64'">
-    <PlatformToolset>v143</PlatformToolset>
-    <ConfigurationType>StaticLibrary</ConfigurationType>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_SSDUnitTest|Win32'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_SSDUnitTest|x64'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_SSD|Win32'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_SSD|x64'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_TestShell|Win32'">
-    <PlatformToolset>v143</PlatformToolset>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='debug_TestShell|x64'">
-    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -152,8 +93,6 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -180,49 +119,24 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSDUnitTest|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>MAIN_SELECT=2;</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSD|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>MAIN_SELECT=1;</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShell|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>MAIN_SELECT=3;</PreprocessorDefinitions>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|x64'">
-    <ClCompile>
-      <PreprocessorDefinitions>MAIN_SELECT=4;</PreprocessorDefinitions>
-      <Optimization>Disabled</Optimization>
-    </ClCompile>
-  </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CmdFullWrite.cpp" />
-    <ClCompile Include="CmdWrite.cpp" />
-    <ClCompile Include="CmdRead.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Parser.cpp" />
-    <ClCompile Include="MockSSD.cpp" />
-    <ClCompile Include="MockSSD.h" />
-    <ClCompile Include="SSDInterface.h" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CmdFullWrite.h" />
-    <ClInclude Include="CmdWrite.h" />
-    <ClInclude Include="CmdRead.h" />
-    <ClInclude Include="Parser.h" />
+    <ClCompile Include="gTestShellUserScenario.cpp" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\gmock.1.11.0\build\native\gmock.targets" Condition="Exists('..\packages\gmock.1.11.0\build\native\gmock.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>이 프로젝트는 이 컴퓨터에 없는 NuGet 패키지를 참조합니다. 해당 패키지를 다운로드하려면 NuGet 패키지 복원을 사용하십시오. 자세한 내용은 http://go.microsoft.com/fwlink/?LinkID=322105를 참조하십시오. 누락된 파일은 {0}입니다.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\gmock.1.11.0\build\native\gmock.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\gmock.1.11.0\build\native\gmock.targets'))" />
+  </Target>
 </Project>

@@ -220,6 +220,7 @@
     <ClCompile Include="gTestCommandWrite.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
     <ClCompile Include="gTestCmdFullWrite.cpp" />
+    <ClCompile Include="gTestParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
