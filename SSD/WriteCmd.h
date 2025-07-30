@@ -1,11 +1,14 @@
 ﻿#pragma once
 #include <iostream>
 #include <sstream>
+#include <fstream>
+#include <iomanip>
 typedef unsigned int uint;
 
 const int MAX_DATA_LEN = 10;
 const int MAX_SIZE = 100;
 const int NAND_SIZE = sizeof(int) * (MAX_SIZE);
+const std::string FILE_NAME = "ssd_nand.txt";
 
 struct Command {
   int cmdType;
@@ -19,7 +22,7 @@ struct Command {
   Command(int t, int l, uint d) : cmdType{t}, lba{l}, data{d} {}
 
   bool CheckErrorCmd() {
-    if (typeStr != "W") {  // �Էµ� string�� ù��° ���ڸ� Ȯ���ϱ�
+    if (typeStr != "W") {  // 첫글자 확인하기로 바꾸기
       return true;
     }
     if (lba < 0 || lba >= MAX_SIZE) {
