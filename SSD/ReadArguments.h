@@ -26,7 +26,6 @@ class ReadArguments {
   void ValidateCmdTypeRead(CmdType cmdType);
   void ValidateLba(int lba);
   std::vector<std::string> GetTokens(const std::string &cmdStr);
-  bool IsCmdTypeReadStr(const std::string &cmdTypeStr);
 
  private:
   CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType

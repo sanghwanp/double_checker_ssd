@@ -24,12 +24,12 @@ class WriteCmdMock : public ICmd {
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
   EXPECT_THROW(
-      { readArgs.ParseAndValidate(INVALID_ARGS_TYPE); }, std::invalid_argument);
+      { readArgs.ParseOrThrows(INVALID_ARGS_TYPE); }, std::invalid_argument);
 }
 
 TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
   // readArgs.ParseAndValidate(BASIC_ARGS);
-  readArgs.ParseAndValidate(BASIC_ARGS);
+  readArgs.ParseOrThrows(BASIC_ARGS);
 
   unsigned int data = ssd.Read(readArgs);
   EXPECT_EQ(data, INIT_DATA);
@@ -37,12 +37,12 @@ TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
 
 TEST_F(ReadTestFixture, TC03_Read_ThrowException_WhenIvalidArgsLba) {
   EXPECT_THROW(
-      { readArgs.ParseAndValidate(INVALID_ARGS_LBA); }, std::invalid_argument);
+      { readArgs.ParseOrThrows(INVALID_ARGS_LBA); }, std::invalid_argument);
 }
 
 TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
   EXPECT_THROW(
-      { readArgs.ParseAndValidate(INVALID_ARGS_COUNT); },
+      { readArgs.ParseOrThrows(INVALID_ARGS_COUNT); },
       std::invalid_argument);
 }
 

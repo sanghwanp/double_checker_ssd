@@ -14,10 +14,6 @@ std::vector<std::string> ReadArguments::GetTokens(const std::string& cmdStr) {
   return result;
 }
 
-bool ReadArguments::IsCmdTypeReadStr(const std::string& cmdTypeStr) {
-  return cmdTypeStr == "R" || cmdTypeStr == "read";
-}
-
 void ReadArguments::ParseOrThrows(std::string argsStr) {
   std::vector<std::string> tokens = GetTokens(argsStr);
   ValidateTokenCount(tokens);
