@@ -1,22 +1,20 @@
-#if 0
 #include "../SSD/WriteCmd.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
 typedef unsigned int uint;
 
-class WriteCmdMock : public WriteCmd {
+class MockWriteArguments : public WriteArguments {
  public:
-  // MOCK_METHOD(void, Init, (), ());
-  // MOCK_METHOD(bool, CheckFirst, (), ());
+  MOCK_METHOD(unsigned int, GetLba, (), (const, override));
+  MOCK_METHOD(unsigned int, GetData, (), (const));
 };
 
 class WriteTestFixture : public Test {
  public:
-  const int WRITE = 1;
   const int LBA = 1;
-  const int DATA = 0x10;
-  const int INIT_DATA = 0x0;
+  const unsigned int DATA = 0x10;
+  const unsigned int INIT_DATA = 0x0;
   const std::string BASIC_CMD = "W 1 0x00000010";
   const std::string INVALID_CMD_TYPE = "F 1 0x00000000";
   const std::string INVALID_CMD_LBA = "W 100 0x00000000";
@@ -25,27 +23,30 @@ class WriteTestFixture : public Test {
   const std::string INVALID_CMD_2 = "W W 0x100000000";
   const std::string INVALID_CMD_3 = "W 1 0xxxxxxxxx";
 
-  uint GetData(int lba) { return mock.nand[lba]; }
+  WriteCmd cmd;
+  WriteArguments args;
 
-  Command cmd;
-  WriteCmdMock mock;
+  void SetUp() override { cmd.Init(); }
+
+  unsigned int GetData(int lba) { return cmd.GetData(lba); }
 };
 
 TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
-  cmd.Parse(BASIC_CMD);
+  args.Parse(BASIC_CMD);
 
-  EXPECT_EQ(cmd.cmdType, WRITE);
-  EXPECT_EQ(cmd.lba, LBA);
-  EXPECT_EQ(cmd.data, DATA);
+  // EXPECT_EQ(args.cmdType, WRITE);
+  EXPECT_EQ(args.GetLba(), LBA);
+  EXPECT_EQ(args.GetData(), DATA);
 }
 
+#if 0
 TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
-  EXPECT_THROW({ cmd.Parse(INVALID_CMD_TYPE); }, std::invalid_argument);
-  EXPECT_THROW({ cmd.Parse(INVALID_CMD_LBA); }, std::invalid_argument);
-  EXPECT_THROW({ cmd.Parse(INVALID_CMD_DATA); }, std::invalid_argument);
-  EXPECT_THROW({ cmd.Parse(INVALID_CMD_1); }, std::invalid_argument);
-  EXPECT_THROW({ cmd.Parse(INVALID_CMD_2); }, std::invalid_argument);
-  EXPECT_THROW({ cmd.Parse(INVALID_CMD_3); }, std::invalid_argument);
+  EXPECT_THROW({ args.Parse(INVALID_CMD_TYPE); }, std::invalid_argument);
+  EXPECT_THROW({ args.Parse(INVALID_CMD_LBA); }, std::invalid_argument);
+  EXPECT_THROW({ args.Parse(INVALID_CMD_DATA); }, std::invalid_argument);
+  EXPECT_THROW({ args.Parse(INVALID_CMD_1); }, std::invalid_argument);
+  EXPECT_THROW({ args.Parse(INVALID_CMD_2); }, std::invalid_argument);
+  EXPECT_THROW({ args.Parse(INVALID_CMD_3); }, std::invalid_argument);
 }
 
 TEST_F(WriteTestFixture, 03_Write_Data_First) {
@@ -54,9 +55,9 @@ TEST_F(WriteTestFixture, 03_Write_Data_First) {
   mock.Init();
   EXPECT_EQ(GetData(LBA), INIT_DATA);
 
-  cmd.Parse(BASIC_CMD);
-  mock.Run(cmd);
+  args.Parse(BASIC_CMD);
+  mock.Run(args);
 
-  EXPECT_EQ(GetData(cmd.lba), DATA);
+  EXPECT_EQ(GetData(args.lba), DATA);
 }
 #endif
