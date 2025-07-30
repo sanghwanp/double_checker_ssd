@@ -15,7 +15,7 @@ TEST(MockSSDTest, ReadInvalidLBA_ReturnsDefault) {
 
 TEST(MockSSDTest, OverwriteSameLBA) {
   MockSSD ssd;
-  ssd.Write(2, "1234");
-  ssd.Write(2, "5678");
-  EXPECT_EQ(ssd.Read(2), "5678");
+  ssd.Write(2, "0x00001234");
+  ssd.Write(2, "0x00005678");
+  EXPECT_EQ(ssd.Read(2), "0x00005678");
 }
