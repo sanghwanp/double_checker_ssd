@@ -13,7 +13,7 @@ void WriteCmd::Run(Command cmd) {
   if (inFile.is_open()) {
     std::cout << "file exist" << std::endl;
     std::string hexStr;
-    for (int idx = 0; idx < MAX_SIZE; ++idx) {
+    for (int idx = 0; idx < MAX_LBA_SIZE; ++idx) {
       inFile >> hexStr;
       nand[idx] = std::stoul(hexStr, nullptr, 16);
     }
@@ -30,7 +30,7 @@ void WriteCmd::Run(Command cmd) {
     return;
   }
 
-  for (int idx = 0; idx < MAX_SIZE; ++idx) {
+  for (int idx = 0; idx < MAX_LBA_SIZE; ++idx) {
     outFile << "0x" << std::setfill('0') << std::setw(8) << std::hex
             << std::uppercase << nand[idx] << std::endl;
   }

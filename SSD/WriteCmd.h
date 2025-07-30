@@ -1,13 +1,14 @@
 ﻿#pragma once
-#include <iostream>
-#include <sstream>
+#include <cctype>
 #include <fstream>
 #include <iomanip>
+#include <iostream>
+#include <sstream>
 typedef unsigned int uint;
 
 const int MAX_DATA_LEN = 10;
-const int MAX_SIZE = 100;
-const int NAND_SIZE = sizeof(int) * (MAX_SIZE);
+const int MAX_LBA_SIZE = 100;
+const int NAND_SIZE = sizeof(int) * (MAX_LBA_SIZE);
 const std::string FILE_NAME = "ssd_nand.txt";
 
 struct Command {
@@ -22,16 +23,22 @@ struct Command {
   Command(int t, int l, uint d) : cmdType{t}, lba{l}, data{d} {}
 
   bool CheckErrorCmd() {
-    if (typeStr != "W") {  // 첫글자 확인하기로 바꾸기
+    if (typeStr[0] != 'W' && typeStr[0] != 'w') {
       return true;
     }
-    if (lba < 0 || lba >= MAX_SIZE) {
+    if (lba < 0 || lba >= MAX_LBA_SIZE) {
       return true;
     }
     if (dataStr.length() > MAX_DATA_LEN) {
       return true;
     }
-
+    if (!(dataStr[0] == '0' && dataStr[1] == 'x')) {
+      return true;
+    }
+    for (int i = 2; i < dataStr.length(); i++) {
+      if (std::isxdigit(dataStr[i])) continue;
+      return true;
+    }
     return false;
   }
 
@@ -53,6 +60,6 @@ class WriteCmd {
   void Run(Command cmd);
   void SetData(int i, uint d);
 
-  uint nand[MAX_SIZE];
+  uint nand[MAX_LBA_SIZE];
   Command cmd;
 };
