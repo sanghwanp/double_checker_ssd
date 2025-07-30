@@ -16,8 +16,8 @@ void SSD::SetWriteCmd(ICmd *cmd) { this->writeCmd = cmd; }
 void SSD::SetReadCmd(ICmd *cmd) { this->readCmd = cmd; }
 
 // unsigned int SSD::Read(int lba) const { return readCmd.Run(lba, storage); }
-unsigned int SSD::Read(ReadArguments &readArgs) {
-  readCmd->Run(&readArgs);
+unsigned int SSD::Read(IArguments *args) {
+  readCmd->Run(static_cast<ReadArguments *>(args));
   unsigned int readData = dynamic_cast<ReadCmd *>(readCmd)->GetReadResult();
   std::ofstream ofs;
   ofs.open("C:\\ssd_output.txt");
@@ -26,4 +26,6 @@ unsigned int SSD::Read(ReadArguments &readArgs) {
   return readData;
 }
 
-void SSD::Write(IArguments &args) { writeCmd->Run(&args); }
+void SSD::Write(IArguments *args) {
+  writeCmd->Run(static_cast<WriteArguments *>(args));
+}

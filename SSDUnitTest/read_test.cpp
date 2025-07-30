@@ -59,7 +59,7 @@ TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
   ReadCmd readCmd;
   ssd.SetReadCmd(&readCmd);
 
-  unsigned int data = ssd.Read(readArgs);
+  unsigned int data = ssd.Read(&readArgs);
   EXPECT_EQ(data, INIT_DATA);
 }
 
@@ -109,13 +109,13 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
       }
       ofs.close();
     });
-    ssd.Write(writeArgs);
+    ssd.Write(&writeArgs);
   }
 
   for (unsigned int i = 0; i < 5; i++) {
     ReadArguments readArgs;
     readArgs.Parse("R " + std::to_string(i));
-    unsigned int result = ssd.Read(readArgs);
+    unsigned int result = ssd.Read(&readArgs);
     EXPECT_EQ(result, i);
   }
 }

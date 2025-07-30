@@ -12,8 +12,8 @@ class SSD {
   void Clear();
   void SetWriteCmd(ICmd *cmd);
   void SetReadCmd(ICmd *cmd);
-  unsigned int Read(ReadArguments &readArgs);
-  void Write(IArguments &args);
+  unsigned int Read(IArguments *args);
+  void Write(IArguments *args);
 
  private:
   const int STORAGE_SIZE = 100;
