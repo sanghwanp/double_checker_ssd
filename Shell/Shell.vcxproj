@@ -207,6 +207,7 @@
     <ClCompile>
       <PreprocessorDefinitions>MAIN_SELECT=4;</PreprocessorDefinitions>
       <Optimization>Disabled</Optimization>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -221,6 +222,7 @@
     <ClCompile Include="SSDInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IParam.h" />
     <ClInclude Include="CmdFullRead.h" />
     <ClInclude Include="CmdFullWrite.h" />
     <ClInclude Include="CmdWrite.h" />

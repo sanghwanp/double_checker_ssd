@@ -1,7 +1,9 @@
-#include "Parser.h"
 #include <iostream>
+#include <cctype>
 
-  // ���ڿ��� ���� �������� �и�
+#include "Parser.h"
+
+// ���ڿ��� ���� �������� �и�
 std::vector<std::string> Parser::SplitArgs(const std::string& input) {
   std::vector<std::string> result;
   std::string temp;
@@ -19,75 +21,52 @@ std::vector<std::string> Parser::SplitArgs(const std::string& input) {
   return result;
 }
 
-CommandStruct Parser::Parse(const std::string& input) {
+IParam* Parser::GenCommandParam(std::vector<std::string> tokens) {
+  auto it = commandSpecs.find(tokens[0]);
+  return it->second.paramObj(tokens);
+}
+
+IParam* Parser::Parse(const std::string& input) {
   vector<std::string> tokens;
-  CommandStruct cmd;
-  int pos = 0;
-  int found;
-  string token;
-  string inputCopy = input;
+  IParam* cmdParam;
 
   if (input == "") {
-    cmd.commandName = "error";
-    return cmd;
+    return GetInvalidCommand();
   }
 
   tokens = SplitArgs(input);
 
-  if (false == CheckTokensStruct(tokens, inputCopy.substr(pos))) {
+  if (false == IsValidCommandStructure(tokens)) {
     std::cerr << "Error: Invalid command structure." << std::endl;
-    cmd.commandName = "error";
-    return cmd;
+    return GetInvalidCommand();
   }
 
-  cmd.commandName = tokens[0];
-  if (tokens.size() > 1) {
-    cmd.firstNumber = tokens[1];
-  }
-  if (tokens.size() > 2) {
-    cmd.secondNumber = tokens[2];
-  }
+  cmdParam = GenCommandParam(tokens);
 
-  return cmd;
-}
-bool Parser::CheckTokensStruct(const vector<std::string>& tokens,
-                               const string& lastToken) {
-  if (tokens.empty()) {
-    return false;  // No command provided
-  }
-
-  if (tokens[0] != "write" && tokens[0] != "read" && tokens[0] != "exit" &&
-      tokens[0] != "help" && tokens[0] != "fullwrite" &&
-      tokens[0] != "fullread") {
-    return false;  // Invalid command
-  }
-
-  if (tokens[0] == "write") {
-    if (tokens.size() != 3 || !IsNumberOrHex(tokens[1]) ||
-        !IsNumberOrHex(tokens[2])) {
-      return false;  // Invalid write command structure
-    }
-  } else if (tokens[0] == "read" || tokens[0] == "fullwrite") {
-    if (tokens.size() != 2 || !IsNumberOrHex(tokens[1])) {
-      return false;  // Invalid read command structure
-    }
-  } else if (tokens[0] == "exit" || tokens[0] == "help" ||
-             tokens[0] == "fullread") {
-    if (tokens.size() != 1) {
-      return false;  // Invalid exit or help command structure
-    }
-  }
+  return cmdParam;
 }
 
-bool Parser::IsNumberOrHex(const std::string& str) {
+bool Parser::IsValidCommandStructure(const vector<std::string>& tokens) {
+    if (tokens.empty()) return false;
+
+    auto it = commandSpecs.find(tokens[0]);
+    if (it == commandSpecs.end()) return false;
+
+    const CommandSpec& spec = it->second;
+
+    if (tokens.size() != spec.argCount) return false;
+    return spec.validator(tokens);
+}
+
+bool Parser::IsNumber(const std::string& str) {
   if (str.empty()) return false;
   if (str[0] == '0' && str.size() > 1 && str[1] == 'x') {
     return IsHex(str);  // Check for hexadecimal
   } else {
-    return IsNumber(str);  // Check for decimal number
+    return IsDec(str);  // Check for decimal number
   }
 }
-bool Parser::IsNumber(const std::string& str) {
+bool Parser::IsDec(const std::string& str) {
   for (char c : str) {
     if (!isdigit(c)) {
       return false;
