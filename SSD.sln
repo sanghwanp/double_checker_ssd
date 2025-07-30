@@ -17,11 +17,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShellUnitTest", "ShellUnitT
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4} = {B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{2A3A057F-5D22-31FD-628C-DF5EF75AEF1E}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		debug_SSD|x64 = debug_SSD|x64
@@ -49,7 +44,7 @@ Global
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
-		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_SSD|x64
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Debug|x64.ActiveCfg = Debug|x64
@@ -70,7 +65,7 @@ Global
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
-		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_SSDUnitTest|x64
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.Debug|x64.ActiveCfg = Debug|x64
@@ -91,8 +86,8 @@ Global
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x64.Build.0 = debug_TestShell|x64
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
-		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
-		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.Build.0 = debug_TestShellUnit_test|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShell|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.Build.0 = debug_TestShell|x64
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Debug|x64.ActiveCfg = Debug|x64
