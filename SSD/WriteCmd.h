@@ -6,7 +6,7 @@
 
 class WriteCmd : public ICmd {
  public:
-  void Run(IArguments* args) override;
+  unsigned int Run(IArguments* args) override;
 
   bool CheckFirst();
   //void Init();

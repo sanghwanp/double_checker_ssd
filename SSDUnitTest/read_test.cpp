@@ -47,7 +47,7 @@ class ReadTestFixture : public Test {
 
 class WriteCmdMock : public ICmd {
  public:
-  MOCK_METHOD(void, Run, (IArguments * args), (override));
+  MOCK_METHOD(unsigned int, Run, (IArguments * args), (override));
 };
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
@@ -108,6 +108,9 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
         ofs << std::hex << cache[i] << "\n";
       }
       ofs.close();
+
+      const int kVoidResult = 0;
+      return kVoidResult;
     });
     ssd.Write(&writeArgs);
   }

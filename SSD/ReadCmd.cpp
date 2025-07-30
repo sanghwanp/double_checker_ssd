@@ -4,12 +4,10 @@
 #include <fstream>
 #include <iostream>
 
-void ReadCmd::Run(IArguments *args) {
+unsigned int ReadCmd::Run(IArguments *args) {
   LoadFromFile();
-  readResult = GetCachedData(args->GetLba());
+  return GetCachedData(args->GetLba());
 }
-
-unsigned int ReadCmd::GetReadResult() const { return readResult; }
 
 bool ReadCmd::DoesFileExist(const std::string &fileName) {
   std::ifstream ifs;

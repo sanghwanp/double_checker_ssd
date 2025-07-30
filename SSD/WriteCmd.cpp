@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iomanip>
 
-void WriteCmd::Run(IArguments* args) {
+unsigned int WriteCmd::Run(IArguments* args) {
   auto writeArgs = dynamic_cast<WriteArguments*>(args);
   if (!writeArgs) {
     throw std::invalid_argument("Invalid argument type for WriteCmd");
@@ -13,6 +13,9 @@ void WriteCmd::Run(IArguments* args) {
   LoadFromFile();                                      // 파일 읽기
   SetData(writeArgs->GetLba(), writeArgs->GetCachedData());  // 데이터 설정
   SaveToFile();                                        // 파일에 저장
+
+  const int kVoidResult = 0;
+  return kVoidResult;
 }
 
 bool WriteCmd::CheckFirst() {

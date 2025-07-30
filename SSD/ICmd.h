@@ -5,5 +5,5 @@
 #define interface struct
 interface ICmd {
   virtual ~ICmd() = default;
-  virtual void Run(IArguments * args) = 0;
+  virtual unsigned int Run(IArguments * args) = 0;
 };
