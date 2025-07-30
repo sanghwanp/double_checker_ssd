@@ -14,9 +14,6 @@ class ReadArguments : public IArguments {
   virtual ~ReadArguments() = default;
 
  public:
-  static unsigned int LBA_SIZE();
-
- public:
   unsigned int GetLba() const;
   void Parse(const std::string &cmdStr);
 

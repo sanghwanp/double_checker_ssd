@@ -6,6 +6,7 @@
 #include "ReadCmd.h"
 #include "WriteArguments.h"
 #include "WriteCmd.h"
+#include "SsdConfig.h"
 
 class SSD {
  public:
@@ -17,12 +18,11 @@ class SSD {
   void SetReadCmd(ICmd *cmd);
   unsigned int Read(IArguments *args);
   void Write(IArguments *args);
+  unsigned int GetCachedData(unsigned int lba);
 
  private:
   void SaveToOutputFile(unsigned int readData);
-  const int STORAGE_SIZE = 100;
-  const int STORAGE_INIT_VALUE = 0;
-  std::vector<unsigned int> storage;
+  std::vector<unsigned int> cache;
   // ReadCmd readCmd;
   ICmd *writeCmd = nullptr;
   ICmd *readCmd = nullptr;

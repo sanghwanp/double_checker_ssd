@@ -1,6 +1,7 @@
 #if (MAIN_SELECT == 1)
 #include <iostream>
 #include <stdexcept>
+#include <fstream>
 
 #include "ReadArguments.h"
 #include "ReadCmd.h"
@@ -17,7 +18,7 @@ int main(int argc, char* argv[]) {
     // if (argc < 3) {
     //   throw std::invalid_argument("Usage: <R/W> <LBA> [Data]");
     // }
-    if (args.size() < 2) {
+    if (args.size() <= 1 || args.size() >= 4) {
       throw std::invalid_argument("Usage1: R <LBA>\nUsage2: W <LBA> <Data>");
     }
 
@@ -28,7 +29,6 @@ int main(int argc, char* argv[]) {
       if (i != args.size() - 1) argsStr += " ";
     }
     SSD ssd;
-
     ReadCmd readCmd;
     WriteCmd writeCmd;
 
@@ -39,14 +39,14 @@ int main(int argc, char* argv[]) {
       ReadArguments readArgs;
       readArgs.Parse(argsStr);
 
-      unsigned int result = ssd.Read(readArgs);
+      unsigned int result = ssd.Read(&readArgs);
       //std::cout << result << "\n";
 
     } else if (cmdTypeStr == "W" || cmdTypeStr == "write") {
       WriteArguments writeArgs;
       writeArgs.Parse(argsStr);
 
-      ssd.Write(writeArgs);
+      ssd.Write(&writeArgs);
     } else {
       throw std::invalid_argument("Unknown command type");
     }

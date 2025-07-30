@@ -1,6 +1,5 @@
 #include "ReadArguments.h"
-unsigned int ReadArguments::LBA_SIZE() { return 100; }
-
+#include "SsdConfig.h"
 ReadArguments::ReadArguments() {}
 
 unsigned int ReadArguments::GetLba() const { return lba; }
@@ -50,7 +49,7 @@ void ReadArguments::ValidateCmdTypeRead(CmdType cmdType) {
 }
 
 void ReadArguments::ValidateLba(int lba) {
-  if (lba >= LBA_SIZE()) {
+  if (lba >= SsdConfig::kStorageSize) {
     throw std::invalid_argument("Invalid Arguments: LBA - out of bound");
   }
 }

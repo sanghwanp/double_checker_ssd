@@ -7,8 +7,8 @@
 
 SSD::SSD() { Clear(); }
 void SSD::Clear() {
-  storage.clear();
-  storage.resize(STORAGE_SIZE, STORAGE_INIT_VALUE);
+  cache.clear();
+  cache.resize(SsdConfig::kStorageSize, SsdConfig::kStorageInitValue);
 }
 
 void SSD::SetWriteCmd(ICmd *cmd) { this->writeCmd = cmd; }
@@ -24,10 +24,17 @@ void SSD::SaveToOutputFile(unsigned int readData) {
 
 // unsigned int SSD::Read(int lba) const { return readCmd.Run(lba, storage); }
 unsigned int SSD::Read(IArguments *args) {
-  unsigned int readData = readCmd->Run(args);
+  unsigned int readData = readCmd->Run(args, cache);
   // unsigned int readData = dynamic_cast<ReadCmd *>(readCmd)->GetReadResult();
   SaveToOutputFile(readData);
   return readData;
 }
 
-void SSD::Write(IArguments *args) { writeCmd->Run(args); }
+void SSD::Write(IArguments *args) { writeCmd->Run(args, cache); }
+
+unsigned int SSD::GetCachedData(unsigned int lba) {
+	if(lba >= SsdConfig::kStorageSize) {
+		throw std::invalid_argument("Invalid LBA access");
+	}
+	return cache[lba];
+}

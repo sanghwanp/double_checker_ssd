@@ -4,15 +4,15 @@ void MockSSD::Write(int lba, const string& value) {
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
     return;
   }
-  storage[lba] = value;
+  cache[lba] = value;
 }
 
 string MockSSD::Read(int lba) {
   if (IsInvalidLBA(lba)) {
     return "ERROR";
   }
-  auto it = storage.find(lba);
-  if (it != storage.end()) {
+  auto it = cache.find(lba);
+  if (it != cache.end()) {
     return it->second;
   }
   return "0x00000000";

@@ -1,22 +1,17 @@
 #pragma once
 #include <vector>
+#include <string>
 
 #include "ICmd.h"
 #include "ReadArguments.h"
+#include "SsdConfig.h"
 
 class ReadCmd : public ICmd {
  public:
-  unsigned int Run(IArguments *args) override;
-  //unsigned int GetReadResult() const;
+  unsigned int Run(IArguments *args, std::vector<unsigned int> &cache) override;
 
  private:
-  static constexpr int MAX_LBA_SIZE = 100;
-  unsigned int cache[MAX_LBA_SIZE]{};
-  const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
-
- private:
-  unsigned int GetCachedData(int lba) const;
-  void LoadFromFile();
+  void LoadFromNandFile(std::vector<unsigned int> &cache);
 
   bool DoesFileExist(const std::string &fileName);
   void CreateFile(const std::string &fileName);

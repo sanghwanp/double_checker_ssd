@@ -1,10 +1,12 @@
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
+#include <vector>
 
-#include "../SSD/IArguments.h"
-#include "../SSD/ReadArguments.h"
 #include "../SSD/SSD.h"
+#include "../SSD/ReadCmd.h"
+#include "../SSD/ReadArguments.h"
+#include "../SSD/IArguments.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
@@ -36,7 +38,9 @@ class ReadTestFixture : public Test {
     std::ofstream ofs;
     ofs.open(fileName);
     if (ofs.is_open()) {
-      for (int i = 0; i < ReadArguments::LBA_SIZE(); i++) ofs << "0x00000000\n";
+      for (int i = 0; i < SsdConfig::kStorageSize; i++) {
+        ofs << std::hex << SsdConfig::kStorageInitValue << "\n";
+      }
       ofs.close();
       return;
     }
@@ -47,7 +51,9 @@ class ReadTestFixture : public Test {
 
 class WriteCmdMock : public ICmd {
  public:
-  MOCK_METHOD(unsigned int, Run, (IArguments * args), (override));
+  MOCK_METHOD(unsigned int, Run,
+              (IArguments * writeArgs, std::vector<unsigned int> &cache),
+              (override));
 };
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
@@ -87,7 +93,7 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
                      << std::hex << std::setw(8) << std::setfill('0') << data)
                         .str());
 
-    EXPECT_CALL(mock, Run(&writeArgs)).WillOnce([&]() {
+    EXPECT_CALL(mock, Run(&writeArgs,_)).WillOnce([&]() {
       if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
         CreateFile(SSD_NAND_TXT_FILEPATH);
       }
@@ -95,8 +101,8 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
       std::ifstream ifs(SSD_NAND_TXT_FILEPATH);
       const int MAX_LBA_SIZE = 100;
       std::vector<unsigned int> cache(MAX_LBA_SIZE, 0);
-      for(int lba=0; lba<MAX_LBA_SIZE; lba++) {
-          ifs >> std::hex >> cache[lba];
+      for (int lba = 0; lba < MAX_LBA_SIZE; lba++) {
+        ifs >> std::hex >> cache[lba];
       }
 
       const int lbaToWrite = data;

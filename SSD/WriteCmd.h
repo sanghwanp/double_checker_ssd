@@ -1,27 +1,22 @@
 ﻿#pragma once
 #include <string>
+#include <vector>
 
 #include "ICmd.h"
+#include "SsdConfig.h"
 #include "WriteArguments.h"
 
 class WriteCmd : public ICmd {
  public:
-  unsigned int Run(IArguments* args) override;
+  unsigned int Run(IArguments* args, std::vector<unsigned int>& cache) override;
 
   bool CheckFirst();
-  //void Init();
-  void SetData(int idx, unsigned int data);
-  unsigned int GetCachedData(int idx) const;
+  void SetData(std::vector<unsigned int>& cache, WriteArguments* writeArgs);
 
  private:
-  static constexpr int MAX_LBA_SIZE = 100;
-  unsigned int cache[MAX_LBA_SIZE]{};
-  const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
+  void LoadFromNandFile(std::vector<unsigned int>& cache);
+  void SaveToFile(std::vector<unsigned int>& cache);
 
- private:
-  void LoadFromFile();
-  void SaveToFile();
-
-  bool DoesFileExist(const std::string &fileName);
-  void CreateFile(const std::string &fileName);
+  bool DoesFileExist(const std::string& fileName);
+  void CreateFile(const std::string& fileName);
 };
