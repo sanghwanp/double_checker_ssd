@@ -45,7 +45,7 @@ struct Command {
 
 class WriteCmd {
  public:
-
+  bool CheckFirst();
   void Init();
   void Run(Command cmd);
   void SetData(int i, uint d);

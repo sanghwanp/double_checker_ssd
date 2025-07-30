@@ -40,3 +40,17 @@ TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_LBA); }, std::invalid_argument);
   EXPECT_THROW({ cmd.Parse(INVALID_CMD_DATA); }, std::invalid_argument);
 }
+
+TEST_F(WriteTestFixture, 03_Write_Data_First) {
+  EXPECT_CALL(mock, CheckFirst).Times(1).WillOnce(Return(true));
+  EXPECT_CALL(mock, Init).Times(1);
+
+  if (mock.CheckFirst()) {
+    mock.Init();
+  }
+
+  cmd.Parse(BASIC_CMD);
+  mock.Run(cmd);
+
+  EXPECT_EQ(GetData(cmd.lba), DATA);
+}
