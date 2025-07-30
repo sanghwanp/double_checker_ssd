@@ -37,7 +37,7 @@ void ReadArguments::ParseOrThrows(std::string argsStr) {
 }
 
 void ReadArguments::ValidateTokenCount(const std::vector<std::string>& tokens) {
-  if (tokens.size() == 2U) return;
+  if (tokens.size() == VALID_READ_ARGS_COUNT) return;
   throw std::invalid_argument("Invalid Arguments: argc must be 2");
 }
 

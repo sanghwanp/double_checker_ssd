@@ -20,6 +20,7 @@ class ReadArguments {
   CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType
   unsigned int lba;
   const unsigned int MAX_LBA = 99;
+  const unsigned int VALID_READ_ARGS_COUNT = 2U;
 
  private:
   std::vector<std::string> GetTokens(const std::string &cmdStr);
