@@ -1,19 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="CmdFullRead.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Parser.cpp">
+    <ClCompile Include="CmdFullWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="MockSSD.cpp">
+    <ClCompile Include="CmdRead.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CmdWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CmdRead.cpp">
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="MockSSD.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MockSSD.h">
@@ -22,32 +28,33 @@
     <ClCompile Include="SSDInterface.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CmdFullRead.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CmdFullRead.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdFullWrite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="CmdRead.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CmdWrite.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CmdFullRead.h">
-      <Filter>헤더 파일</Filter>
     <ClInclude Include="Parser.h">
-      <Filter>소스 파일</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
-      <UniqueIdentifier>{6d05ec67-2654-4fe7-a53a-da7d55821d49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="리소스 파일">
-      <UniqueIdentifier>{d8eeb578-22bc-46fc-a218-ac29a289957e}</UniqueIdentifier>
+      <UniqueIdentifier>{329460e3-4739-401a-b3c4-6b1275f42732}</UniqueIdentifier>
     </Filter>
     <Filter Include="헤더 파일">
-      <UniqueIdentifier>{2947256b-fac0-4069-b963-a05ebb62d6c6}</UniqueIdentifier>
+      <UniqueIdentifier>{021749c5-2456-424e-b6a4-28cf1d776310}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{b87cc2a0-a0a8-4d37-bb04-bd96645b8c75}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
