@@ -208,7 +208,9 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shell\CmdRead.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="gTestCmdRead.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -217,6 +219,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shell\MockSSD.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shell\CmdRead.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
