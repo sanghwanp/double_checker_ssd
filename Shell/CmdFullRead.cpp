@@ -2,6 +2,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 
 CommandFullRead::CommandFullRead(SSDInterface* ssdInterface)
     : ssd(ssdInterface) {}
@@ -24,10 +25,17 @@ bool CommandFullRead::Call(const std::vector<std::string>& program) {
   for (unsigned int lba = MIN_LBA; lba <= MAX_LBA; ++lba) {
     std::string value = ssd->Read(lba);
 
-    std::cout << "[Fullread] LBA " << std::setw(2) << std::setfill('0') << lba
-              << " : " << value << "\n";
+    std::cout << GenerateOutputStr(lba, value);
   }
 
   // SUCCESS VALUE: true
   return true;
+}
+
+std::string CommandFullRead::GenerateOutputStr(unsigned int lba,
+                                               std::string value) {
+  std::ostringstream oss;
+  oss << "[Fullread] LBA " << std::setw(2) << std::setfill('0') << lba << " : "
+      << value << "\n";
+  return oss.str();
 }

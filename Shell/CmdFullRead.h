@@ -11,6 +11,8 @@ class CommandFullRead {
   bool Call(const std::vector<std::string>& program);
 
  private:
+  std::string static GenerateOutputStr(unsigned int lba, std::string value);
+
   SSDInterface* ssd;
   const char* COMMAND_NAME = "fullread";
   const int COMMAND_NAME_INDEX = 0;
