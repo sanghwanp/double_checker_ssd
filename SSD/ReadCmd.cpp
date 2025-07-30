@@ -5,23 +5,42 @@
 #include <iostream>
 
 void ReadCmd::Run(ReadArguments *args) {
-  outputData = ReadFromFile(args->GetLba());
+  outputData = ReadFromSsd(args->GetLba());
 }
 
 unsigned int ReadCmd::GetOutputData() const { return outputData; }
 
-unsigned int ReadCmd::ReadFromFile(int reqLba) {
+bool ReadCmd::DoesFileExist(const std::string &fileName) {
   std::ifstream ifs;
-  ifs.open(NAND_FNAME);
+  ifs.open(fileName);
+  if (ifs.is_open()) {
+    ifs.close();
+    return true;
+  }
+  return false;
+}
 
-  if (false == ifs.is_open()) {
-    throw std::runtime_error("Failed to open NAND file: " +
-                             std::string(NAND_FNAME));
+void ReadCmd::CreateFileOrThrows(const std::string &fileName) {
+  std::ofstream ofs;
+  ofs.open(fileName);
+  if (ofs.is_open()) {
+    for (int i = 0; i < 100; i++) ofs << "0x00000000\n";
+    ofs.close();
+    return;
   }
 
+  throw std::runtime_error("cannot create ssd_nand.txt file.");
+}
+
+unsigned int ReadCmd::ReadFromSsd(int reqLba) {
+  if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
+    CreateFileOrThrows(SSD_NAND_TXT_FILEPATH);
+  }
+
+  std::ifstream ifs(SSD_NAND_TXT_FILEPATH);
   std::string line;
   int lba = 0;
-  while (getline(ifs, line)) {
+  while (std::getline(ifs, line)) {
     if (lba == reqLba) {
       return stoul(line);
     }

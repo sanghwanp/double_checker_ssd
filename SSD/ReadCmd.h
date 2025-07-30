@@ -15,7 +15,11 @@ class ReadCmd : public ICmd {
   unsigned int GetOutputData() const;
 
 private:
-  unsigned int ReadFromFile(int reqLba);
-  const std::string NAND_FNAME = "../SSD/ssd_nand.txt";
+  unsigned int ReadFromSsd(int reqLba);
+  const std::string SSD_NAND_TXT_FILEPATH = "../SSD/ssd_nand.txt";
   unsigned int outputData;
+
+private:
+	bool DoesFileExist(const std::string & fileName);
+	void CreateFileOrThrows(const std::string &fileName);
 };
