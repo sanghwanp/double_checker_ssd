@@ -24,9 +24,6 @@
     <ClCompile Include="SSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Write.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -34,6 +31,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ReadArguments.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="WriteCmd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,10 +47,10 @@
     <ClInclude Include="SSD.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Write.h">
+    <ClInclude Include="ReadArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ReadArguments.h">
+    <ClInclude Include="WriteCmd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
