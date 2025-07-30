@@ -250,6 +250,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ReadArguments.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReadCmd.cpp" />
     <ClCompile Include="SSD.cpp" />
@@ -259,6 +260,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ReadArguments.h" />
     <ClInclude Include="ReadCmd.h" />
     <ClInclude Include="SSD.h" />
     <ClInclude Include="Write.h" />
