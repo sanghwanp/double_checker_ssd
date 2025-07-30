@@ -220,6 +220,8 @@
     <ClCompile Include="gTestCmdRead.cpp" />
     <ClCompile Include="gTestCommandWrite.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
+    <ClCompile Include="gTestCmdFullWrite.cpp" />
+    <ClCompile Include="gTestParser.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +234,7 @@
     <ClCompile Include="..\Shell\SSDInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shell\CmdFullWrite.h" />
     <ClInclude Include="..\Shell\CmdWrite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
