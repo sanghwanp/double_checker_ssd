@@ -31,6 +31,7 @@ bool MockSSD::IsInvalidValue(const string& value) {
     bool isUpper = ('A' <= c && c <= 'F');
     bool isLower = ('a' <= c && c <= 'f');
     if (!(isDigit || isUpper || isLower)) return true;
+  }
 
   return false;
 }
