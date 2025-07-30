@@ -2,7 +2,7 @@
 
 ReadArguments::ReadArguments() {}
 
- unsigned int ReadArguments::GetLba() const { return lba; }
+unsigned int ReadArguments::GetLba() const { return lba; }
 
 void ReadArguments::Parse(std::string cmdStr) {
   std::istringstream iss(cmdStr);

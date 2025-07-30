@@ -8,8 +8,6 @@ using namespace testing;
 
 class ReadTestFixture : public Test {
  public:
-  const int READ = 2;
-  const int LBA = 0;
   const int INIT_DATA = 0x00000000;
   const std::string BASIC_ARGS = "R 0";
   const std::string INVALID_ARGS_TYPE = "F 0";
@@ -33,9 +31,9 @@ TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
 }
 
 TEST_F(ReadTestFixture, TC03_Read_ThrowException_WhenIvalidArgsLba) {
-	EXPECT_THROW({ ParsingArgs(INVALID_ARGS_LBA); }, std::invalid_argument);
+  EXPECT_THROW({ ParsingArgs(INVALID_ARGS_LBA); }, std::invalid_argument);
 }
 
 TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
-	EXPECT_THROW({ ParsingArgs(INVALID_ARGS_COUNT); }, std::invalid_argument);
+  EXPECT_THROW({ ParsingArgs(INVALID_ARGS_COUNT); }, std::invalid_argument);
 }
