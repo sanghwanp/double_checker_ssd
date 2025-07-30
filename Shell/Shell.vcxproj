@@ -210,6 +210,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CmdFullRead.cpp" />
     <ClCompile Include="CmdFullWrite.cpp" />
     <ClCompile Include="CmdWrite.cpp" />
     <ClCompile Include="CmdRead.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="SSDInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CmdFullRead.h" />
     <ClInclude Include="CmdFullWrite.h" />
     <ClInclude Include="CmdWrite.h" />
     <ClInclude Include="CmdRead.h" />
