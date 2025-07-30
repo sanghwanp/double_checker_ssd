@@ -1,3 +1,5 @@
+#include <unordered_map>
+
 #include "SSDInterface.h"
 
 class MockSSD : public SSDInterface {
@@ -6,6 +8,5 @@ class MockSSD : public SSDInterface {
   string Read(int lba) override;
 
  private:
-  int last_written_lba_ = -1;
-  string last_written_value_;
+  std::unordered_map<int, std::string> storage;
 };
