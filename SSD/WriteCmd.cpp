@@ -27,8 +27,7 @@ void WriteCmd::LoadFromFile() {
   if (inFile.is_open()) {
     std::string hexStr;
     for (int idx = 0; idx < MAX_LBA_SIZE; ++idx) {
-      inFile >> hexStr;
-      nand[idx] = std::stoul(hexStr, nullptr, 16);
+      inFile >> std::hex >> nand[idx];
     }
     inFile.close();
   } else {
@@ -43,8 +42,7 @@ void WriteCmd::SaveToFile() {
   }
 
   for (int idx = 0; idx < MAX_LBA_SIZE; ++idx) {
-    outFile << "0x" << std::setfill('0') << std::setw(8) << std::hex
-            << std::uppercase << nand[idx] << std::endl;
+    outFile << std::hex << nand[idx] << "\n";
   }
   outFile.close();
 }

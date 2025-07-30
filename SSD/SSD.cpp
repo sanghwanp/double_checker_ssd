@@ -21,10 +21,7 @@ unsigned int SSD::Read(ReadArguments &readArgs) {
   unsigned int readData = dynamic_cast<ReadCmd *>(readCmd)->GetOutputData();
   std::ofstream ofs;
   ofs.open("C:\\ssd_output.txt");
-  ofs << " 0x" + (std::stringstream()
-                  << std::hex << std::setw(8) << std::setfill('0') << readData)
-                     .str();
-
+  ofs << (std::stringstream() << std::hex << readData).str();
   ofs.close();
   return readData;
 }

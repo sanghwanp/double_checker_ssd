@@ -24,7 +24,7 @@ void ReadCmd::CreateFile(const std::string &fileName) {
   std::ofstream ofs;
   ofs.open(fileName);
   if (ofs.is_open()) {
-    for (int i = 0; i < ReadArguments::LBA_SIZE(); i++) ofs << "0x00000000\n";
+    for (int i = 0; i < ReadArguments::LBA_SIZE(); i++) ofs << "0\n";
     ofs.close();
     return;
   }
