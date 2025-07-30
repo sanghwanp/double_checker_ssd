@@ -10,7 +10,7 @@
 CommandFullWrite::CommandFullWrite(SSDInterface* ssdInterface)
     : ssd(ssdInterface) {}
 
-bool CommandFullWrite::Call(std::vector<std::string> program) {
+bool CommandFullWrite::Call(const std::vector<std::string> program) {
   if (program.size() != 2) {
     printInvalidCommandMessage();
     return false;
@@ -22,7 +22,7 @@ bool CommandFullWrite::Call(std::vector<std::string> program) {
     return false;
   }
 
-  for (int lba = 0; lba < 100; ++lba) {
+  for (unsigned lba = 0; lba < 100; ++lba) {
     ssd->Write(lba, value);
   }
   printSuccessMessage();

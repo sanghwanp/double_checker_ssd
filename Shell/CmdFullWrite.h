@@ -7,7 +7,7 @@
 class CommandFullWrite {
  public:
   CommandFullWrite(SSDInterface* ssdInterface);
-  bool Call(std::vector<std::string> program);
+  bool Call(const std::vector<std::string> program);
 
  private:
   bool IsInvalidValue(const string& value);

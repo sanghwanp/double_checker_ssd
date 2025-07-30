@@ -16,7 +16,7 @@ TEST_F(FullWriteTest, FullWriteSuccess) {
   std::vector<std::string> program = {"fullwrite", "0xABCDEF12"};
   EXPECT_TRUE(cmd->Call(program));
 
-  for (int i = 0; i < 100; ++i) {
+  for (unsigned i = 0; i < 100; ++i) {
     EXPECT_EQ("0xABCDEF12", ssd.Read(i));
   }
 }
