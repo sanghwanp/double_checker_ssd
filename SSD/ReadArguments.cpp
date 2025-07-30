@@ -25,7 +25,7 @@ std::vector<std::string> ReadArguments::GetTokens(const std::string& cmdStr) {
   return result;
 }
 
-void ReadArguments::Parse(std::string argsStr) {
+void ReadArguments::Parse(const std::string& argsStr) {
   std::vector<std::string> tokens = GetTokens(argsStr);
   ValidateTokenCount(tokens);
 

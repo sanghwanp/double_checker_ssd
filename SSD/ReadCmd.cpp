@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-void ReadCmd::Run(ReadArguments *args) {
+void ReadCmd::Run(IArguments *args) {
   outputData = ReadFromSsd(args->GetLba());
 }
 

@@ -36,6 +36,9 @@
     <ClCompile Include="WriteCmd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="WriteArguments.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -51,6 +54,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="WriteCmd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ICmd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IArguments.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="WriteArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
