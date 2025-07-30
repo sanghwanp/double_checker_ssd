@@ -14,8 +14,9 @@ class ReadArguments {
 
  public:
   unsigned int GetLba() const;
-  void Parse(std::string cmdStr);
+  void ParseAndValidate(std::string cmdStr);
   bool CheckErrorCmd();
+  std::vector<std::string> GetTokensAndValidateTokenCount(const std::string& cmdStr);
 
  private:
   CmdType cmdType = CMD_TYPE_OTHER;  // 2: ReadCmdType

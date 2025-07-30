@@ -4,22 +4,28 @@ ReadArguments::ReadArguments() {}
 
 unsigned int ReadArguments::GetLba() const { return lba; }
 
-void ReadArguments::Parse(std::string cmdStr) {
+std::vector<std::string> ReadArguments::GetTokensAndValidateTokenCount(
+    const std::string& cmdStr) {
   std::istringstream iss(cmdStr);
-
-  std::vector<std::string> tokens;
+  std::vector<std::string> result;
   std::string token;
+
   while (iss >> token) {
-    tokens.push_back(token);
+    result.push_back(token);
   }
-  if (tokens.size() != 2) {
+  if (result.size() != 2) {
     throw std::invalid_argument("Invalid Arguments: argc must be 2");
   }
-  std::string typeStr = tokens[0];
+  return result;
+}
+
+void ReadArguments::ParseAndValidate(std::string argsStr) {
+  std::vector<std::string> tokens = GetTokensAndValidateTokenCount(argsStr);
+  const std::string& typeStr = tokens[0];
 
   if (typeStr == "R" || typeStr == "read") {
     cmdType = CMD_TYPE_READ;
-    std::string lbaStr = tokens[1];
+    const std::string& lbaStr = tokens[1];
     lba = std::stoul(lbaStr);
   }
 

@@ -16,7 +16,7 @@ class ReadTestFixture : public Test {
 
   ReadArguments readArgs;
   SSD ssd;
-  void ParsingArgs(const std::string &args) { readArgs.Parse(args); }
+  void ParsingArgs(const std::string &args) { readArgs.ParseAndValidate(args); }
 };
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
