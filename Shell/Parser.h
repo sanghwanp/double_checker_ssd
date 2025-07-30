@@ -1,25 +1,73 @@
 #pragma once
 // #include "Parser.h"
+#include <functional>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 #include <vector>
+
+#include "IParam.h"
 
 using std::string;
 using std::vector;
 
-struct CommandStruct {
-  string commandName;
-  string firstNumber;
-  string secondNumber;
+struct CommandParamSpec {
+  int argCount;
+  TestShellCMD eCmd;
+  std::function<IParam*(const std::vector<std::string>&)> paramObj;
+  std::function<bool(const std::vector<std::string>&)> validator;
 };
 
 class Parser {
  public:
   std::vector<std::string> SplitArgs(const std::string& input);
-  CommandStruct Parse(const std::string& input);
-  bool CheckTokensStruct(const vector<std::string>& tokens,
-                         const string& lastToken);
-  bool IsNumberOrHex(const std::string& str);
+  IParam* Parse(const std::string& input);
+  bool IsValidCommandStructure(const vector<std::string>& tokens);
   bool IsNumber(const std::string& str);
+  bool IsDec(const std::string& str);
   bool IsHex(const std::string& str);
+  IParam* GenCommandParam(std::vector<std::string> tokens);
+
+ private:
+  IParam* GetInvalidCommand() { return new IParam(TestShellCMD::eInvalidCmd); }
+
+  const std::unordered_map<std::string, CommandParamSpec> commandParamSpecs = {
+      {"write",
+       {3, TestShellCMD::eWriteCmd,
+        [&](const std::vector<std::string>& tokens) {
+          return new WriteParam(TestShellCMD::eWriteCmd, tokens[1], tokens[2]);},
+        [&](const std::vector<std::string>& tokens) {
+          return IsNumber(tokens[1]) && IsNumber(tokens[2]);
+        }}},
+      {"read",
+       {2, TestShellCMD::eReadCmd,
+        [&](const std::vector<std::string>& tokens) {
+          return new ReadParam(TestShellCMD::eReadCmd, tokens[1]);},
+        [&](const std::vector<std::string>& tokens) {
+          return IsNumber(tokens[1]);
+        }}},
+      {"fullwrite",
+       {2, TestShellCMD::eFullwrite,
+        [&](const std::vector<std::string>& tokens) {
+          return new FullWriteParam(TestShellCMD::eFullwrite, tokens[1]);},
+        [&](const std::vector<std::string>& tokens) {
+          return IsNumber(tokens[1]);
+        }}},
+      {"exit",
+       {1, TestShellCMD::eExitCmd, 
+            [](const std::vector<std::string>& tokens) {
+          return new IParam(TestShellCMD::eExitCmd);},
+        [](const std::vector<std::string>&) { return true; }}},
+      {"help",
+       {1, TestShellCMD::eHelpCmd,
+        [](const std::vector<std::string>& tokens) {
+          return new IParam(TestShellCMD::eHelpCmd);
+        },
+        [](const std::vector<std::string>&) { return true; }}},
+      {"fullread",
+       {1, TestShellCMD::eFullread,
+        [](const std::vector<std::string>& tokens) {
+          return new IParam(TestShellCMD::eFullread);
+        },
+        [](const std::vector<std::string>&) { return true; }}}};
 };

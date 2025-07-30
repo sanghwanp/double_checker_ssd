@@ -45,6 +45,12 @@
     <ClInclude Include="Parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IParam.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
