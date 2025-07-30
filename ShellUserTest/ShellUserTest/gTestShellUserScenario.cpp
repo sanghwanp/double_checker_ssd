@@ -313,6 +313,21 @@ class TestShellFixture : public Test {
   std::vector<std::string> invalidCommand = {"strange_commands", "exit"};
   std::string invalidCommandResult = {SHELL_PREFIX_OUTPUT
                                       "INVALID COMMAND\n" SHELL_EXIT_OUTPUT};
+
+  // 9
+  std::vector<std::string> ts1Command = {"1_FullWriteAndReadCompare", "exit"};
+  std::vector<std::string> ts1CommandShort = {"1_", "exit"};
+  std::string ts1CommandResult = {SHELL_PREFIX_OUTPUT SHELL_EXIT_OUTPUT};
+
+  // 10
+  std::vector<std::string> ts2Command = {"2_PartialLBAWrite", "exit"};
+  std::vector<std::string> ts2CommandShort = {"2_", "exit"};
+  std::string ts2CommandResult = {SHELL_PREFIX_OUTPUT SHELL_EXIT_OUTPUT};
+
+  // 11
+  std::vector<std::string> ts3Command = {"3_WriteReadAging", "exit"};
+  std::vector<std::string> ts3CommandShort = {"3_", "exit"};
+  std::string ts3CommandResult = {SHELL_PREFIX_OUTPUT SHELL_EXIT_OUTPUT};
 };
 
 // 1
@@ -377,4 +392,37 @@ TEST_F(TestShellFixture, mockInvalidCommand) {
 
 TEST_F(TestShellFixture, realInvalidCommand) {
   SendCommandToReal(invalidCommand, invalidCommandResult);
+}
+
+// 9
+TEST_F(TestShellFixture, mockTs1Command) {
+  SendCommandToMock(ts1Command, ts1CommandResult);
+  SendCommandToMock(ts1CommandShort, ts1CommandResult);
+}
+
+TEST_F(TestShellFixture, realTs1Command) {
+  SendCommandToReal(ts1Command, ts1CommandResult);
+  SendCommandToReal(ts1CommandShort, ts1CommandResult);
+}
+
+// 10
+TEST_F(TestShellFixture, mockTs2Command) {
+  SendCommandToMock(ts2Command, ts2CommandResult);
+  SendCommandToMock(ts2CommandShort, ts2CommandResult);
+}
+
+TEST_F(TestShellFixture, realTs2Command) {
+  SendCommandToReal(ts2Command, ts2CommandResult);
+  SendCommandToReal(ts2CommandShort, ts2CommandResult);
+}
+
+// 11
+TEST_F(TestShellFixture, mockTs3Command) {
+  SendCommandToMock(ts3Command, ts3CommandResult);
+  SendCommandToMock(ts3CommandShort, ts3CommandResult);
+}
+
+TEST_F(TestShellFixture, realTs3Command) {
+  SendCommandToReal(ts3Command, ts3CommandResult);
+  SendCommandToReal(ts3CommandShort, ts3CommandResult);
 }
