@@ -6,7 +6,7 @@ CommandWrite::CommandWrite(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
 bool CommandWrite::Call(std::vector<std::string> program) {
   if (program.size() != 3) {
-    std::cout << "ERROR\n";
+    printInvalidCommandMessage();
     return false;
   }
 
@@ -14,19 +14,19 @@ bool CommandWrite::Call(std::vector<std::string> program) {
   try {
     lba = std::stoi(program[LBA_INDEX]);
   } catch (...) {
-    std::cout << "ERROR\n";
+    printInvalidCommandMessage();
     return false;
   }
 
   const std::string& value = program[VALUE_INDEX];
 
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
-    std::cout << "ERROR\n";
+    printInvalidCommandMessage();
     return false;
   }
 
   ssd->Write(lba, value);
-  std::cout << "[Write] Done\n";
+  printSuccessMessage();
   return true;
 }
 
@@ -46,4 +46,12 @@ bool CommandWrite::IsInvalidValue(const string& value) {
   }
 
   return false;
+}
+
+void CommandWrite::printInvalidCommandMessage() {
+  std::cout << INVALID_COMMAND_MESSAGE;
+}
+
+void CommandWrite::printSuccessMessage() {
+  std::cout << SUCCESS_MESSSAGE;
 }
