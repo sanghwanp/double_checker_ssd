@@ -1,5 +1,4 @@
 #include "MockSSD.h"
-#include <stdexcept>
 
 void MockSSD::Write(int lba, const string& value) {
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
@@ -29,7 +28,8 @@ bool MockSSD::IsInvalidValue(const string& value) {
     char c = value[i];
     bool is_digit = ('0' <= c && c <= '9');
     bool is_upper = ('A' <= c && c <= 'F');
-    if (!(is_digit || is_upper)) return true;
+    bool is_lower = ('a' <= c && c <= 'f');
+    if (!(is_digit || is_upper || is_lower)) return true;
   }
 
   return false;

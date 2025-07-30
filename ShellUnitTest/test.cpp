@@ -51,15 +51,15 @@ TEST(MockSSD, MultipleLBA_WritesAndReads) {
   EXPECT_EQ(ssd.Read(50), "0xCCCCCCCC");
 }
 
-TEST(MockSSDTest, IsInalidLBA_Valid) {
+TEST(MockSSDTest, IsInvalidLBA_Valid) {
   MockSSD ssd;
-  EXPECT_FALSE(ssd.IsInvalidLBA(100));
   EXPECT_FALSE(ssd.IsInvalidLBA(0));
   EXPECT_FALSE(ssd.IsInvalidLBA(50));
 }
 
-TEST(MockSSDTest, IsInalidLBA_InValid) {
+TEST(MockSSDTest, IsInvalidLBA_InValid) {
   MockSSD ssd;
+  EXPECT_TRUE(ssd.IsInvalidLBA(100));
   EXPECT_TRUE(ssd.IsInvalidLBA(200));
   EXPECT_TRUE(ssd.IsInvalidLBA(-10));
 }
