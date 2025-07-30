@@ -20,7 +20,7 @@ class ReadTestFixture : public Test {
   ReadArguments readArgs;
   SSD ssd;
 
-  const std::string SSD_NAND_TXT_FILEPATH = "../SSD/ssd_nand.txt";
+  const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
 
   bool DoesFileExist(const std::string &fileName) {
     std::ifstream ifs;

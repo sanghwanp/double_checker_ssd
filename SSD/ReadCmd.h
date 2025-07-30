@@ -11,7 +11,7 @@ class ReadCmd : public ICmd {
 
  private:
   unsigned int ReadFromSsd(int reqLba);
-  const std::string SSD_NAND_TXT_FILEPATH = "../SSD/ssd_nand.txt";
+  const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
   unsigned int outputData;
   // const int LBA_SIZE = 100;
 

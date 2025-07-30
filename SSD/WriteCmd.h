@@ -18,7 +18,7 @@ class WriteCmd : public ICmd {
  private:
   static constexpr int MAX_LBA_SIZE = 100;
   unsigned int nand[MAX_LBA_SIZE]{};
-  const std::string FILE_NAME = "ssd_nand.txt";
+  const std::string FILE_NAME = "C:\\ssd_nand.txt";
 
  private:
   void LoadFromFile();

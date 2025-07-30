@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
 
   } catch (const std::exception& e) {
     std::ofstream ofs;
-    ofs.open("../SSD/ssd_output.txt");
+    ofs.open("C:\\ssd_output.txt");
     ofs << "ERROR";
     ofs.close();
     // std::cout << "ERROR";
