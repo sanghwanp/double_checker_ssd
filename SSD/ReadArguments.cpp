@@ -3,6 +3,15 @@ ReadArguments::ReadArguments() {}
 
 unsigned int ReadArguments::GetLba() const { return lba; }
 
+ReadArguments::CmdType ReadArguments::GetCmdType(
+    const std::string& cmdTypeStr) {
+  if (cmdTypeStr == "R" || cmdTypeStr == "read") {
+    return CMD_TYPE_READ;
+  }
+
+  return CMD_TYPE_OTHER;
+}
+
 std::vector<std::string> ReadArguments::GetTokens(const std::string& cmdStr) {
   std::istringstream iss(cmdStr);
   std::vector<std::string> result;
