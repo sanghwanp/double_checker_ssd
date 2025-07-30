@@ -11,7 +11,6 @@ struct CommandStruct {
   string commandName;
   string firstNumber;
   string secondNumber;
-  string lastString;
 };
 
 class Parser {

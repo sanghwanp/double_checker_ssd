@@ -47,9 +47,6 @@ CommandStruct Parser::Parse(const std::string& input) {
   if (tokens.size() > 2) {
     cmd.secondNumber = tokens[2];
   }
-  if (tokens.size() > 3) {
-    cmd.lastString = tokens[3];
-  }
 
   return cmd;
 }
@@ -71,7 +68,7 @@ bool Parser::CheckTokensStruct(const vector<std::string>& tokens,
       return false;  // Invalid write command structure
     }
   } else if (tokens[0] == "read" || tokens[0] == "fullwrite") {
-    if (tokens.size() != 2 || IsNumberOrHex(tokens[1])) {
+    if (tokens.size() != 2 || !IsNumberOrHex(tokens[1])) {
       return false;  // Invalid read command structure
     }
   } else if (tokens[0] == "exit" || tokens[0] == "help" ||

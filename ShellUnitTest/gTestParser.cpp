@@ -10,11 +10,8 @@ class FixtureParser : public ::testing::Test {
   Parser parser;
   string testStr;
   CommandStruct cmd;
-  void SetUp() override {
-  }
-  void SetupInputString(const string& input) {
-    testStr = input;
-  }
+  void SetUp() override {}
+  void SetupInputString(const string& input) { testStr = input; }
 };
 
 TEST_F(FixtureParser, empty_fail) {
@@ -41,15 +38,77 @@ TEST_F(FixtureParser, write_command_struct_second_number_check) {
   EXPECT_EQ(cmd.commandName, "error");
 }
 
-TEST(gTestParserTS, write_command_parse_success) {}
-TEST(gTestParserTS, read_command_struct_first_string_check) {}
-TEST(gTestParserTS, read_command_struct_second_number_check) {}
-TEST(gTestParserTS, read_command_parse_success) {}
+TEST_F(FixtureParser, write_command_parse_success) {
+  SetupInputString("write 33 0x12341234");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "write");
+  EXPECT_EQ(cmd.firstNumber, "33");
+  EXPECT_EQ(cmd.secondNumber, "0x12341234");
+}
 
-TEST(gTestParserTS, read_command_parse) {}
-TEST(gTestParserTS, exit_command_parse) {}
-TEST(gTestParserTS, help_command_parse) {}
-TEST(gTestParserTS, fullwrite_command_parse) {}
-TEST(gTestParserTS, fullwrite_command_struct_first_number_decimal_check) {}
-TEST(gTestParserTS, fullwrite_command_struct_first_number_hex_check) {}
-TEST(gTestParserTS, fullread_command_parse) {}
+TEST_F(FixtureParser, read_command_struct_first_string_check) {
+  SetupInputString("read abc");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "error");
+}
+TEST_F(FixtureParser, read_command_struct_over_args_check) {
+  SetupInputString("read 123 eee");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "error");
+
+  SetupInputString("read 123 eee 123");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "error");
+}
+
+TEST_F(FixtureParser, read_command_parse_success) {
+  SetupInputString("read 123");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "read");
+  EXPECT_EQ(cmd.firstNumber, "123");
+}
+
+TEST_F(FixtureParser, exit_command_parse) {
+  SetupInputString("exit");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "exit");
+  EXPECT_EQ(cmd.firstNumber, "");
+  EXPECT_EQ(cmd.secondNumber, "");
+}
+TEST_F(FixtureParser, help_command_parse) {
+  SetupInputString("help");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "help");
+  EXPECT_EQ(cmd.firstNumber, "");
+  EXPECT_EQ(cmd.secondNumber, "");
+}
+TEST_F(FixtureParser, fullwrite_command_parse) {
+  SetupInputString("fullwrite 0x12341234");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "fullwrite");
+  EXPECT_EQ(cmd.firstNumber, "0x12341234");
+  EXPECT_EQ(cmd.secondNumber, "");
+}
+TEST_F(FixtureParser, fullwrite_command_struct_first_number_decimal_check) {
+  SetupInputString("fullwrite aaw");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "error");
+}
+
+TEST_F(FixtureParser, fullwrite_command_struct_over_args) {
+  SetupInputString("fullwrite 0x12341234 0");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "error");
+}
+TEST_F(FixtureParser, fullwrite_command_struct_first_number_hex_check) {
+  SetupInputString("fullwrite 0x12341234 0x1234");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "error");
+}
+TEST_F(FixtureParser, fullread_command_parse) {
+  SetupInputString("fullread");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd.commandName, "fullread");
+  EXPECT_EQ(cmd.firstNumber, "");
+  EXPECT_EQ(cmd.secondNumber, "");
+}
