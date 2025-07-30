@@ -1,21 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\Shell\CmdWrite.cpp" />
-    <ClCompile Include="..\Shell\MockSSD.cpp" />
-    <ClCompile Include="gTestCommandWrite.cpp" />
-    <ClCompile Include="gTestMockSSD.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="..\Shell\MockSSD.h" />
-    <ClCompile Include="..\Shell\SSDInterface.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
-    <ClCompile Include="gTestCmdRead.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Shell\CmdWrite.h" />
+    <ClCompile Include="..\Shell\MockSSD.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\SSDInterface.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\CmdWrite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCmdRead.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCommandWrite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestMockSSD.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\MockSSD.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{2214636f-eaa7-4e63-99b0-1800c5a80df1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{7a67d2f7-c407-4631-852a-06a40101d067}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{e91069e7-bc1c-4533-a221-6c524342f626}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shell\CmdWrite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
