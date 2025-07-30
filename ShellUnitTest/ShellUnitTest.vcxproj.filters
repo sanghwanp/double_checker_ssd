@@ -24,9 +24,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shell\MockSSD.h">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shell\MockSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -36,8 +33,22 @@
     <ClCompile Include="gTestCommandWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shell\SSDInterface.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\MockSSD.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\CmdWrite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shell\CmdWrite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

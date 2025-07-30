@@ -208,6 +208,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Shell\CmdWrite.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
     <ClCompile Include="gTestCommandWrite.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
@@ -218,6 +219,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Shell\MockSSD.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Shell\SSDInterface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Shell\CmdWrite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
