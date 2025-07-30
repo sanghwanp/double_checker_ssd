@@ -44,7 +44,7 @@ Global
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
-		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_SSD|x64
+		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
 		{7BABE87A-ECBE-42F9-B579-43FC4E5CB03A}.Debug|x64.ActiveCfg = Debug|x64
@@ -65,7 +65,7 @@ Global
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x64.ActiveCfg = debug_TestShell|x64
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
-		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_SSDUnitTest|x64
+		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
 		{41A0F681-E539-4881-8407-D6B02363157A}.Debug|x64.ActiveCfg = Debug|x64
@@ -86,8 +86,8 @@ Global
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x64.Build.0 = debug_TestShell|x64
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x86.ActiveCfg = debug_TestShell|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShell|x86.Build.0 = debug_TestShell|Win32
-		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShell|x64
-		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.Build.0 = debug_TestShell|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.ActiveCfg = debug_TestShellUnit_test|x64
+		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x64.Build.0 = debug_TestShellUnit_test|x64
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x86.ActiveCfg = debug_TestShellUnit_test|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.debug_TestShellUnit_test|x86.Build.0 = debug_TestShellUnit_test|Win32
 		{B57B6220-7DB3-4554-9D6C-7A9DCF0D00D4}.Debug|x64.ActiveCfg = Debug|x64
