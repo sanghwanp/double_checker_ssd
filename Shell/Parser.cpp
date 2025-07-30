@@ -1,7 +1,7 @@
 #include "Parser.h"
 #include <iostream>
 
-  // ¹®ÀÚ¿­À» °ø¹é ±âÁØÀ¸·Î ºÐ¸®
+  // ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¸ï¿½
 std::vector<std::string> Parser::SplitArgs(const std::string& input) {
   std::vector<std::string> result;
   std::string temp;
