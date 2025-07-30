@@ -1,0 +1,16 @@
+[Feature] | [Bugfix] | [Refactoring] | [Test] 제목을 작성해주세요
+
+# [Bugfix] 버그 수정
+# [Refactoring] 리팩토링
+# [Test] 테스트 코드 작성
+
+본문 설명:
+- 무엇을 변경했는지
+ 
+- 왜 변경했는지
+
+- 어떤 방식으로 변경했는지
+
+- 어떤 테스트를 했는지
+
+conflict 발생 이력 : O/X
