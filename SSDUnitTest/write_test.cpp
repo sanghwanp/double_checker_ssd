@@ -7,7 +7,7 @@ typedef unsigned int uint;
 class MockWriteArguments : public WriteArguments {
  public:
   MOCK_METHOD(unsigned int, GetLba, (), (const, override));
-  MOCK_METHOD(unsigned int, GetData, (), (const));
+  MOCK_METHOD(unsigned int, GetCachedData, (), (const));
 };
 
 class WriteTestFixture : public Test {
@@ -26,9 +26,9 @@ class WriteTestFixture : public Test {
   WriteCmd cmd;
   WriteArguments args;
 
-  void SetUp() override { cmd.Init(); }
+  //void SetUp() override {}//cmd.Init();
 
-  unsigned int GetData(int lba) { return cmd.GetData(lba); }
+  unsigned int GetCachedData(int lba) { return cmd.GetCachedData(lba); }
 };
 
 TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
@@ -36,7 +36,7 @@ TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
 
   // EXPECT_EQ(args.cmdType, WRITE);
   EXPECT_EQ(args.GetLba(), LBA);
-  EXPECT_EQ(args.GetData(), DATA);
+  EXPECT_EQ(args.GetCachedData(), DATA);
 }
 
 TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
@@ -52,5 +52,5 @@ TEST_F(WriteTestFixture, 03_Write_Data_First) {
   args.Parse(BASIC_CMD);
   cmd.Run(&args);
 
-  EXPECT_EQ(GetData(args.GetLba()), DATA);
+  EXPECT_EQ(GetCachedData(args.GetLba()), DATA);
 }

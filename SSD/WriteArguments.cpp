@@ -3,9 +3,12 @@
 #include <iomanip>
 #include <sstream>
 
+unsigned int WriteArguments::LBA_SIZE() { return 100; }
+unsigned int WriteArguments::MAX_DATA_LEN() { return 10; }
+
 unsigned int WriteArguments::GetLba() const { return lba; }
 
-unsigned int WriteArguments::GetData() const { return data; }
+unsigned int WriteArguments::GetCachedData() const { return data; }
 
 void WriteArguments::Parse(const std::string &cmdStr) {
   std::istringstream iss(cmdStr);
@@ -16,11 +19,11 @@ void WriteArguments::Parse(const std::string &cmdStr) {
     throw std::invalid_argument("Invalid Command Type");
   }
 
-  if (lba >= MAX_LBA) {
+  if (lba >= LBA_SIZE()) {
     throw std::invalid_argument("LBA out of range");
   }
 
-  if (dataStr.size() > MAX_DATA_LEN || dataStr.substr(0, 2) != "0x") {
+  if (dataStr.size() > MAX_DATA_LEN() || dataStr.substr(0, 2) != "0x") {
     throw std::invalid_argument("Invalid Data Format");
   }
 

@@ -45,12 +45,10 @@ class ReadTestFixture : public Test {
   }
 };
 
-#if 1  //[RED] ??? -- main? merge? ?? ?? off
 class WriteCmdMock : public ICmd {
  public:
   MOCK_METHOD(void, Run, (IArguments * args), (override));
 };
-#endif
 
 TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
   EXPECT_THROW({ readArgs.Parse(INVALID_ARGS_TYPE); }, std::invalid_argument);
@@ -73,7 +71,6 @@ TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
   EXPECT_THROW({ readArgs.Parse(INVALID_ARGS_COUNT); }, std::invalid_argument);
 }
 
-#if 1  //[RED] ??? -- main? merge? ?? ?? off
 TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
   WriteCmdMock mock;
   ReadCmd readCmd;
@@ -83,30 +80,32 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
   ssd.SetReadCmd(&readCmd);
 
   std::ostringstream oss;
-  for (int i = 0; i < 5; i++) {
+  for (int data = 0; data < 5; data++) {
     WriteArguments writeArgs;
-    writeArgs.Parse("W " + std::to_string(i) + " 0x" +
+    writeArgs.Parse("W " + std::to_string(data) + " 0x" +
                     (std::stringstream()
-                     << std::hex << std::setw(8) << std::setfill('0') << i)
+                     << std::hex << std::setw(8) << std::setfill('0') << data)
                         .str());
 
     EXPECT_CALL(mock, Run(&writeArgs)).WillOnce([&]() {
       if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
         CreateFile(SSD_NAND_TXT_FILEPATH);
       }
+
       std::ifstream ifs(SSD_NAND_TXT_FILEPATH);
-      std::string line;
-      std::vector<std::string> storage;
-      while (std::getline(ifs, line)) {
-        storage.push_back(line);
+      const int MAX_LBA_SIZE = 100;
+      std::vector<unsigned int> cache(MAX_LBA_SIZE, 0);
+      for(int lba=0; lba<MAX_LBA_SIZE; lba++) {
+          ifs >> std::hex >> cache[lba];
       }
 
-      storage[i] = std::to_string(i);
+      const int lbaToWrite = data;
+      cache[lbaToWrite] = data;
 
       std::ofstream ofs;
       ofs.open(SSD_NAND_TXT_FILEPATH);
-      for (int i = 0; i < storage.size(); i++) {
-        ofs << storage[i] << "\n";
+      for (int i = 0; i < cache.size(); i++) {
+        ofs << std::hex << cache[i] << "\n";
       }
       ofs.close();
     });
@@ -120,4 +119,3 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
     EXPECT_EQ(result, i);
   }
 }
-#endif

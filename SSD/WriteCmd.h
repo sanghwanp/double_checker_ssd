@@ -1,7 +1,5 @@
 ﻿#pragma once
-#include <cstring>
-#include <fstream>
-#include <iomanip>
+#include <string>
 
 #include "ICmd.h"
 #include "WriteArguments.h"
@@ -11,16 +9,19 @@ class WriteCmd : public ICmd {
   void Run(IArguments* args) override;
 
   bool CheckFirst();
-  void Init();
+  //void Init();
   void SetData(int idx, unsigned int data);
-  unsigned int GetData(int idx) const;
+  unsigned int GetCachedData(int idx) const;
 
  private:
   static constexpr int MAX_LBA_SIZE = 100;
-  unsigned int nand[MAX_LBA_SIZE]{};
-  const std::string FILE_NAME = "C:\\ssd_nand.txt";
+  unsigned int cache[MAX_LBA_SIZE]{};
+  const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
 
  private:
   void LoadFromFile();
   void SaveToFile();
+
+  bool DoesFileExist(const std::string &fileName);
+  void CreateFile(const std::string &fileName);
 };

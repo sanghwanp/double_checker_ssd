@@ -5,10 +5,11 @@
 #include <iostream>
 
 void ReadCmd::Run(IArguments *args) {
-  outputData = ReadFromSsd(args->GetLba());
+  LoadFromFile();
+  readResult = GetCachedData(args->GetLba());
 }
 
-unsigned int ReadCmd::GetOutputData() const { return outputData; }
+unsigned int ReadCmd::GetReadResult() const { return readResult; }
 
 bool ReadCmd::DoesFileExist(const std::string &fileName) {
   std::ifstream ifs;
@@ -32,21 +33,16 @@ void ReadCmd::CreateFile(const std::string &fileName) {
   throw std::runtime_error("cannot create ssd_nand.txt file.");
 }
 
-unsigned int ReadCmd::ReadFromSsd(int reqLba) {
+unsigned int ReadCmd::GetCachedData(int lba) const { return cache[lba]; }
+
+void ReadCmd::LoadFromFile() {
   if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
     CreateFile(SSD_NAND_TXT_FILEPATH);
   }
 
   std::ifstream ifs(SSD_NAND_TXT_FILEPATH);
-  std::string line;
-  int lba = 0;
-  while (std::getline(ifs, line)) {
-    if (lba == reqLba) {
-      return stoul(line);
-    }
-    lba++;
+  for (int idx = 0; idx < MAX_LBA_SIZE; ++idx) {
+    ifs >> std::hex >> cache[idx];
   }
   ifs.close();
-
-  throw std::runtime_error("Invalid LBA");
 }

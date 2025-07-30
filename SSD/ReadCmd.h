@@ -7,15 +7,18 @@
 class ReadCmd : public ICmd {
  public:
   void Run(IArguments *args) override;
-  unsigned int GetOutputData() const;
+  unsigned int GetReadResult() const;
 
  private:
-  unsigned int ReadFromSsd(int reqLba);
+  unsigned int readResult;
+  static constexpr int MAX_LBA_SIZE = 100;
+  unsigned int cache[MAX_LBA_SIZE]{};
   const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
-  unsigned int outputData;
-  // const int LBA_SIZE = 100;
 
  private:
+  unsigned int GetCachedData(int lba) const;
+  void LoadFromFile();
+
   bool DoesFileExist(const std::string &fileName);
   void CreateFile(const std::string &fileName);
 };
