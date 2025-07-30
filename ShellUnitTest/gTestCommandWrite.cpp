@@ -5,6 +5,9 @@
 
 using namespace testing;
 
+const std::string INVALID_COMMAND_MESSAGE = "INVALID COMMAND\n";
+const std::string SUCCESS_MESSSAGE = "[Write] Done\n";
+
 TEST(CommandWriteTest, WriteValid) {
   std::ostringstream oss;
   auto oldCout = std::cout.rdbuf();
@@ -18,7 +21,7 @@ TEST(CommandWriteTest, WriteValid) {
   std::cout.rdbuf(oldCout);
   std::string output = oss.str();
 
-  EXPECT_EQ("[Write] Done\n", output);
+  EXPECT_EQ(SUCCESS_MESSSAGE, output);
 }
 
 TEST(CommandWriteTest, WriteInvalidLBA) {
@@ -34,7 +37,7 @@ TEST(CommandWriteTest, WriteInvalidLBA) {
   std::cout.rdbuf(oldCout);
   std::string output = oss.str();
 
-  EXPECT_EQ("ERROR\n", output);
+  EXPECT_EQ(INVALID_COMMAND_MESSAGE, output);
 }
 
 TEST(CommandWriteTest, WriteInvalidValue) {
@@ -50,7 +53,7 @@ TEST(CommandWriteTest, WriteInvalidValue) {
   std::cout.rdbuf(oldCout);
   std::string output = oss.str();
 
-  EXPECT_EQ("ERROR\n", output);
+  EXPECT_EQ(INVALID_COMMAND_MESSAGE, output);
 }
 
 TEST(CommandWriteTest, WriteMissingArgs) {
@@ -66,5 +69,5 @@ TEST(CommandWriteTest, WriteMissingArgs) {
   std::cout.rdbuf(oldCout);
   std::string output = oss.str();
 
-  EXPECT_EQ("ERROR\n", output);
+  EXPECT_EQ(INVALID_COMMAND_MESSAGE, output);
 }
