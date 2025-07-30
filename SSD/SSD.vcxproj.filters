@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Read.cpp">
+    <ClCompile Include="ReadCmd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SSD.cpp">
@@ -38,7 +38,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Read.h">
+    <ClInclude Include="ReadCmd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SSD.h">

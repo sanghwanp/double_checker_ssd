@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-#include "Read.h"
+#include "ReadCmd.h"
 
 class SSD {
  public:
@@ -13,9 +13,9 @@ class SSD {
     storage.resize(STORAGE_SIZE, STORAGE_INIT_VALUE);
   }
 
-  unsigned int read(int lba) { return readCmd.run(lba, storage); }
+  unsigned int Read(int lba) { return readCmd.Run(lba, storage); }
 
  private:
   std::vector<unsigned int> storage;
-  Read readCmd;
+  ReadCmd readCmd;
 };
