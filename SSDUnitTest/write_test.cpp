@@ -39,7 +39,6 @@ TEST_F(WriteTestFixture, 01_Parse_Write_Cmd) {
   EXPECT_EQ(args.GetData(), DATA);
 }
 
-#if 0
 TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
   EXPECT_THROW({ args.Parse(INVALID_CMD_TYPE); }, std::invalid_argument);
   EXPECT_THROW({ args.Parse(INVALID_CMD_LBA); }, std::invalid_argument);
@@ -49,6 +48,7 @@ TEST_F(WriteTestFixture, 02_Invalid_Cmd) {
   EXPECT_THROW({ args.Parse(INVALID_CMD_3); }, std::invalid_argument);
 }
 
+#if 0
 TEST_F(WriteTestFixture, 03_Write_Data_First) {
   // EXPECT_CALL(mock, CheckFirst).Times(1).WillOnce(Return(true));
   // EXPECT_CALL(mock, Init).Times(1);
