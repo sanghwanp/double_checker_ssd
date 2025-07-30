@@ -27,6 +27,9 @@
     <ClCompile Include="..\Shell\MockSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="gTestCmdFullRead.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
