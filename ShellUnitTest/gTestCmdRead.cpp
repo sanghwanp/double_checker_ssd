@@ -13,7 +13,7 @@ TEST(CommandTest, ReadDefault) {
   MockSSD ssd;
   CommandRead cmd(&ssd);
 
-  EXPECT_EQ(0, cmd.Call({"read", "1"}));
+  EXPECT_TRUE(cmd.Call({"read", "1"}));
  
   std::cout.rdbuf(oldCoutStreamBuf);
   std::string outputStr = oss.str();
@@ -30,7 +30,7 @@ TEST(CommandTest, ReadValue) {
   CommandRead cmd(&ssd);
   ssd.Write(1, "0x12345678");
 
-  EXPECT_EQ(0, cmd.Call({"read", "1"}));
+  EXPECT_TRUE(cmd.Call({"read", "1"}));
 
   std::cout.rdbuf(oldCoutStreamBuf);
   std::string outputStr = oss.str();
@@ -42,5 +42,5 @@ TEST(CommandTest, ReadInvalidLBA) {
   MockSSD ssd;
   CommandRead cmd(&ssd);
 
-  EXPECT_EQ(1, cmd.Call({"read", "-1"}));
+  EXPECT_FALSE(cmd.Call({"read", "-1"}));
 }
