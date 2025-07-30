@@ -1,73 +1,52 @@
+#include <iostream>
+
 #include "../Shell/CmdWrite.h"
 #include "../Shell/MockSSD.h"
 #include "gtest/gtest.h"
-#include <iostream>
 
 using namespace testing;
 
 const std::string INVALID_COMMAND_MESSAGE = "INVALID COMMAND\n";
-const std::string SUCCESS_MESSSAGE = "[Write] Done\n";
+const std::string SUCCESS_MESSAGE = "[Write] Done\n";
 
-TEST(CommandWriteTest, WriteValid) {
+class CommandWriteTest : public Test {
+ protected:
   std::ostringstream oss;
-  auto oldCout = std::cout.rdbuf();
-  std::cout.rdbuf(oss.rdbuf());
-
+  std::streambuf* oldCout;
   MockSSD ssd;
-  CommandWrite cmd(&ssd);
+  CommandWrite* cmd;
 
-  EXPECT_EQ(true, cmd.Call({"write", "3", "0xABCDEF01"}));
+  void SetUp() override {
+    oldCout = std::cout.rdbuf();
+    std::cout.rdbuf(oss.rdbuf());
 
-  std::cout.rdbuf(oldCout);
-  std::string output = oss.str();
+    cmd = new CommandWrite(&ssd);
+  }
 
-  EXPECT_EQ(SUCCESS_MESSSAGE, output);
+  void TearDown() override {
+    std::cout.rdbuf(oldCout);
+    delete cmd;
+  }
+
+  std::string GetOutput() { return oss.str(); }
+};
+
+TEST_F(CommandWriteTest, WriteValid) {
+  EXPECT_TRUE(cmd->Call({"write", "3", "0xABCDEF01"}));
+  EXPECT_EQ(SUCCESS_MESSAGE, GetOutput());
 }
 
-TEST(CommandWriteTest, WriteInvalidLBA) {
-  std::ostringstream oss;
-  auto oldCout = std::cout.rdbuf();
-  std::cout.rdbuf(oss.rdbuf());
-
-  MockSSD ssd;
-  CommandWrite cmd(&ssd);
-
-  EXPECT_EQ(false, cmd.Call({"write", "-1", "0x12345678"}));
-
-  std::cout.rdbuf(oldCout);
-  std::string output = oss.str();
-
-  EXPECT_EQ(INVALID_COMMAND_MESSAGE, output);
+TEST_F(CommandWriteTest, WriteInvalidLBA) {
+  EXPECT_FALSE(cmd->Call({"write", "-1", "0x12345678"}));
+  EXPECT_EQ(INVALID_COMMAND_MESSAGE, GetOutput());
 }
 
-TEST(CommandWriteTest, WriteInvalidValue) {
-  std::ostringstream oss;
-  auto oldCout = std::cout.rdbuf();
-  std::cout.rdbuf(oss.rdbuf());
-
-  MockSSD ssd;
-  CommandWrite cmd(&ssd);
-
-  EXPECT_EQ(false, cmd.Call({"write", "3", "1234GHIJ"}));
-
-  std::cout.rdbuf(oldCout);
-  std::string output = oss.str();
-
-  EXPECT_EQ(INVALID_COMMAND_MESSAGE, output);
+TEST_F(CommandWriteTest, WriteInvalidValue) {
+  EXPECT_FALSE(cmd->Call({"write", "3", "1234GHIJ"}));
+  EXPECT_EQ(INVALID_COMMAND_MESSAGE, GetOutput());
 }
 
-TEST(CommandWriteTest, WriteMissingArgs) {
-  std::ostringstream oss;
-  auto oldCout = std::cout.rdbuf();
-  std::cout.rdbuf(oss.rdbuf());
-
-  MockSSD ssd;
-  CommandWrite cmd(&ssd);
-
-  EXPECT_EQ(false, cmd.Call({"write", "3"}));
-
-  std::cout.rdbuf(oldCout);
-  std::string output = oss.str();
-
-  EXPECT_EQ(INVALID_COMMAND_MESSAGE, output);
+TEST_F(CommandWriteTest, WriteMissingArgs) {
+  EXPECT_FALSE(cmd->Call({"write", "3"}));
+  EXPECT_EQ(INVALID_COMMAND_MESSAGE, GetOutput());
 }

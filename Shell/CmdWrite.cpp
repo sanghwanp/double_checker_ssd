@@ -53,5 +53,5 @@ void CommandWrite::printInvalidCommandMessage() {
 }
 
 void CommandWrite::printSuccessMessage() {
-  std::cout << SUCCESS_MESSSAGE;
+  std::cout << SUCCESS_MESSAGE;
 }
