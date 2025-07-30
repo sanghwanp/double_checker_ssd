@@ -11,9 +11,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
     <ClCompile Include="gTestCmdRead.cpp" />
+    <ClCompile Include="gTestCmdFullWrite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Shell\CmdWrite.h" />
+    <ClInclude Include="..\Shell\CmdFullWrite.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
