@@ -1,36 +1,38 @@
-#include "CommandWrite.h"
+#include "CmdWrite.h"
 
 #include <iostream>
 
-int CommandWrite(SSDInterface& ssd, const std::vector<std::string>& tokens) {
-  if (tokens.size() != 3) {
+CommandWrite::CommandWrite(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
+
+bool CommandWrite::Call(std::vector<std::string> program) {
+  if (program.size() != 3) {
     std::cout << "ERROR\n";
-    return -1;
+    return false;
   }
 
   int lba;
   try {
-    lba = std::stoi(tokens[1]);
+    lba = std::stoi(program[LBA_INDEX]);
   } catch (...) {
     std::cout << "ERROR\n";
-    return -1;
+    return false;
   }
 
-  const std::string& value = tokens[2];
+  const std::string& value = program[VALUE_INDEX];
 
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
     std::cout << "ERROR\n";
-    return -1;
+    return false;
   }
 
-  ssd.Write(lba, value);
+  ssd->Write(lba, value);
   std::cout << "[Write] Done\n";
-  return 0;
+  return true;
 }
 
-bool IsInvalidLBA(int lba) { return lba < 0 || lba >= 100; }
+bool CommandWrite::IsInvalidLBA(int lba) { return lba < 0 || lba >= 100; }
 
-bool IsInvalidValue(const string& value) {
+bool CommandWrite::IsInvalidValue(const string& value) {
   if (value.size() != 10) return true;
   if (value[0] != '0' || value[1] != 'x') return true;
 

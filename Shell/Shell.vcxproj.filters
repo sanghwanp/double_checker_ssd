@@ -27,12 +27,12 @@
     <ClCompile Include="MockSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CommandWrite.cpp">
+    <ClCompile Include="CmdWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CommandWrite.h">
+    <ClInclude Include="CmdWrite.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
