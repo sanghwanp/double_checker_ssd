@@ -131,6 +131,7 @@ std::vector<Interval> Optimize(std::vector<Interval>& cmds) {
       }
     }
 
+    //1번째 후처리: 구간 값 줄이기
     int mnTotalIntvLength = INF;
     int totalIntvLength = 0;
     for (int i = 0; i < result.size(); i++) {
@@ -161,18 +162,18 @@ std::vector<Interval> Optimize(std::vector<Interval>& cmds) {
       if (result[i].data == 0) result[i].cmdType = CmdType::ERASE;
     }
 
-    // 3번째 후처리:
+    // 3번째 후처리: ERASE가 10개 넘어가면 끊어준다.
     std::vector<Interval> newResult;
     for (int i = 0; i < result.size(); i++) {
-      if (result[i].cmdType == CmdType::ERASE) {
-        while (result[i].Length() > 0) {
-          int ne = min(result[i].s + 10-1, result[i].e);
-          Interval newInterval(result[i].s, ne, result[i].data,
-                               result[i].cmdType);
-          newResult.push_back(newInterval);
-          result[i].s = ne+1;
-        }
+      // if (result[i].cmdType == CmdType::ERASE) { //-> WRITE도 그냥 끊어주자.
+      while (result[i].Length() > 0) {
+        int ne = min(result[i].s + 10 - 1, result[i].e);
+        Interval newInterval(result[i].s, ne, result[i].data,
+                             result[i].cmdType);
+        newResult.push_back(newInterval);
+        result[i].s = ne + 1;
       }
+      //}
     }
 
     if (mnResultCnt > newResult.size()) {
