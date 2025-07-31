@@ -37,16 +37,24 @@ Logger::~Logger() {
     delete fileSystem;
   }
 }
+void Logger::MyPrint(const std::string& message) {
+  if (consoleOutput == true) {
+    std::cout << message;
+  }
+}
 
 void Logger::SetConsoleOutput(bool on) { consoleOutput = on; }
 
-void Logger::Print(const std::string& functionName,
+void Logger::LogPrint(const std::string& functionName,
                    const std::string& message) {
   std::string timestamp = GetCurrentTimestamp();
   std::ostringstream formatted;
-
   std::ostringstream funcOss;
-  funcOss << std::left << std::setw(40) << functionName;
+
+  // 항상 파일 정리를 먼저해서 latest log는 항상 기록 될 수 있도록 한다.
+  CheckAndRotateLogFile();
+
+  funcOss << std::left << std::setw(30) << functionName;
 
   formatted << "[" << timestamp << "] " << funcOss.str() << ": " << message;
   std::string logLine = formatted.str();
@@ -55,11 +63,8 @@ void Logger::Print(const std::string& functionName,
     std::cout << logLine << std::endl;
   }
 
-  if (logFile.is_open()) {
-    logFile << logLine << std::endl;
-    logFile.flush();
-    CheckAndRotateLogFile();
-  }
+  logFile << logLine << std::endl;
+  logFile.flush();
 }
 
 void Logger::OpenLogFile() { logFile.open(logFileName, std::ios::app); }
@@ -79,8 +84,9 @@ std::string Logger::GetCurrentTimestamp(bool forFile) {
   if (forFile) {
     oss << std::setfill('0') << std::setw(2) << (localTime.tm_year % 100)
         << std::setw(2) << (localTime.tm_mon + 1) << std::setw(2)
-        << localTime.tm_mday << "_" << std::setw(2) << localTime.tm_hour
-        << std::setw(2) << localTime.tm_min;
+        << localTime.tm_mday << "_" << std::setw(2) << localTime.tm_hour << "h_"
+        << std::setw(2) << localTime.tm_min << "m_" << std::setw(2)
+        << localTime.tm_sec << "s";
   } else {
     oss << std::setfill('0') << std::setw(2) << (localTime.tm_year % 100) << "."
         << std::setw(2) << (localTime.tm_mon + 1) << "." << std::setw(2)
@@ -97,15 +103,33 @@ void Logger::CheckAndRotateLogFile() {
   std::uintmax_t fileSize = fileSystem->File_size(logFileName);
   if (fileSize < MAX_FILE_SIZE) return;
 
+  logFile.flush();
   logFile.close();
 
-  std::string rotatedName = "until_" + GetCurrentTimestamp(true) + ".log";
+  std::string rotatedName = GenerateUniqueLogFileName("until_" + GetCurrentTimestamp(true));
+
   fileSystem->Rename(logFileName, rotatedName);
 
   OpenLogFile();
   ManageOldLogs();
 }
+std::string Logger::GenerateUniqueLogFileName(const std::string& baseName) {
+  std::string extension = ".log";
+  std::string fileName = baseName + extension;
 
+  if (!std::filesystem::exists(fileName)) {
+    return fileName;
+  }
+
+  for (int counter = 0;; ++counter) {
+    std::ostringstream oss;
+    oss << baseName << "_" << counter << extension;
+    std::string newName = oss.str();
+    if (!std::filesystem::exists(newName)) {
+      return newName;
+    }
+  }
+}
 bool Logger::Ends_with(const std::string& str, const std::string& suffix) {
   if (str.length() < suffix.length()) return false;
   return str.compare(str.length() - suffix.length(), suffix.length(), suffix) ==

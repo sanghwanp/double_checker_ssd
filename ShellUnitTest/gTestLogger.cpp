@@ -27,31 +27,32 @@ TEST(LoggerTest, RotatesLogFileWhenSizeExceedsMax) {
   using namespace std::filesystem;
 
   // Arrange
-  auto mockFS = new NiceMock<MockFileSystem>();
-  Logger logger(mockFS, true);
+  testing::NiceMock<MockFileSystem> mockFS;
+  Logger logger(&mockFS, true);
 
   const std::string logFileName = "latest.log";
   const std::filesystem::path logFilePath(logFileName);
 
-  EXPECT_CALL(*mockFS, Exists(logFilePath)).WillOnce(Return(true));
-  EXPECT_CALL(*mockFS, File_size(logFilePath))
+  EXPECT_CALL(mockFS, Exists(logFilePath)).WillOnce(Return(true));
+  EXPECT_CALL(mockFS, File_size(logFilePath))
       .WillOnce(Return(11 * 1024));             // 11KB
-  EXPECT_CALL(*mockFS, Rename(_, _)).Times(1);  // rotated name
-  EXPECT_CALL(*mockFS, ListFiles((std::filesystem::path) "."))
+  EXPECT_CALL(mockFS, Rename(_, _)).Times(1);  // rotated name
+  EXPECT_CALL(mockFS, ListFiles((std::filesystem::path) "."))
       .WillOnce(Return(std::vector<directory_entry>{}));  // skip manageOldLogs
 
   // Act
-  logger.Print("RotateTestFunc", "Trigger log rotation by exceeding file size");
+  logger.LogPrint("RotateTestFunc", "Trigger log rotation by exceeding file size");
 }
 
 TEST(LoggerTest, ConsoleOutputDisabled_DoesNotPrintToConsole) {
   testing::NiceMock<MockFileSystem> mockFS;
+
   Logger logger(&mockFS, true);
   logger.SetConsoleOutput(false);
 
   // std::cout 캡쳐 또는 Redirect 필요 (예: testing::internal::CaptureStdout())
   testing::internal::CaptureStdout();
-  logger.Print("Func", "Message");
+  logger.LogPrint("Func", "Message");
   std::string output = testing::internal::GetCapturedStdout();
 
   EXPECT_TRUE(output.empty());
@@ -61,16 +62,15 @@ TEST(LoggerTest, EndsWithFunction_WorksCorrectly) {
   Logger logger;
   ILogger* loggerPtr = &logger;
 
-  logger.Print("TestFunc()", "Testing ends_with function");
-  loggerPtr->Print("TestFunc()", "Testing ends_with function from interface");
+  logger.LogPrint("TestFunc()", "Testing ends_with function");
+  loggerPtr->LogPrint("TestFunc()", "Testing ends_with function from interface");
 }
 
 //TEST(LoggerTest, loggerPrint_10000) {
-//  Logger logger;
-//  ILogger* loggerPtr = &logger;
+//  ILogger* loggerPtr = new Logger;
 //
 //  int loopCnt = 10000;
 //  for (int i = 0; i < loopCnt; i++) {
-//    loggerPtr->print("TestFunc", "Testing ends_with function");
+//    loggerPtr->LogPrint("TestFunc", "Testing ends_with function");
 //  }
 //}

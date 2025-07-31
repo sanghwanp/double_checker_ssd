@@ -13,7 +13,8 @@ class Logger : public ILogger {
   Logger(ILogFileSystem* fs, bool ConsoleOn);
   ~Logger();
 
-  void Print(const std::string& functionName, const std::string& message) override;
+  void LogPrint(const std::string& functionName, const std::string& message) override;
+  void MyPrint(const std::string& message) override;
   void SetConsoleOutput(bool on);
 
  private:
@@ -26,6 +27,8 @@ class Logger : public ILogger {
   void OpenLogFile();
   std::string GetCurrentTimestamp(bool forFile = false);
   void CheckAndRotateLogFile();
+  std::string GenerateUniqueLogFileName(const std::string& baseName);
   void ManageOldLogs();
   bool Ends_with(const std::string& str, const std::string& suffix);
 };
+
