@@ -42,6 +42,10 @@ std::string RealSSD::Read(int lba) {
   return line;
 }
 
+void RealSSD::Erase(int lba, int size) {
+  throw std::runtime_error("RealSSD::Erase() Not implemented");
+}
+
 int RealSSD::execCommand(const std::string& cmd) {
   return std::system(cmd.c_str());
 }
