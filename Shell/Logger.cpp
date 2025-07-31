@@ -1,4 +1,3 @@
-#include "Logger.h"
 
 #include <chrono>
 #include <ctime>
@@ -7,6 +6,7 @@
 #include <sstream>
 #include <vector>
 
+#include "Logger.h"
 #include "LogFileSystem.h"
 
 namespace {
@@ -18,7 +18,7 @@ Logger::Logger()
       logFileName("latest.log"),
       fileSystem(new LogFileSystem()),
       ownsFileSystem(true) {
-  openLogFile();
+  OpenLogFile();
 }
 
 Logger::Logger(ILogFileSystem* fs, bool ConsoleOn)
@@ -26,7 +26,7 @@ Logger::Logger(ILogFileSystem* fs, bool ConsoleOn)
       logFileName("latest.log"),
       fileSystem(fs),
       ownsFileSystem(false) {
-  openLogFile();
+  OpenLogFile();
 }
 
 Logger::~Logger() {
@@ -38,11 +38,11 @@ Logger::~Logger() {
   }
 }
 
-void Logger::setConsoleOutput(bool on) { consoleOutput = on; }
+void Logger::SetConsoleOutput(bool on) { consoleOutput = on; }
 
-void Logger::print(const std::string& functionName,
+void Logger::Print(const std::string& functionName,
                    const std::string& message) {
-  std::string timestamp = getCurrentTimestamp();
+  std::string timestamp = GetCurrentTimestamp();
   std::ostringstream formatted;
 
   std::ostringstream funcOss;
@@ -58,13 +58,13 @@ void Logger::print(const std::string& functionName,
   if (logFile.is_open()) {
     logFile << logLine << std::endl;
     logFile.flush();
-    checkAndRotateLogFile();
+    CheckAndRotateLogFile();
   }
 }
 
-void Logger::openLogFile() { logFile.open(logFileName, std::ios::app); }
+void Logger::OpenLogFile() { logFile.open(logFileName, std::ios::app); }
 
-std::string Logger::getCurrentTimestamp(bool forFile) {
+std::string Logger::GetCurrentTimestamp(bool forFile) {
   using namespace std::chrono;
   auto now = system_clock::now();
   std::time_t t = system_clock::to_time_t(now);
@@ -91,34 +91,34 @@ std::string Logger::getCurrentTimestamp(bool forFile) {
   return oss.str();
 }
 
-void Logger::checkAndRotateLogFile() {
-  if (!fileSystem->exists(logFileName)) return;
+void Logger::CheckAndRotateLogFile() {
+  if (!fileSystem->Exists(logFileName)) return;
 
-  std::uintmax_t fileSize = fileSystem->file_size(logFileName);
+  std::uintmax_t fileSize = fileSystem->File_size(logFileName);
   if (fileSize < MAX_FILE_SIZE) return;
 
   logFile.close();
 
-  std::string rotatedName = "until_" + getCurrentTimestamp(true) + ".log";
-  fileSystem->rename(logFileName, rotatedName);
+  std::string rotatedName = "until_" + GetCurrentTimestamp(true) + ".log";
+  fileSystem->Rename(logFileName, rotatedName);
 
-  openLogFile();
-  manageOldLogs();
+  OpenLogFile();
+  ManageOldLogs();
 }
 
-bool Logger::ends_with(const std::string& str, const std::string& suffix) {
+bool Logger::Ends_with(const std::string& str, const std::string& suffix) {
   if (str.length() < suffix.length()) return false;
   return str.compare(str.length() - suffix.length(), suffix.length(), suffix) ==
          0;
 }
 
-void Logger::manageOldLogs() {
+void Logger::ManageOldLogs() {
   std::vector<std::filesystem::directory_entry> untilLogs;
 
-  for (const auto& entry : fileSystem->listFiles(".")) {
-    if (fileSystem->isRegularFile(entry)) {
-      std::string name = fileSystem->filename(entry);
-      if (name.rfind("until_", 0) == 0 && ends_with(name, ".log")) {
+  for (const auto& entry : fileSystem->ListFiles(".")) {
+    if (fileSystem->IsRegularFile(entry)) {
+      std::string name = fileSystem->FileName(entry);
+      if (name.rfind("until_", 0) == 0 && Ends_with(name, ".log")) {
         untilLogs.push_back(entry);
       }
     }
@@ -128,12 +128,12 @@ void Logger::manageOldLogs() {
 
   std::sort(
       untilLogs.begin(), untilLogs.end(), [&](const auto& a, const auto& b) {
-        return fileSystem->lastWriteTime(a) < fileSystem->lastWriteTime(b);
+        return fileSystem->LastWriteTime(a) < fileSystem->LastWriteTime(b);
       });
   untilLogs.pop_back();  // Remove the most recent log
   for (auto oldLog : untilLogs) {
     std::filesystem::path zipPath = oldLog.path();
     zipPath.replace_extension(".zip");
-    fileSystem->rename(oldLog.path(), zipPath);
+    fileSystem->Rename(oldLog.path(), zipPath);
   } 
 }

@@ -3,6 +3,6 @@
 
 class ILogger {
  public:
-  virtual void print(const std::string& functionName,
+  virtual void Print(const std::string& functionName,
                      const std::string& message) = 0;
 };
