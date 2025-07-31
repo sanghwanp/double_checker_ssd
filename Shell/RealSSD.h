@@ -1,10 +1,12 @@
 #pragma once
-#include <unordered_map>
+#include <string>
 
 #include "SSDInterface.h"
 
-class MockSSD : public SSDInterface {
+class RealSSD : public SSDInterface {
  public:
+  RealSSD(const std::string& ssdExecutable = "ssd.exe",
+          const std::string& outputFile = "ssd_output.txt");
   void Write(int lba, const string& value) override;
   string Read(int lba) override;
   void Erase(int lba, int size) override;
@@ -12,8 +14,9 @@ class MockSSD : public SSDInterface {
 
   bool IsInvalidLBA(int lba);
   bool IsInvalidValue(const string& value);
-  bool IsInvalidErase(int lba, int size);
+  virtual int execCommand(const std::string& cmd);
 
  private:
-  std::unordered_map<int, string> cache;
+  std::string ssdExe;
+  std::string outputFile;
 };

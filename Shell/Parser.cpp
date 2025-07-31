@@ -102,7 +102,12 @@ bool Parser::IsNumber(const std::string& str) {
   }
 }
 bool Parser::IsDec(const std::string& str) {
-  for (char c : str) {
+  if (!(isdigit(str[0]) || str[0] == '-')) {
+    // negative number check
+    return false;
+  }
+
+  for (char c : str.substr(1)) {
     if (!isdigit(c)) {
       return false;
     }

@@ -24,9 +24,6 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shell\MockSSD.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -40,6 +37,29 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="gTestCmdFullWrite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestLogger.cpp">
+    </ClCompile>
+    <ClCompile Include="gTestRealSSD.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestShell.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\MockSSD.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCmdExit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCommandHelp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCmdFlush.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCmdErase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,6 +82,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Shell\CmdFullWrite.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Shell\RealSSD.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

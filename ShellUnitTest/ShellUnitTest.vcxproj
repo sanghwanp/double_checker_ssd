@@ -217,12 +217,19 @@
   <ItemGroup>
     <ClCompile Include="..\Shell\CmdWrite.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="gTestCmdExit.cpp" />
+    <ClCompile Include="gTestCmdFlush.cpp" />
+    <ClCompile Include="gTestCmdErase.cpp" />
     <ClCompile Include="gTestCmdFullRead.cpp" />
     <ClCompile Include="gTestCmdRead.cpp" />
+    <ClCompile Include="gTestCommandHelp.cpp" />
     <ClCompile Include="gTestCommandWrite.cpp" />
+    <ClCompile Include="gTestLogger.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
     <ClCompile Include="gTestCmdFullWrite.cpp" />
     <ClCompile Include="gTestParser.cpp" />
+    <ClCompile Include="gTestRealSSD.cpp" />
+    <ClCompile Include="gTestShell.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -237,6 +244,7 @@
   <ItemGroup>
     <ClInclude Include="..\Shell\CmdFullWrite.h" />
     <ClInclude Include="..\Shell\CmdWrite.h" />
+    <ClInclude Include="..\Shell\RealSSD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

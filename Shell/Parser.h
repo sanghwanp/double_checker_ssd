@@ -83,6 +83,20 @@ class Parser {
           return new IParam(TestShellCMD::eFullread);
         },
         [](const std::vector<std::string>&) { return true; }}},
+      {"flush",
+       {1, TestShellCMD::eFlushCmd,
+        [](const std::vector<std::string>& tokens) {
+          return new IParam(TestShellCMD::eFlushCmd);
+        },
+        [](const std::vector<std::string>&) { return true; }}},
+      {"erase",
+       {3, TestShellCMD::eEraseCmd,
+        [&](const std::vector<std::string>& tokens) {
+          return new EraseParam(TestShellCMD::eEraseCmd, tokens[1], tokens[2]);
+        },
+        [&](const std::vector<std::string>& tokens) {
+          return IsNumber(tokens[1]) && IsNumber(tokens[2]);
+        }}},
       {"script",
        {1, TestShellCMD::eScriptCmd,
         [&](const std::vector<std::string>& tokens) {

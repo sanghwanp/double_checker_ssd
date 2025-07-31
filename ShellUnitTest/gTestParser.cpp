@@ -117,6 +117,32 @@ TEST_F(FixtureParser, fullread_command_parse) {
   EXPECT_EQ(cmd->eCmd, eFullread);
 }
 
+
+TEST_F(FixtureParser, erase_command_struct_over_args) {
+  SetupInputString("erase 10 10 10");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eInvalidCmd);
+}
+TEST_F(FixtureParser, erase_command_struct_first_number_check) {
+  SetupInputString("erase www 10");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eInvalidCmd);
+}
+TEST_F(FixtureParser, erase_command_struct_second_number_check) {
+  SetupInputString("erase 10 www");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eInvalidCmd);
+}
+TEST_F(FixtureParser, erase_command_parse_success) {
+  SetupInputString("erase 10 10");
+  cmd = parser.Parse(testStr);
+  EraseParam* eraseCmd = dynamic_cast<EraseParam*>(cmd);
+
+  EXPECT_EQ(eraseCmd->eCmd, TestShellCMD::eEraseCmd);
+  EXPECT_EQ(eraseCmd->lba, "10");
+  EXPECT_EQ(eraseCmd->size, "10");
+}
+
 TEST_F(FixtureParser, script_command_parse) {
   SetupInputString("1_");
   cmd = parser.Parse(testStr);
@@ -161,4 +187,14 @@ TEST_F(FixtureParser, script_command_parse_invalid_name) {
   SetupInputString("_Partial");
   cmd = parser.Parse(testStr);
   EXPECT_EQ(cmd->eCmd, eInvalidCmd);
+}
+TEST_F(FixtureParser, flush_command_fail_over_args) {
+  SetupInputString("flush 1123");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eInvalidCmd);
+}
+TEST_F(FixtureParser, flush_command_success) {
+  SetupInputString("flush");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eFlushCmd);
 }

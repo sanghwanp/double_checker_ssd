@@ -6,4 +6,6 @@ class SSDInterface {
  public:
   virtual void Write(int lba, const string& value) = 0;
   virtual string Read(int lba) = 0;
+  virtual void Erase(int lba, int size) = 0;
+  virtual void Flush() = 0;
 };
