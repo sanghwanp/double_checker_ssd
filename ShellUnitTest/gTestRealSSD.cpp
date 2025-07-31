@@ -28,13 +28,13 @@ class RealSSDTest : public Test {
   void TearDown() override { std::remove(outFile.c_str()); }
 };
 
-// 1) Write: execCommand È£Ãâ ¿©ºÎ °ËÁõ
+// 1) Write: execCommand í˜¸ì¶œ ì—¬ë¶€ ê²€ì¦
 TEST_F(RealSSDTest, Write_ExecutesCorrectCommand) {
   EXPECT_CALL(ssd, execCommand(exe + " W 42 0xCAFEBABE")).WillOnce(Return(0));
   ssd.Write(42, "0xCAFEBABE");
 }
 
-// 2) Read Á¤»ó: ÆÄÀÏ¿¡ °ª ½áµÎ°í Read ¡æ ¹İÈ¯°ª °ËÁõ
+// 2) Read ì •ìƒ: íŒŒì¼ì— ê°’ ì¨ë‘ê³  Read â†’ ë°˜í™˜ê°’ ê²€ì¦
 TEST_F(RealSSDTest, Read_ReturnsWrittenOutput) {
   EXPECT_CALL(ssd, execCommand(exe + " R 7")).WillOnce(Return(0));
   writeOutput("0xDEADBEEF");
@@ -42,7 +42,7 @@ TEST_F(RealSSDTest, Read_ReturnsWrittenOutput) {
   EXPECT_EQ(v, "0xDEADBEEF");
 }
 
-// 3) Read ½ÇÆĞ(ÆÄÀÏ ¾øÀ½): »èÁ¦µÈ »óÅÂ¿¡¼­ Read ¡æ "ERROR" ¹İÈ¯
+// 3) Read ì‹¤íŒ¨(íŒŒì¼ ì—†ìŒ): ì‚­ì œëœ ìƒíƒœì—ì„œ Read â†’ "ERROR" ë°˜í™˜
 TEST_F(RealSSDTest, Read_MissingFile_ReturnsError) {
   EXPECT_CALL(ssd, execCommand(exe + " R 3")).WillOnce(Return(0));
   std::remove(outFile.c_str());
@@ -50,7 +50,7 @@ TEST_F(RealSSDTest, Read_MissingFile_ReturnsError) {
   EXPECT_EQ(v, "ERROR");
 }
 
-// 4) Read ½ÇÆĞ(ºó ÆÄÀÏ): ºó ÆÄÀÏ ¸¸µé¾î ³õ°í Read ¡æ "ERROR" ¹İÈ¯
+// 4) Read ì‹¤íŒ¨(ë¹ˆ íŒŒì¼): ë¹ˆ íŒŒì¼ ë§Œë“¤ì–´ ë†“ê³  Read â†’ "ERROR" ë°˜í™˜
 TEST_F(RealSSDTest, Read_EmptyFile_ReturnsError) {
   EXPECT_CALL(ssd, execCommand(exe + " R 5")).WillOnce(Return(0));
   std::ofstream o(outFile, std::ios::trunc);
