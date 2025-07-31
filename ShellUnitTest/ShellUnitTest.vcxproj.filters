@@ -39,6 +39,8 @@
     <ClCompile Include="gTestCmdFullWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="gTestLogger.cpp">
+    </ClCompile>
     <ClCompile Include="gTestRealSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -55,6 +57,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="gTestCmdFlush.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestCmdErase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

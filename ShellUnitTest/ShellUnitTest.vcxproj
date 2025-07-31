@@ -219,10 +219,12 @@
     <ClCompile Include="..\Shell\MockSSD.cpp" />
     <ClCompile Include="gTestCmdExit.cpp" />
     <ClCompile Include="gTestCmdFlush.cpp" />
+    <ClCompile Include="gTestCmdErase.cpp" />
     <ClCompile Include="gTestCmdFullRead.cpp" />
     <ClCompile Include="gTestCmdRead.cpp" />
     <ClCompile Include="gTestCommandHelp.cpp" />
     <ClCompile Include="gTestCommandWrite.cpp" />
+    <ClCompile Include="gTestLogger.cpp" />
     <ClCompile Include="gTestMockSSD.cpp" />
     <ClCompile Include="gTestCmdFullWrite.cpp" />
     <ClCompile Include="gTestParser.cpp" />
