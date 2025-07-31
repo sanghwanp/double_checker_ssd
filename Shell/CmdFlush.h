@@ -12,7 +12,4 @@ class CommandFlush {
  private:
   SSDInterface* ssd;
   const int COMMAND_SIZE = 1;
-  const std::string INVALID_COMMAND_MESSAGE = "INVALID COMMAND\n";
-
-  void printInvalidCommandMessage();
 };
