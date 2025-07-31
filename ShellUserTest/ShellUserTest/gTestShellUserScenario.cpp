@@ -6,7 +6,7 @@
 
 #include "gmock/gmock.h"
 
-#define TEST_SHELL_APP_NAME "shell.exe"
+#define TEST_SHELL_APP_NAME "..\\..\\x64\\debug_TestShell\\Shell.exe"
 #define TEMP_INPUT_FILE_NAME "input.txt"
 #define SHELL_PREFIX_OUTPUT "Shell> "
 #define SHELL_EXIT_OUTPUT SHELL_PREFIX_OUTPUT "Shutting down\n"
