@@ -14,10 +14,12 @@ class CommandErase {
   bool IsInvalidLBA(unsigned int lba);
   unsigned int GetForwardLBA(unsigned int lba, int size);
   int GetForwardSize(int size);
+  void ExecuteErase(unsigned int lba, int size);
 
   SSDInterface* ssd;
   const int LBA_INDEX = 1;
   const int SIZE_INDEX = 2;
   const int PROGRAM_SIZE = 3;
   const unsigned int MAX_LBA = 99;
+  const int SSD_ERASE_MAX_SIZE = 10;
 };

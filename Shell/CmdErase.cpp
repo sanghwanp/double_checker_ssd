@@ -1,5 +1,6 @@
 #include "CmdErase.h"
 
+#include <algorithm>
 #include <iostream>
 
 CommandErase::CommandErase(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
@@ -35,7 +36,7 @@ bool CommandErase::Call(const std::vector<std::string>& program) {
   unsigned int lbaForward = GetForwardLBA(lba, size);
   int sizeForward = GetForwardSize(size);
 
-  ssd->Erase(lbaForward, sizeForward);
+  ExecuteErase(lbaForward, sizeForward);
 
   // SUCCESS
   std::cout << "[Erase] Done\n";
@@ -57,5 +58,26 @@ int CommandErase::GetForwardSize(int size) {
     return -size;
   } else {
     return size;
+  }
+}
+
+void CommandErase::ExecuteErase(unsigned int lba, int size) {
+  // this function assumes size >= 0
+  unsigned int lbaCurr = lba;
+  int remainingSize = size;
+  while (lbaCurr <= MAX_LBA && remainingSize > 0) {
+    int cappedSize = std::min(remainingSize, SSD_ERASE_MAX_SIZE);
+
+    int actualSize;
+    if (lbaCurr + cappedSize > MAX_LBA + 1) {
+      actualSize = MAX_LBA - lbaCurr + 1;
+    } else {
+      actualSize = cappedSize;
+    }
+
+    ssd->Erase(lbaCurr, actualSize);
+
+    lbaCurr += actualSize;
+    remainingSize -= actualSize;
   }
 }
