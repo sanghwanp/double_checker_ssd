@@ -31,6 +31,15 @@
     <ClCompile Include="RealSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="CmdFlush.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdHelp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdExit.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdFullRead.h">
@@ -55,6 +64,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="RealSSD.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdFlush.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdHelp.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdExit.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
