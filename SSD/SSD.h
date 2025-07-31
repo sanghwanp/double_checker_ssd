@@ -14,13 +14,11 @@
 
 class SSD {
  public:
-  SSD::SSD() {
-    if (filedriver.CheckFileExist(STORAGE_FILE_NAME))
-      Open();
-    else
-      Format();
-  }
+  SSD();
 
+  static SSD instance;
+  static SSD& GetInstance() { return instance; }
+   
   void Format();
   void Open();
   void SetWriteCmd(ICmd *cmd);
@@ -36,7 +34,7 @@ class SSD {
 
   std::vector<unsigned int> cache;
   unsigned int storageCache[MAX_STORAGE_IDX] = {0};
-  
+
   ICmd *writeCmd = nullptr;
   ICmd *readCmd = nullptr;
 };

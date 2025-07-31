@@ -5,6 +5,15 @@
 #include <iostream>
 #include <sstream>
 
+SSD SSD::instance;
+
+SSD::SSD() {
+  if (filedriver.CheckFileExist(STORAGE_FILE_NAME))
+    Open();
+  else
+    Format();
+}
+
 void SSD::Format() {
   filedriver.SaveFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
 }
@@ -24,10 +33,8 @@ void SSD::SaveToOutputFile(unsigned int readData) {
   ofs.close();
 }
 
-// unsigned int SSD::Read(int lba) const { return readCmd.Run(lba, storage); }
 unsigned int SSD::Read(IArguments *args) {
   unsigned int readData = readCmd->Run(args, cache);
-  // unsigned int readData = dynamic_cast<ReadCmd *>(readCmd)->GetReadResult();
   SaveToOutputFile(readData);
   return readData;
 }
