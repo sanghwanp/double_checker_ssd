@@ -28,6 +28,12 @@
     <ClCompile Include="SSDInterface.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>소스 파일\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="LogFileSystem.cpp">
+      <Filter>소스 파일\Logger</Filter>
+    </ClCompile>
     <ClCompile Include="RealSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -84,6 +90,18 @@
     <ClInclude Include="CmdErase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>소스 파일\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="ILogger.h">
+      <Filter>소스 파일\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="LogFileSystem.h">
+      <Filter>소스 파일\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="ILogFileSystem.h">
+      <Filter>소스 파일\Logger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -94,6 +112,9 @@
     </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{b87cc2a0-a0a8-4d37-bb04-bd96645b8c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Logger">
+      <UniqueIdentifier>{99230818-ac2a-4e60-b82e-e44966bbf439}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
