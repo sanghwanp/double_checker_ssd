@@ -266,19 +266,21 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReadCmd.cpp" />
     <ClCompile Include="SSD.cpp" />
+    <ClCompile Include="WriteArguments.cpp" />
     <ClCompile Include="WriteCmd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IArguments.h" />
+    <ClInclude Include="ICmd.h" />
     <ClInclude Include="ReadArguments.h" />
     <ClInclude Include="ReadCmd.h" />
     <ClInclude Include="SSD.h" />
+    <ClInclude Include="SsdConfig.h" />
+    <ClInclude Include="WriteArguments.h" />
     <ClInclude Include="WriteCmd.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ssd_nand.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

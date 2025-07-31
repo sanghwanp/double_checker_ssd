@@ -4,30 +4,43 @@
 #include <fstream>
 #include <iostream>
 
-void ReadCmd::Run(ReadArguments *args) {
-  outputData = ReadFromFile(args->GetLba());
+unsigned int ReadCmd::Run(IArguments *args, std::vector<unsigned int> &cache) {
+  LoadFromNandFile(cache);
+  return cache[args->GetLba()];
 }
 
-unsigned int ReadCmd::GetOutputData() const { return outputData; }
-
-unsigned int ReadCmd::ReadFromFile(int reqLba) {
+bool ReadCmd::DoesFileExist(const std::string &fileName) {
   std::ifstream ifs;
-  ifs.open(NAND_FNAME);
+  ifs.open(fileName);
+  if (ifs.is_open()) {
+    ifs.close();
+    return true;
+  }
+  return false;
+}
 
-  if (false == ifs.is_open()) {
-    throw std::runtime_error("Failed to open NAND file: " +
-                             std::string(NAND_FNAME));
+void ReadCmd::CreateFile(const std::string &fileName) {
+  std::ofstream ofs;
+  ofs.open(fileName);
+  if (ofs.is_open()) {
+    for (int i = 0; i < SsdConfig::kStorageSize; i++) {
+      ofs << std::hex << SsdConfig::kStorageInitValue << "\n";
+    }
+    ofs.close();
+    return;
   }
 
-  std::string line;
-  int lba = 0;
-  while (getline(ifs, line)) {
-    if (lba == reqLba) {
-      return stoul(line);
-    }
-    lba++;
+  throw std::runtime_error("cannot create ssd_nand.txt file.");
+}
+
+void ReadCmd::LoadFromNandFile(std::vector<unsigned int> &cache) {
+  if (false == DoesFileExist(SsdConfig::SSD_NAND_TXT_FILEPATH)) {
+    CreateFile(SsdConfig::SSD_NAND_TXT_FILEPATH);
+  }
+
+  std::ifstream ifs(SsdConfig::SSD_NAND_TXT_FILEPATH);
+  for (int idx = 0; idx < SsdConfig::kStorageSize; ++idx) {
+    ifs >> std::hex >> cache[idx];
   }
   ifs.close();
-
-  throw std::runtime_error("Invalid LBA");
 }

@@ -11,5 +11,5 @@ class MockSSD : public SSDInterface {
   bool IsInvalidValue(const string& value);
 
  private:
-  std::unordered_map<int, string> storage;
+  std::unordered_map<int, string> cache;
 };

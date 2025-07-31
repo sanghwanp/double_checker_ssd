@@ -1,65 +1,22 @@
 ﻿#pragma once
-#include <cctype>
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-typedef unsigned int uint;
+#include <string>
+#include <vector>
 
-const int MAX_DATA_LEN = 10;
-const int MAX_LBA_SIZE = 100;
-const int NAND_SIZE = sizeof(int) * (MAX_LBA_SIZE);
-const std::string FILE_NAME = "ssd_nand.txt";
+#include "ICmd.h"
+#include "SsdConfig.h"
+#include "WriteArguments.h"
 
-struct Command {
-  int cmdType;
-  int lba;
-  uint data;
-
-  std::string typeStr;
-  std::string dataStr;
-
-  Command() : cmdType{0}, lba{0}, data{0} {}
-  Command(int t, int l, uint d) : cmdType{t}, lba{l}, data{d} {}
-
-  bool CheckErrorCmd() {
-    if (typeStr[0] != 'W' && typeStr[0] != 'w') {
-      return true;
-    }
-    if (lba < 0 || lba >= MAX_LBA_SIZE) {
-      return true;
-    }
-    if (dataStr.length() > MAX_DATA_LEN) {
-      return true;
-    }
-    if (!(dataStr[0] == '0' && dataStr[1] == 'x')) {
-      return true;
-    }
-    for (int i = 2; i < dataStr.length(); i++) {
-      if (std::isxdigit(dataStr[i])) continue;
-      return true;
-    }
-    return false;
-  }
-
-  void Parse(std::string cmdStr) {
-    std::istringstream iss(cmdStr);
-    iss >> typeStr >> lba >> dataStr;
-
-    if (CheckErrorCmd()) throw std::invalid_argument("Invalid command type");
-
-    cmdType = 1;
-    data = std::stoul(dataStr, nullptr, 16);
-  }
-};
-
-class WriteCmd {
+class WriteCmd : public ICmd {
  public:
-  bool CheckFirst();
-  void Init();
-  void Run(Command cmd);
-  void SetData(int i, uint d);
+  unsigned int Run(IArguments* args, std::vector<unsigned int>& cache) override;
 
-  uint nand[MAX_LBA_SIZE];
-  Command cmd;
+  bool CheckFirst();
+  void SetData(std::vector<unsigned int>& cache, WriteArguments* writeArgs);
+
+ private:
+  void LoadFromNandFile(std::vector<unsigned int>& cache);
+  void SaveToFile(std::vector<unsigned int>& cache);
+
+  bool DoesFileExist(const std::string& fileName);
+  void CreateFile(const std::string& fileName);
 };

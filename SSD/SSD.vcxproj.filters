@@ -36,6 +36,9 @@
     <ClCompile Include="WriteCmd.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="WriteArguments.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -53,10 +56,17 @@
     <ClInclude Include="WriteCmd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ssd_nand.txt">
-      <Filter>리소스 파일</Filter>
-    </Text>
+    <ClInclude Include="ICmd.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IArguments.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="WriteArguments.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SsdConfig.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

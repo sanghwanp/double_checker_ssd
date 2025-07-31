@@ -1,21 +1,18 @@
 #pragma once
 #include <vector>
+#include <string>
 
+#include "ICmd.h"
 #include "ReadArguments.h"
-
-#define interface struct
-interface ICmd {
-  virtual ~ICmd() = default;
-  virtual void Run(ReadArguments * args) = 0;
-};
+#include "SsdConfig.h"
 
 class ReadCmd : public ICmd {
  public:
-  void Run(ReadArguments *args);
-  unsigned int GetOutputData() const;
+  unsigned int Run(IArguments *args, std::vector<unsigned int> &cache) override;
 
-private:
-  unsigned int ReadFromFile(int reqLba);
-  const std::string NAND_FNAME = "../SSD/ssd_nand.txt";
-  unsigned int outputData;
+ private:
+  void LoadFromNandFile(std::vector<unsigned int> &cache);
+
+  bool DoesFileExist(const std::string &fileName);
+  void CreateFile(const std::string &fileName);
 };

@@ -1,8 +1,12 @@
 #pragma once
 #include <vector>
-
+#include "IArguments.h"
+#include "ICmd.h"
 #include "ReadArguments.h"
 #include "ReadCmd.h"
+#include "WriteArguments.h"
+#include "WriteCmd.h"
+#include "SsdConfig.h"
 
 class SSD {
  public:
@@ -10,11 +14,16 @@ class SSD {
 
  public:
   void Clear();
-  unsigned int Read(ReadArguments& readArgs);
+  void SetWriteCmd(ICmd *cmd);
+  void SetReadCmd(ICmd *cmd);
+  unsigned int Read(IArguments *args);
+  void Write(IArguments *args);
+  unsigned int GetCachedData(unsigned int lba);
 
  private:
-  const int STORAGE_SIZE = 100;
-  const int STORAGE_INIT_VALUE = 0;
-  std::vector<unsigned int> storage;
-  ReadCmd readCmd;
+  void SaveToOutputFile(unsigned int readData);
+  std::vector<unsigned int> cache;
+  // ReadCmd readCmd;
+  ICmd *writeCmd = nullptr;
+  ICmd *readCmd = nullptr;
 };
