@@ -278,7 +278,7 @@
     <ClInclude Include="ReadArguments.h" />
     <ClInclude Include="ReadCmd.h" />
     <ClInclude Include="SSD.h" />
-    <ClInclude Include="SsdConfig.h" />
+    <ClInclude Include="SSDConfig.h" />
     <ClInclude Include="WriteArguments.h" />
     <ClInclude Include="WriteCmd.h" />
   </ItemGroup>

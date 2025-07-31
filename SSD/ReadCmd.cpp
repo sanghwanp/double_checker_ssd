@@ -23,8 +23,8 @@ void ReadCmd::CreateFile(const std::string &fileName) {
   std::ofstream ofs;
   ofs.open(fileName);
   if (ofs.is_open()) {
-    for (int i = 0; i < SsdConfig::kStorageSize; i++) {
-      ofs << std::hex << SsdConfig::kStorageInitValue << "\n";
+    for (int i = 0; i < SSDConfig::kStorageSize; i++) {
+      ofs << std::hex << SSDConfig::kStorageInitValue << "\n";
     }
     ofs.close();
     return;
@@ -34,12 +34,12 @@ void ReadCmd::CreateFile(const std::string &fileName) {
 }
 
 void ReadCmd::LoadFromNandFile(std::vector<unsigned int> &cache) {
-  if (false == DoesFileExist(SsdConfig::SSD_NAND_TXT_FILEPATH)) {
-    CreateFile(SsdConfig::SSD_NAND_TXT_FILEPATH);
+  if (false == DoesFileExist(SSDConfig::SSD_NAND_TXT_FILEPATH)) {
+    CreateFile(SSDConfig::SSD_NAND_TXT_FILEPATH);
   }
 
-  std::ifstream ifs(SsdConfig::SSD_NAND_TXT_FILEPATH);
-  for (int idx = 0; idx < SsdConfig::kStorageSize; ++idx) {
+  std::ifstream ifs(SSDConfig::SSD_NAND_TXT_FILEPATH);
+  for (int idx = 0; idx < SSDConfig::kStorageSize; ++idx) {
     ifs >> std::hex >> cache[idx];
   }
   ifs.close();

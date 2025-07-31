@@ -4,7 +4,7 @@
 
 #include "ICmd.h"
 #include "ReadArguments.h"
-#include "SsdConfig.h"
+#include "SSDConfig.h"
 
 class ReadCmd : public ICmd {
  public:

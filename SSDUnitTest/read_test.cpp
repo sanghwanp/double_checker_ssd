@@ -38,8 +38,8 @@ class ReadTestFixture : public Test {
     std::ofstream ofs;
     ofs.open(fileName);
     if (ofs.is_open()) {
-      for (int i = 0; i < SsdConfig::kStorageSize; i++) {
-        ofs << std::hex << SsdConfig::kStorageInitValue << "\n";
+      for (int i = 0; i < SSDConfig::kStorageSize; i++) {
+        ofs << std::hex << SSDConfig::kStorageInitValue << "\n";
       }
       ofs.close();
       return;

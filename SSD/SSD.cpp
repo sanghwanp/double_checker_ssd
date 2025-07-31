@@ -33,8 +33,8 @@ unsigned int SSD::Read(IArguments *args) {
 void SSD::Write(IArguments *args) { writeCmd->Run(args, cache); }
 
 unsigned int SSD::GetCachedData(unsigned int lba) {
-	if(lba >= SsdConfig::kStorageSize) {
-		throw std::invalid_argument("Invalid LBA access");
-	}
-	return cache[lba];
+  if (lba >= SSDConfig::kStorageSize) {
+    throw std::invalid_argument("Invalid LBA access");
+  }
+  return cache[lba];
 }

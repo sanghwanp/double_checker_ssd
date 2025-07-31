@@ -4,9 +4,9 @@
 #include "ICmd.h"
 #include "ReadArguments.h"
 #include "ReadCmd.h"
+#include "SSDConfig.h"
 #include "WriteArguments.h"
 #include "WriteCmd.h"
-#include "SsdConfig.h"
 
 class SSD {
  public:

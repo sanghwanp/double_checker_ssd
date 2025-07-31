@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "ICmd.h"
-#include "SsdConfig.h"
+#include "SSDConfig.h"
 #include "WriteArguments.h"
 
 class WriteCmd : public ICmd {

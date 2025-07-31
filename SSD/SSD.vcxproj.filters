@@ -65,8 +65,8 @@
     <ClInclude Include="WriteArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SsdConfig.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="SSDConfig.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

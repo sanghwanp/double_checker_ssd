@@ -19,7 +19,7 @@ unsigned int WriteCmd::Run(IArguments* args, std::vector<unsigned int>& cache) {
 }
 
 bool WriteCmd::CheckFirst() {
-  std::ifstream ifs(SsdConfig::SSD_NAND_TXT_FILEPATH);
+  std::ifstream ifs(SSDConfig::SSD_NAND_TXT_FILEPATH);
   return !ifs.is_open();
 }
 
@@ -42,8 +42,8 @@ void WriteCmd::CreateFile(const std::string& fileName) {
   std::ofstream ofs;
   ofs.open(fileName);
   if (ofs.is_open()) {
-    for (int i = 0; i < SsdConfig::kStorageSize; i++) {
-      ofs << std::hex << SsdConfig::kStorageInitValue << "\n";
+    for (int i = 0; i < SSDConfig::kStorageSize; i++) {
+      ofs << std::hex << SSDConfig::kStorageInitValue << "\n";
     }
     ofs.close();
     return;
@@ -53,24 +53,24 @@ void WriteCmd::CreateFile(const std::string& fileName) {
 }
 
 void WriteCmd::LoadFromNandFile(std::vector<unsigned int>& cache) {
-  if (false == DoesFileExist(SsdConfig::SSD_NAND_TXT_FILEPATH)) {
-    CreateFile(SsdConfig::SSD_NAND_TXT_FILEPATH);
+  if (false == DoesFileExist(SSDConfig::SSD_NAND_TXT_FILEPATH)) {
+    CreateFile(SSDConfig::SSD_NAND_TXT_FILEPATH);
   }
 
-  std::ifstream ifs(SsdConfig::SSD_NAND_TXT_FILEPATH);
-  for (int idx = 0; idx < SsdConfig::kStorageSize; ++idx) {
+  std::ifstream ifs(SSDConfig::SSD_NAND_TXT_FILEPATH);
+  for (int idx = 0; idx < SSDConfig::kStorageSize; ++idx) {
     ifs >> std::hex >> cache[idx];
   }
   ifs.close();
 }
 
 void WriteCmd::SaveToFile(std::vector<unsigned int>& cache) {
-  std::ofstream ofs(SsdConfig::SSD_NAND_TXT_FILEPATH);
+  std::ofstream ofs(SSDConfig::SSD_NAND_TXT_FILEPATH);
   if (!ofs.is_open()) {
     throw std::runtime_error("Failed to open SSD file for writing");
   }
 
-  for (int idx = 0; idx < SsdConfig::kStorageSize; ++idx) {
+  for (int idx = 0; idx < SSDConfig::kStorageSize; ++idx) {
     ofs << std::hex << cache[idx] << "\n";
   }
   ofs.close();
