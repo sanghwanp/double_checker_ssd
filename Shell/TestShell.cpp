@@ -33,47 +33,6 @@ static void fullread() {
   }
 }
 
-static void ts1() {
-  /*
-  1. 0 ~ 4번 LBA까지 Write 명령어를 수행한다
-  2. 0 ~ 4번 LBA까지 ReadCompare 수행
-  3. 5 ~ 9번 LBA까지 다른 값으로Write 명령어를 수행한다
-  4. 5 ~ 9번 LBA까지 ReadCompare 수행
-  5. 10 ~ 14번 LBA까지 다른 값으로 Write 명령어를 수행한다.
-  6. 10 ~ 14번 LBA까지 ReadCompare 수행
-  7. 위와같은규칙으로전체영역에대해Full Write + Read Compare를 수행한다
-  */
-  unsigned int data;
-  for (int idx = 0; idx < 100; idx += 5) {
-    data = idx;
-    write(idx + 0, data);
-    write(idx + 1, data);
-    write(idx + 2, data);
-    write(idx + 3, data);
-    write(idx + 4, data);
-    if (data != read(idx + 0)) {
-      std::cout << "FAIL" << std::endl;
-      return;
-    }
-    if (data != read(idx + 1)) {
-      std::cout << "FAIL" << std::endl;
-      return;
-    }
-    if (data != read(idx + 2)) {
-      std::cout << "FAIL" << std::endl;
-      return;
-    }
-    if (data != read(idx + 3)) {
-      std::cout << "FAIL" << std::endl;
-      return;
-    }
-    if (data != read(idx + 4)) {
-      std::cout << "FAIL" << std::endl;
-      return;
-    }
-  }
-}
-
 static void ts2() {
   /*
   Loop는 30회
@@ -113,6 +72,7 @@ static void ts2() {
       return;
     }
   }
+  std::cout << "PASS" << std::endl;
 }
 
 static void ts3() {
@@ -142,6 +102,7 @@ static void ts3() {
       return;
     }
   }
+  std::cout << "PASS" << std::endl;
 }
 
 int TestShell::Exec(void) {
@@ -212,7 +173,7 @@ int TestShell::parseAndExecCommand(std::string command) {
       ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(parsedCommand);
       switch (scriptCmd->nScriptNumber) {
         case 1:
-          ts1();
+          commandTestScript.Call(*parsedCommand);
           break;
         case 2:
           ts2();

@@ -218,16 +218,19 @@
     <ClCompile Include="CmdFullRead.cpp" />
     <ClCompile Include="CmdFullWrite.cpp" />
     <ClCompile Include="CmdHelp.cpp" />
+    <ClCompile Include="CmdTestSciprt.cpp" />
     <ClCompile Include="CmdWrite.cpp" />
     <ClCompile Include="CmdRead.cpp" />
     <ClCompile Include="LogFileSystem.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="ITestSciprtCase.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="MockSSD.cpp" />
     <ClCompile Include="MockSSD.h" />
     <ClCompile Include="RealSSD.cpp" />
     <ClCompile Include="SSDInterface.h" />
+    <ClCompile Include="TestScriptCase1.cpp" />
     <ClCompile Include="TestShell.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -237,6 +240,7 @@
     <ClInclude Include="CmdFlush.h" />
     <ClInclude Include="CmdHelp.h" />
     <ClInclude Include="CmdErase.h" />
+    <ClInclude Include="CmdTestScript.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="CmdFullRead.h" />
     <ClInclude Include="CmdFullWrite.h" />
@@ -244,6 +248,8 @@
     <ClInclude Include="CmdRead.h" />
     <ClInclude Include="LogFileSystem.h" />
     <ClInclude Include="logger.h" />
+    <ClInclude Include="ITestScriptCase.h" />
+    <ClInclude Include="TestScriptCase1.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="RealSSD.h" />
     <ClInclude Include="TestShell.h" />
