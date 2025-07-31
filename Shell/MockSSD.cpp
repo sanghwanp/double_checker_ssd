@@ -31,7 +31,7 @@ void MockSSD::Erase(int lba, int size) {
 
 void MockSSD::Flush() {
   // No-op: MockSSD applies writes directly to its cache,
-  // so there is no buffered data that needs flushing
+  // so there is no buffered data that needs flushing.
 }
 
 bool MockSSD::IsInvalidLBA(int lba) { return lba < 0 || lba >= 100; }
