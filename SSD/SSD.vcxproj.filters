@@ -30,13 +30,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ReadArguments.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="WriteCommand.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="WriteArguments.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FileDriver.cpp">
@@ -62,9 +56,6 @@
     <ClInclude Include="SSD.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ReadArguments.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="WriteCommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -72,9 +63,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="IParam.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="WriteArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SSDConfig.h">

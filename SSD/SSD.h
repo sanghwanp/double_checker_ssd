@@ -16,7 +16,7 @@ using std::string;
 
 class SSD {
  public:
-  SSD();
+     SSD();
 
   static SSD instance;
   static SSD &GetInstance() { return instance; }

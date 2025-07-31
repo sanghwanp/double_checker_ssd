@@ -4,7 +4,6 @@
 
 IParam* Parser::Parse(const vector<string>& tokens) {
   if (!IsValidCommandStructure(tokens)) {
-    std::cerr << "INVALID COMMAND" << std::endl;
     return GetInvalidCommand();
   }
   return GenCommandParam(tokens);

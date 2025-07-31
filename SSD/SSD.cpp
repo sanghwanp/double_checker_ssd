@@ -7,7 +7,7 @@
 
 SSD SSD::instance;
 
-SSD::SSD() {
+SSD::SSD() : cache(100) {
   commandFactory = CommandFactory::GetInstance();
   filedriver = FileDriver::GetInstance();
 }
@@ -31,7 +31,6 @@ void SSD::ExecuteCommand(IParam *param) {
       command = std::make_unique<ReadCommand>();
       break;
     default:
-      std::cerr << "Invalid command\n";
       command = std::make_unique<ICommand>();
       break;
   }
