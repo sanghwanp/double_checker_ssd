@@ -34,7 +34,7 @@ bool CommandErase::Call(const std::vector<std::string>& program) {
 
   // in case size < 0, convert lba & size to go forwards (lba 0 --> 99)
   unsigned int lbaForward = GetForwardLBA(lba, size);
-  int sizeForward = GetForwardSize(size);
+  int sizeForward = GetForwardSize(lba, size);
 
   ExecuteErase(lbaForward, sizeForward);
 
@@ -46,26 +46,37 @@ bool CommandErase::Call(const std::vector<std::string>& program) {
 bool CommandErase::IsInvalidLBA(unsigned int lba) { return lba > MAX_LBA; }
 
 unsigned int CommandErase::GetForwardLBA(unsigned int lba, int size) {
-  if (size < 0) {
-    return lba + size + 1;
-  } else {
+  if (size >= 0) {
     return lba;
   }
+
+  // size < 0
+  int lbaStart = lba + size + 1;
+
+  // need to return a valid lba
+  // if lbaStart < 0, then we push it back up to 0
+  return std::max(lbaStart, 0);
 }
 
-int CommandErase::GetForwardSize(int size) {
-  if (size < 0) {
-    return -size;
-  } else {
+int CommandErase::GetForwardSize(unsigned int lba, int size) {
+  if (size >= 0) {
     return size;
   }
+
+  // re-calculate `size` by computing the size of [lbaForward ~ lba]
+  unsigned int lbaForward = GetForwardLBA(lba, size);
+  int sizeForward = lba - lbaForward + 1;
+  return sizeForward;
 }
 
 void CommandErase::ExecuteErase(unsigned int lba, int size) {
   // this function assumes size >= 0
   unsigned int lbaCurr = lba;
   int remainingSize = size;
+
   while (lbaCurr <= MAX_LBA && remainingSize > 0) {
+    // one ssd->Erase() call per one iteration
+
     int cappedSize = std::min(remainingSize, SSD_ERASE_MAX_SIZE);
 
     int actualSize;

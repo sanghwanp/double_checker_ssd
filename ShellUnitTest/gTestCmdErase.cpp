@@ -133,3 +133,15 @@ TEST_F(EraseTestFixture, EraseFullOverRange) {
     EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
   }
 }
+
+TEST_F(EraseTestFixture, EraseFullOverRangeBackwards) {
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    WritePresetValue(lba);
+  }
+
+  cmd.Call({"erase", "99", "-300"});
+
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+  }
+}

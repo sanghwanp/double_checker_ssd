@@ -13,7 +13,7 @@ class CommandErase {
  private:
   bool IsInvalidLBA(unsigned int lba);
   unsigned int GetForwardLBA(unsigned int lba, int size);
-  int GetForwardSize(int size);
+  int GetForwardSize(unsigned int lba, int size);
   void ExecuteErase(unsigned int lba, int size);
 
   SSDInterface* ssd;
