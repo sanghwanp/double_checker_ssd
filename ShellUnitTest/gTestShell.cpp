@@ -1,55 +1,46 @@
 #include <cstdio>
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <string>
 #include <vector>
 
 #include "gmock/gmock.h"
+#include "../Shell/TestShell.h"
 
-#define TEST_SHELL_APP_NAME "..\\..\\x64\\debug_TestShell\\Shell.exe"
-#define TEMP_INPUT_FILE_NAME "input.txt"
 #define SHELL_PREFIX_OUTPUT "Shell> "
 #define SHELL_EXIT_OUTPUT SHELL_PREFIX_OUTPUT "Shutting down\n"
 #define SHELL_WRITE_DONE_OUTPUT "[Write] Done\n"
 
 using namespace testing;
 
-class TestShell {
+class TestShellExecuter {
  public:
   virtual std::string Exec(const std::vector<std::string>& commands) {
     std::string ret;
 
+    std::string combined = std::accumulate(
+        std::next(commands.begin()), commands.end(), commands[0],
+        [](const std::string& a, const std::string& b) { return a + " " + b; });
+
     std::ostringstream oss;
-    auto backupStreamBuf = std::cout.rdbuf();
+    auto backupOutBuf = std::cout.rdbuf();
     std::cout.rdbuf(oss.rdbuf());
+    std::istringstream iss(combined);
+    auto backupInBuf = std::cin.rdbuf();
+    std::cin.rdbuf(iss.rdbuf());
 
-    std::ofstream inputFile(TEMP_INPUT_FILE_NAME);
-    if (!inputFile) {
-      std::cout.rdbuf(backupStreamBuf);
-      return "Failed to open temporary input file";
-    }
+    shell.Exec();
 
-    for (auto command : commands) {
-      inputFile << command << std::endl;
-    }
-    inputFile.close();
-
-    FILE* pipe = _popen(TEST_SHELL_APP_NAME " < " TEMP_INPUT_FILE_NAME, "r");
-    if (pipe != nullptr) {
-      char buffer[256];
-      while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
-        std::cout << buffer;
-      }
-      _pclose(pipe);
-    }
-
-    std::remove(TEMP_INPUT_FILE_NAME);
-    std::cout.rdbuf(backupStreamBuf);
+    std::cin.rdbuf(backupInBuf);
+    std::cout.rdbuf(backupOutBuf);
     return oss.str();
   }
+
+  TestShell shell;
 };
 
-class MockTestShell : public TestShell {
+class MockTestShellExecuter : public TestShellExecuter {
  public:
   MOCK_METHOD(std::string, Exec, (const std::vector<std::string>&), (override));
 };
@@ -58,19 +49,19 @@ class TestShellFixture : public Test {
  public:
   void SendCommandToMock(const std::vector<std::string>& command,
                          const std::string& expected) {
-    EXPECT_CALL(mockShell, Exec(_)).WillOnce(Return(expected));
-    std::string result = mockShell.Exec(command);
+    EXPECT_CALL(mockShellExecuter, Exec(_)).WillOnce(Return(expected));
+    std::string result = mockShellExecuter.Exec(command);
     EXPECT_EQ(expected, result);
   }
 
   void SendCommandToReal(const std::vector<std::string>& command,
                          const std::string& expected) {
-    std::string result = shell.Exec(command);
+    std::string result = shellExecuter.Exec(command);
     EXPECT_EQ(expected, result);
   }
 
-  MockTestShell mockShell;
-  TestShell shell;
+  MockTestShellExecuter mockShellExecuter;
+  TestShellExecuter shellExecuter;
   const int LBA_COUNT = 100;
 
   // 1

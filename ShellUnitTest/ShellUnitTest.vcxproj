@@ -224,6 +224,7 @@
     <ClCompile Include="gTestCmdFullWrite.cpp" />
     <ClCompile Include="gTestParser.cpp" />
     <ClCompile Include="gTestRealSSD.cpp" />
+    <ClCompile Include="gTestShell.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
