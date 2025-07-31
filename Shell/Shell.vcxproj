@@ -219,6 +219,7 @@
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="MockSSD.cpp" />
     <ClCompile Include="MockSSD.h" />
+    <ClCompile Include="RealSSD.cpp" />
     <ClCompile Include="SSDInterface.h" />
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +229,7 @@
     <ClInclude Include="CmdWrite.h" />
     <ClInclude Include="CmdRead.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="RealSSD.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
