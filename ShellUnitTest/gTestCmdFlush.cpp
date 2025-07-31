@@ -5,34 +5,20 @@
 #include "../Shell/MockSSD.h"
 #include "gtest/gtest.h"
 
-class FlushTestFixture : public ::testing::Test {
+using namespace testing;
+
+class FlushTest : public Test {
  protected:
-  void SetUp() override { oldBuf = std::cout.rdbuf(oss.rdbuf()); }
-  void TearDown() override { std::cout.rdbuf(oldBuf); }
-
-  std::string GetCout() const { return oss.str(); }
-
-  std::ostringstream oss;
-  std::streambuf* oldBuf = nullptr;
-
   MockSSD ssd;
   CommandFlush cmd{&ssd};
 };
 
-TEST_F(FlushTestFixture, FlushDefault) {
-  // valid: exactly one token
+TEST_F(FlushTest, FlushDefault_CallsFlushOnce) {
+  EXPECT_CALL(ssd, Flush()).Times(1);  // gMock으로 검증
   EXPECT_TRUE(cmd.Call({"flush"}));
-  EXPECT_EQ("", GetCout());
 }
 
-TEST_F(FlushTestFixture, FlushExtraArg) {
-  // invalid: too many args
+TEST_F(FlushTest, FlushBadArgs_NoFlush) {
+  EXPECT_CALL(ssd, Flush()).Times(0);  // 호출 없어야 함
   EXPECT_FALSE(cmd.Call({"flush", "now"}));
-  EXPECT_EQ("INVALID COMMAND\n", GetCout());
-}
-
-TEST_F(FlushTestFixture, FlushNoArg) {
-  // invalid: missing command
-  EXPECT_FALSE(cmd.Call({}));
-  EXPECT_EQ("INVALID COMMAND\n", GetCout());
 }

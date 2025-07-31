@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 
+#include "gmock/gmock.h"
 #include "SSDInterface.h"
 
 class MockSSD : public SSDInterface {
@@ -8,7 +9,7 @@ class MockSSD : public SSDInterface {
   void Write(int lba, const string& value) override;
   string Read(int lba) override;
   void Erase(int lba, int size) override;
-  void Flush() override;
+  MOCK_METHOD(void, Flush, (), (override));
 
   bool IsInvalidLBA(int lba);
   bool IsInvalidValue(const string& value);
