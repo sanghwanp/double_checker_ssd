@@ -165,7 +165,8 @@ int TestShell::parseAndExecCommand(std::string command) {
   switch (eCmd) {
     case eWriteCmd: {
       WriteParam* writeCmd = dynamic_cast<WriteParam*>(parsedCommand);
-      std::vector<std::string> program = {"write", writeCmd->lba, writeCmd->data};
+      std::vector<std::string> program = {"write", writeCmd->lba,
+                                          writeCmd->data};
       commandWrite.Call(program);
       break;
     }
@@ -176,10 +177,13 @@ int TestShell::parseAndExecCommand(std::string command) {
       break;
     }
     case eHelpCmd: {
+      std::vector<std::string> program = {"help"};
+      commandHelp.Call(program);
       break;
     }
     case eExitCmd: {
-      std::cout << "Shutting down" << std::endl;
+      std::vector<std::string> program = {"exit"};
+      commandExit.Call(program);
       break;
     }
     case eFullwrite: {

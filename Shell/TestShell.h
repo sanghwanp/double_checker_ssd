@@ -6,6 +6,8 @@
 #include "CmdRead.h"
 #include "CmdFullWrite.h"
 #include "CmdFullRead.h"
+#include "CmdExit.h"
+#include "CmdHelp.h"
 
 class TestShell {
  public:
@@ -20,4 +22,6 @@ class TestShell {
   CommandRead commandRead{&ssdDriver};
   CommandFullWrite commandFullWrite{&ssdDriver};
   CommandFullRead commandFullRead{&ssdDriver};
+  CommandExit commandExit;
+  CommandHelp commandHelp;
 };
