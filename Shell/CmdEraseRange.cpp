@@ -2,8 +2,10 @@
 
 #include <iostream>
 
+#include "logger.h"
+
 CommandEraseRange::CommandEraseRange(SSDInterface* ssdInterface)
-    : ssd(ssdInterface) {}
+    : CommandErase(ssdInterface) {}
 
 bool CommandEraseRange::Call(const std::vector<std::string>& program) {
   // program example:
@@ -32,24 +34,13 @@ bool CommandEraseRange::Call(const std::vector<std::string>& program) {
     return false;
   }
 
-  if (lbaEnd < lbaStart) {
-    unsigned int tmp = lbaEnd;
-    lbaEnd = lbaStart;
-    lbaStart = tmp;
-  }
+  int size =
+      (lbaStart <= lbaEnd) ? lbaEnd - lbaStart + 1 : lbaEnd - lbaStart - 1;
 
-  while (lbaStart <= lbaEnd) {
-    int size = lbaEnd - lbaStart + 1;
-    int actualSize = (size > 10) ? 10 : size;
 
-    ssd->Erase(lbaStart, actualSize);
+  std::vector<std::string> eraseProgram = {"erase",
+                                           std::to_string(lbaStart),
+                                           std::to_string(size)};
 
-    lbaStart += actualSize;
-  }
-
-  // SUCCESS
-  std::cout << "[Eraserange] Done\n";
-  return true;
+  return CommandErase::Call(eraseProgram);
 }
-
-bool CommandEraseRange::IsInvalidLBA(unsigned int lba) { return lba > MAX_LBA; }

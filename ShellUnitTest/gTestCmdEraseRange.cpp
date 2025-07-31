@@ -21,7 +21,7 @@ class EraseRangeTestFixture : public Test {
 
   std::string GetCoutStr() { return oss.str(); }
 
-  bool CheckSuccess() { return GetCoutStr() == "[Eraserange] Done\n"; }
+  bool CheckSuccess() { return GetCoutStr() == "[Erase] Done\n"; }
 
   void ClearCoutStr() { oss.str(""); }
 

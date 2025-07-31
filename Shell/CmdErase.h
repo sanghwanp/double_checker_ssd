@@ -11,7 +11,6 @@ class CommandErase {
   bool Call(const std::vector<std::string>& program);
 
  private:
-  bool IsInvalidLBA(unsigned int lba);
   unsigned int GetForwardLBA(unsigned int lba, int size);
   int GetForwardSize(unsigned int lba, int size);
 
@@ -22,10 +21,14 @@ class CommandErase {
   void updateLbaAndSize(unsigned int& lbaCurr, int& remainingSize,
                         int actualSize);
 
-  SSDInterface* ssd;
   const int LBA_INDEX = 1;
   const int SIZE_INDEX = 2;
   const int PROGRAM_SIZE = 3;
-  const unsigned int MAX_LBA = 99;
   const int SSD_ERASE_MAX_SIZE = 10;
+
+ protected:
+  bool IsInvalidLBA(unsigned int lba);
+
+  SSDInterface* ssd;
+  const unsigned int MAX_LBA = 99;
 };
