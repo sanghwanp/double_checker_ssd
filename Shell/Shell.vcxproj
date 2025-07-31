@@ -217,6 +217,8 @@
     <ClCompile Include="CmdHelp.cpp" />
     <ClCompile Include="CmdWrite.cpp" />
     <ClCompile Include="CmdRead.cpp" />
+    <ClCompile Include="LogFileSystem.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="MockSSD.cpp" />
@@ -226,6 +228,8 @@
     <ClCompile Include="TestShell.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ILogFileSystem.h" />
+    <ClInclude Include="ILogger.h" />
     <ClInclude Include="CmdExit.h" />
     <ClInclude Include="CmdHelp.h" />
     <ClInclude Include="IParam.h" />
@@ -233,6 +237,8 @@
     <ClInclude Include="CmdFullWrite.h" />
     <ClInclude Include="CmdWrite.h" />
     <ClInclude Include="CmdRead.h" />
+    <ClInclude Include="LogFileSystem.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="RealSSD.h" />
     <ClInclude Include="TestShell.h" />
