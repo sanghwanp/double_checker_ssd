@@ -21,6 +21,8 @@ class SSD {
    
   void Format();
   void Open();
+
+  bool Run(std::vector<std::string> args);
   void SetWriteCmd(ICmd *cmd);
   void SetReadCmd(ICmd *cmd);
   unsigned int Read(IArguments *args);
