@@ -8,6 +8,7 @@ enum TestShellCMD {
   eExitCmd,
   eFullwrite,
   eFullread,
+  eEraseCmd,
   eScriptCmd,
   eInvalidCmd
 };
@@ -38,6 +39,13 @@ class FullWriteParam : public IParam {
  public:
   FullWriteParam(TestShellCMD cmd, string data) : IParam(cmd), data(data) {}
   string data;
+};
+
+class EraseParam : public IParam {
+ public:
+  EraseParam(TestShellCMD cmd, string lba, string size) : IParam(cmd), lba(lba), size(size) {}
+  string lba;
+  string size;
 };
 
 class ScriptParam : public IParam {

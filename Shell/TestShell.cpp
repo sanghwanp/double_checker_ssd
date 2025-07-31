@@ -197,6 +197,12 @@ int TestShell::parseAndExecCommand(std::string command) {
       commandFullRead.Call(program);
       break;
     }
+    case eEraseCmd: {
+      EraseParam* eraseCmd = dynamic_cast<EraseParam*>(parsedCommand);
+      std::vector<std::string> program = {"erase", eraseCmd->lba, eraseCmd->size};
+      commandErase.Call(program);
+      break;
+    }
     case eScriptCmd: {
       ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(parsedCommand);
       switch (scriptCmd->nScriptNumber) {

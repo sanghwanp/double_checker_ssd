@@ -8,6 +8,7 @@
 #include "CmdFullRead.h"
 #include "CmdExit.h"
 #include "CmdHelp.h"
+#include "CmdErase.h"
 
 class TestShell {
  public:
@@ -24,4 +25,5 @@ class TestShell {
   CommandFullRead commandFullRead{&ssdDriver};
   CommandExit commandExit;
   CommandHelp commandHelp;
+  CommandErase commandErase{&ssdDriver};
 };
