@@ -46,9 +46,9 @@ int RealSSD::execCommand(const std::string& cmd) {
   return std::system(cmd.c_str());
 }
 
-bool MockSSD::IsInvalidLBA(int lba) { return lba < 0 || lba >= 100; }
+bool RealSSD::IsInvalidLBA(int lba) { return lba < 0 || lba >= 100; }
 
-bool MockSSD::IsInvalidValue(const string& value) {
+bool RealSSD::IsInvalidValue(const string& value) {
   if (value.size() != 10) return true;
   if (value[0] != '0' || value[1] != 'x') return true;
 
