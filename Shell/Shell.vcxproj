@@ -212,6 +212,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CmdEraseRange.cpp" />
     <ClCompile Include="CmdExit.cpp" />
     <ClCompile Include="CmdFlush.cpp" />
     <ClCompile Include="CmdErase.cpp" />
@@ -231,6 +232,7 @@
     <ClCompile Include="TestShell.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CmdEraseRange.h" />
     <ClInclude Include="ILogFileSystem.h" />
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="CmdExit.h" />

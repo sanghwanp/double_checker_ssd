@@ -217,6 +217,7 @@
   <ItemGroup>
     <ClCompile Include="..\Shell\CmdWrite.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="gTestCmdEraseRange.cpp" />
     <ClCompile Include="gTestCmdExit.cpp" />
     <ClCompile Include="gTestCmdFlush.cpp" />
     <ClCompile Include="gTestCmdErase.cpp" />
