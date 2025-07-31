@@ -98,6 +98,28 @@ TEST_F(EraseTestFixture, EraseMultiCmd) {
   }
 }
 
+TEST_F(EraseTestFixture, EraseMultiCmdBackwards) {
+  for (unsigned int lba = 0; lba < 30; lba++) {
+    WritePresetValue(lba);
+  }
+
+  EXPECT_TRUE(cmd.Call({"erase", "20", "-15"}));
+  CheckSuccess();
+
+  for (unsigned int lba = 0; lba < 6; lba++) {
+    EXPECT_EQ(GetPresetValue(lba), ssd.Read(lba));
+  }
+  for (unsigned int lba = 6; lba < 21; lba++) {
+    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+  }
+  for (unsigned int lba = 21; lba < 30; lba++) {
+    EXPECT_EQ(GetPresetValue(lba), ssd.Read(lba));
+  }
+  for (unsigned int lba = 30; lba < 31; lba++) {
+    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+  }
+}
+
 TEST_F(EraseTestFixture, EraseFull) {
   for (unsigned int lba = 0; lba < 100; lba++) {
     WritePresetValue(lba);
@@ -140,6 +162,32 @@ TEST_F(EraseTestFixture, EraseFullOverRangeBackwards) {
   }
 
   cmd.Call({"erase", "99", "-300"});
+
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+  }
+}
+
+TEST_F(EraseTestFixture, EraseMultiCmdFull) {
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    WritePresetValue(lba);
+  }
+
+  EXPECT_TRUE(cmd.Call({"erase", "0", "300"}));
+  CheckSuccess();
+
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+  }
+}
+
+TEST_F(EraseTestFixture, EraseMultiCmdFullBackwards) {
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    WritePresetValue(lba);
+  }
+
+  EXPECT_TRUE(cmd.Call({"erase", "99", "-300"}));
+  CheckSuccess();
 
   for (unsigned int lba = 0; lba < 100; lba++) {
     EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
