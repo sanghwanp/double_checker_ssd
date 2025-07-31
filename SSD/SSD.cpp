@@ -8,6 +8,9 @@
 SSD SSD::instance;
 
 SSD::SSD() {
+
+  commandFactory = CommandFactory::GetInstance();
+
   if (filedriver.CheckFileExist(STORAGE_FILE_NAME))
     Open();
   else
@@ -22,7 +25,7 @@ void SSD::Open() {
   filedriver.LoadFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
 }
 
-bool SSD::Run(vector<string> args) {
+void SSD::Run(vector<string> args) {
   IParam *cmd;
 
   cmd = parser.Parse(args);
@@ -41,12 +44,7 @@ bool SSD::Run(vector<string> args) {
       break;
   }
 
-  return false;
 }
-
-void SSD::SetWriteCmd(ICmd *cmd) { this->writeCmd = cmd; }
-
-void SSD::SetReadCmd(ICmd *cmd) { this->readCmd = cmd; }
 
 void SSD::SaveToOutputFile(unsigned int readData) {
   std::ofstream ofs;

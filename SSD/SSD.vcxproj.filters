@@ -18,7 +18,7 @@
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ReadCmd.cpp">
+    <ClCompile Include="ReadCommand.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="SSD.cpp">
@@ -33,7 +33,7 @@
     <ClCompile Include="ReadArguments.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="WriteCmd.cpp">
+    <ClCompile Include="WriteCommand.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="WriteArguments.cpp">
@@ -45,6 +45,9 @@
     <ClCompile Include="Paser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="CommandFactory.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -53,7 +56,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ReadCmd.h">
+    <ClInclude Include="ReadCommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SSD.h">
@@ -62,10 +65,10 @@
     <ClInclude Include="ReadArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="WriteCmd.h">
+    <ClInclude Include="WriteCommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ICmd.h">
+    <ClInclude Include="ICommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="IParam.h">
@@ -78,6 +81,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Parser.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandFactory.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

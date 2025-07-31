@@ -1,5 +1,5 @@
 #include "../SSD/SSD.h"
-#include "../SSD/WriteCmd.h"
+#include "../SSD/WriteCommand.h"
 #include "../SSD/WriteArguments.h"
 #include "gmock/gmock.h"
 
@@ -26,7 +26,7 @@ class WriteTestFixture : public Test {
   const std::string INVALID_CMD_3 = "W 1 0xxxxxxxxx";
 
   SSD ssd;
-  WriteCmd writeCmd;
+  WriteCommand writeCmd;
   WriteArguments writeArgs;
 
   void SetUp() override {

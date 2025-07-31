@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../SSD/SSD.h"
-#include "../SSD/ReadCmd.h"
+#include "../SSD/ReadCommand.h"
 #include "../SSD/ReadArguments.h"
 #include "../SSD/IParam.h"
 #include "gmock/gmock.h"
@@ -49,9 +49,9 @@ class ReadTestFixture : public Test {
   }
 };
 
-class WriteCmdMock : public ICmd {
+class WriteCmdMock : public ICommand {
  public:
-  MOCK_METHOD(unsigned int, Run,
+  MOCK_METHOD(unsigned int, Execute,
               (IArguments * writeArgs, std::vector<unsigned int> &cache),
               (override));
 };
@@ -93,7 +93,7 @@ TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
                      << std::hex << std::setw(8) << std::setfill('0') << data)
                         .str());
 
-    EXPECT_CALL(mock, Run(&writeArgs,_)).WillOnce([&]() {
+    EXPECT_CALL(mock, Execute(&writeArgs,_)).WillOnce([&]() {
       if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
         CreateFile(SSD_NAND_TXT_FILEPATH);
       }

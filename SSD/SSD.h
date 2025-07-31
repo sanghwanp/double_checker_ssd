@@ -2,17 +2,15 @@
 #include <vector>
 
 #include "SSDConfig.h"
+#include "CommandFactory.h"
 #include "FileDriver.h"
 #include "Parser.h"
 
-#include "IParam.h"
-#include "ICmd.h"
-
+#include "ICommand.h"
+#include "WriteCommand.h"
+#include "ReadCommand.h"
 #include "ReadArguments.h"
-#include "ReadCmd.h"
-
 #include "WriteArguments.h"
-#include "WriteCmd.h"
 
 using std::string;
 
@@ -26,15 +24,15 @@ class SSD {
   void Format();
   void Open();
 
-  bool Run(vector<string> argv);
-  void SetWriteCmd(ICmd *cmd);
-  void SetReadCmd(ICmd *cmd);
   unsigned int Read(IArguments *args);
   void Write(IArguments *args);
+  void Run(vector<string> argv);
   unsigned int GetCachedData(unsigned int lba);
 
  private:
   void SaveToOutputFile(unsigned int readData);
+  
+  CommandFactory commandFactory;
 
   FileDriver filedriver;
   Parser parser;
@@ -42,6 +40,6 @@ class SSD {
   vector<unsigned int> cache;
   unsigned int storageCache[MAX_STORAGE_IDX] = {0};
 
-  ICmd *writeCmd = nullptr;
-  ICmd *readCmd = nullptr;
+  ICommand *writeCmd = nullptr;
+  ICommand *readCmd = nullptr;
 };
