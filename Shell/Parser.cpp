@@ -1,7 +1,18 @@
 #include <iostream>
 #include <cctype>
-
+#include <regex>
 #include "Parser.h"
+
+string Parser::ExtractScriptNumberIfValidFormat(const std::string& str) {
+  static const std::regex pattern(R"(^(\d+)_.*$)");
+  std::smatch match;
+
+  if (std::regex_match(str, match, pattern)) {
+    return match[1].str();  // 첫 번째 캡처 그룹(숫자) 반환
+  }
+
+  return "0";
+}
 
 std::vector<std::string> Parser::SplitArgs(const std::string& input) {
   std::vector<std::string> result;
@@ -26,6 +37,7 @@ IParam* Parser::GenCommandParam(std::vector<std::string> tokens) {
   return it->second.paramObj(tokens);
 }
 
+
 IParam* Parser::Parse(const std::string& input) {
   vector<std::string> tokens;
   IParam* cmdParam;
@@ -36,14 +48,22 @@ IParam* Parser::Parse(const std::string& input) {
 
   tokens = SplitArgs(input);
 
+  if (true == IsValidScriptCommandStructure(tokens)) {
+    return GenScriptParam(tokens);
+  }
+
   if (false == IsValidCommandStructure(tokens)) {
-    std::cerr << "Error: Invalid command structure." << std::endl;
+    std::cerr << "INVALID COMMAND" << std::endl;
     return GetInvalidCommand();
   }
 
   cmdParam = GenCommandParam(tokens);
 
   return cmdParam;
+}
+
+IParam * Parser::GenScriptParam(std::vector<std::string>& tokens) {
+  return commandParamSpecs.at("script").paramObj(tokens);
 }
 
 bool Parser::IsValidCommandStructure(const vector<std::string>& tokens) {
@@ -56,6 +76,21 @@ bool Parser::IsValidCommandStructure(const vector<std::string>& tokens) {
 
     if (tokens.size() != spec.argCount) return false;
     return spec.validator(tokens);
+}
+
+bool Parser::IsValidScriptCommandStructure(const vector<std::string>& tokens) {
+  string scriptNumber = ExtractScriptNumberIfValidFormat(tokens[0]);
+
+  if (scriptNumber == "0")
+  {
+    return false;
+  }
+
+  const CommandParamSpec& spec = commandParamSpecs.at("script");
+
+  if (tokens.size() != spec.argCount) return false;
+
+  return spec.validator(tokens);
 }
 
 bool Parser::IsNumber(const std::string& str) {
