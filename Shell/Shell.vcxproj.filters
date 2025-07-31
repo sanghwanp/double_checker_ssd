@@ -30,6 +30,7 @@
     </ClCompile>
     <ClCompile Include="RealSSD.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="TestShell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

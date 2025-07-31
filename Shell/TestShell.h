@@ -1,6 +1,11 @@
 #pragma once
 
 #include "Parser.h"
+#include "MockSSD.h"
+#include "CmdWrite.h"
+#include "CmdRead.h"
+#include "CmdFullWrite.h"
+#include "CmdFullRead.h"
 
 class TestShell {
  public:
@@ -9,4 +14,10 @@ class TestShell {
  private:
   int parseAndExecCommand(std ::string command);
   Parser parser;
+
+  MockSSD ssdDriver;
+  CommandWrite commandWrite{&ssdDriver};
+  CommandRead commandRead{&ssdDriver};
+  CommandFullWrite commandFullWrite{&ssdDriver};
+  CommandFullRead commandFullRead{&ssdDriver};
 };

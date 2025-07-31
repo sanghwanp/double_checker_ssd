@@ -145,8 +145,8 @@ static void ts3() {
 }
 
 int TestShell::Exec(void) {
-  std::string command;
   std::fill(ssd.begin(), ssd.end(), 0);
+  std::string command;
 
   while (true) {
     std::cout << "Shell> ";
@@ -165,12 +165,14 @@ int TestShell::parseAndExecCommand(std::string command) {
   switch (eCmd) {
     case eWriteCmd: {
       WriteParam* writeCmd = dynamic_cast<WriteParam*>(parsedCommand);
-      write(stoi(writeCmd->lba), stoul(writeCmd->data, nullptr, 16));
+      std::vector<std::string> program = {"write", writeCmd->lba, writeCmd->data};
+      commandWrite.Call(program);
       break;
     }
     case eReadCmd: {
       ReadParam* readCmd = dynamic_cast<ReadParam*>(parsedCommand);
-      read(stoi(readCmd->lba));
+      std::vector<std::string> program = {"read", readCmd->lba};
+      commandRead.Call(program);
       break;
     }
     case eHelpCmd: {
@@ -182,11 +184,13 @@ int TestShell::parseAndExecCommand(std::string command) {
     }
     case eFullwrite: {
       FullWriteParam* fwCmd = dynamic_cast<FullWriteParam*>(parsedCommand);
-      fullwrite(stoul(fwCmd->data, nullptr, 16));
+      std::vector<std::string> program = {"fullwrite", fwCmd->data};
+      commandFullWrite.Call(program);
       break;
     }
     case eFullread: {
-      fullread();
+      std::vector<std::string> program = {"fullread"};
+      commandFullRead.Call(program);
       break;
     }
     case eScriptCmd: {
