@@ -182,3 +182,23 @@ TEST(MockSSDTest, Erase_InvalidRange) {
 
   EXPECT_EQ(ssd.Read(99), "0x10000000");
 }
+
+TEST(MockSSDTest, IsInvalidErase) {
+  MockSSD ssd;
+  EXPECT_FALSE(ssd.IsInvalidErase(0, 0));
+  EXPECT_FALSE(ssd.IsInvalidErase(0, 1));
+  EXPECT_FALSE(ssd.IsInvalidErase(0, 2));
+  EXPECT_FALSE(ssd.IsInvalidErase(0, 10));
+
+  EXPECT_FALSE(ssd.IsInvalidErase(50, 0));
+  EXPECT_FALSE(ssd.IsInvalidErase(50, 1));
+  EXPECT_FALSE(ssd.IsInvalidErase(50, 2));
+  EXPECT_FALSE(ssd.IsInvalidErase(50, 10));
+
+  EXPECT_FALSE(ssd.IsInvalidErase(95, 0));
+  EXPECT_FALSE(ssd.IsInvalidErase(95, 1));
+  EXPECT_FALSE(ssd.IsInvalidErase(95, 2));
+  EXPECT_TRUE(ssd.IsInvalidErase(95, 10));
+
+  EXPECT_TRUE(ssd.IsInvalidErase(95, -1));
+}

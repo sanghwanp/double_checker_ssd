@@ -19,20 +19,11 @@ string MockSSD::Read(int lba) {
 }
 
 void MockSSD::Erase(int lba, int size) {
-  if (IsInvalidLBA(lba)) {
-    return;
-  }
-
-  // check validity of size
-  if (size < 0 || size > 10) {
+  if (IsInvalidLBA(lba) || IsInvalidErase(lba, size)) {
     return;
   }
 
   int lbaEnd = lba + size - 1;
-  if (lbaEnd >= 100) {
-    return;
-  }
-
   for (int lbaIndex = lba; lbaIndex <= lbaEnd; lbaIndex++) {
     cache.erase(lbaIndex);
   }
@@ -54,4 +45,18 @@ bool MockSSD::IsInvalidValue(const string& value) {
   }
 
   return false;
+}
+
+bool MockSSD::IsInvalidErase(int lba, int size) {
+  if (size < 0 || size > 10) {
+    return true;
+  }
+
+  if (size == 0) {
+    return false;
+  }
+
+  // assume lba is valid
+  int lbaEnd = lba + size - 1;
+  return lbaEnd >= 100;
 }

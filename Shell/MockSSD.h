@@ -10,6 +10,7 @@ class MockSSD : public SSDInterface {
   void Erase(int lba, int size) override;
   bool IsInvalidLBA(int lba);
   bool IsInvalidValue(const string& value);
+  bool IsInvalidErase(int lba, int size);
 
  private:
   std::unordered_map<int, string> cache;
