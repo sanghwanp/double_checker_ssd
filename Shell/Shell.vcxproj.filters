@@ -43,6 +43,8 @@
     <ClCompile Include="CmdExit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gtest\gtest-all.cc" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)..\..\lib\native\src\gmock\gmock-all.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdFullRead.h">
@@ -98,8 +100,5 @@
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{b87cc2a0-a0a8-4d37-bb04-bd96645b8c75}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

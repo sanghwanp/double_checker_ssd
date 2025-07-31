@@ -3,13 +3,18 @@
 
 #include "../Shell/CmdFlush.h"
 #include "../Shell/MockSSD.h"
-#include "gtest/gtest.h"
+#include "gmock/gmock.h"
 
 using namespace testing;
 
+class MockableMockSSD : public MockSSD {
+ public:
+  MOCK_METHOD(void, Flush, (), (override));
+};
+
 class FlushTest : public Test {
  protected:
-  MockSSD ssd;
+  MockableMockSSD ssd;
   CommandFlush cmd{&ssd};
 };
 
