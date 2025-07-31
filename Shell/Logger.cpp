@@ -91,7 +91,8 @@ std::string Logger::GetCurrentTimestamp(bool forFile) {
     oss << std::setfill('0') << std::setw(2) << (localTime.tm_year % 100) << "."
         << std::setw(2) << (localTime.tm_mon + 1) << "." << std::setw(2)
         << localTime.tm_mday << " " << std::setw(2) << localTime.tm_hour << ":"
-        << std::setw(2) << localTime.tm_min;
+        << std::setw(2) << localTime.tm_min << ":" << std::setw(2)
+        << localTime.tm_sec;
   }
 
   return oss.str();
