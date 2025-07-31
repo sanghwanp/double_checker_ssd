@@ -34,6 +34,9 @@
     <ClCompile Include="CmdFlush.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestShell.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="CmdHelp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -73,6 +76,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CmdExit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TestShell.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdExit.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdHelp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
