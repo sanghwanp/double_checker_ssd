@@ -8,7 +8,7 @@ class MockSSD : public SSDInterface {
   void Write(int lba, const string& value) override;
   string Read(int lba) override;
   void Erase(int lba, int size) override;
-  virtual void Flush() override;
+  void Flush() override;
 
   bool IsInvalidLBA(int lba);
   bool IsInvalidValue(const string& value);
