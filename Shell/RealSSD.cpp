@@ -9,6 +9,10 @@ RealSSD::RealSSD(const std::string& ssdExecutable,
     : ssdExe(ssdExecutable), outputFile(outputFile) {}
 
 void RealSSD::Write(int lba, const std::string& value) {
+  if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
+    return;
+  }
+
   std::ostringstream cmd;
   cmd << ssdExe << " W " << lba << " " << value;
   execCommand(cmd.str());
@@ -21,6 +25,10 @@ void RealSSD::Write(int lba, const std::string& value) {
 }
 
 std::string RealSSD::Read(int lba) {
+  if (IsInvalidLBA(lba)) {
+    return "ERROR";
+  }
+
   std::ostringstream cmd;
   cmd << ssdExe << " R " << lba;
   int ret = execCommand(cmd.str());
@@ -34,7 +42,24 @@ std::string RealSSD::Read(int lba) {
   return line;
 }
 
-// 기본 execCommand 구현: std::system 사용
 int RealSSD::execCommand(const std::string& cmd) {
   return std::system(cmd.c_str());
+}
+
+bool MockSSD::IsInvalidLBA(int lba) { return lba < 0 || lba >= 100; }
+
+bool MockSSD::IsInvalidValue(const string& value) {
+  if (value.size() != 10) return true;
+  if (value[0] != '0' || value[1] != 'x') return true;
+
+  for (int i = 2; i < 10; ++i) {
+    char c = value[i];
+
+    bool isDigit = ('0' <= c && c <= '9');
+    bool isUpper = ('A' <= c && c <= 'F');
+    bool isLower = ('a' <= c && c <= 'f');
+    if (!(isDigit || isUpper || isLower)) return true;
+  }
+
+  return false;
 }
