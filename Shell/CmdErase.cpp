@@ -71,24 +71,39 @@ int CommandErase::GetForwardSize(unsigned int lba, int size) {
 
 void CommandErase::ExecuteErase(unsigned int lba, int size) {
   // this function assumes size >= 0
+
+  // initialization
   unsigned int lbaCurr = lba;
   int remainingSize = size;
 
-  while (lbaCurr <= MAX_LBA && remainingSize > 0) {
+  while (IsValidErase(lbaCurr, remainingSize)) {
     // one ssd->Erase() call per one iteration
 
-    int cappedSize = std::min(remainingSize, SSD_ERASE_MAX_SIZE);
-
-    int actualSize;
-    if (lbaCurr + cappedSize > MAX_LBA + 1) {
-      actualSize = MAX_LBA - lbaCurr + 1;
-    } else {
-      actualSize = cappedSize;
-    }
+    // calibrate the erase size
+    int actualSize = GetActualEraseSize(lbaCurr, remainingSize);
 
     ssd->Erase(lbaCurr, actualSize);
 
-    lbaCurr += actualSize;
-    remainingSize -= actualSize;
+    updateLbaAndSize(lbaCurr, remainingSize, actualSize);
   }
+}
+
+bool CommandErase::IsValidErase(unsigned int lbaCurr, int remainingSize) {
+  return lbaCurr <= MAX_LBA && remainingSize > 0;
+}
+
+int CommandErase::GetActualEraseSize(unsigned int lbaCurr, int remainingSize) {
+  int cappedSize = std::min(remainingSize, SSD_ERASE_MAX_SIZE);
+
+  if (lbaCurr + cappedSize > MAX_LBA + 1) {
+    return MAX_LBA - lbaCurr + 1;
+  } else {
+    return cappedSize;
+  }
+}
+
+void CommandErase::updateLbaAndSize(unsigned int& lbaCurr, int& remainingSize,
+                                    int actualSize) {
+  lbaCurr += actualSize;
+  remainingSize -= actualSize;
 }

@@ -14,7 +14,13 @@ class CommandErase {
   bool IsInvalidLBA(unsigned int lba);
   unsigned int GetForwardLBA(unsigned int lba, int size);
   int GetForwardSize(unsigned int lba, int size);
+
+  // erase algorithm related functions
   void ExecuteErase(unsigned int lba, int size);
+  bool IsValidErase(unsigned int lbaCurr, int remainingSize);
+  int GetActualEraseSize(unsigned int lbaCurr, int cappedSize);
+  void updateLbaAndSize(unsigned int& lbaCurr, int& remainingSize,
+                        int actualSize);
 
   SSDInterface* ssd;
   const int LBA_INDEX = 1;
