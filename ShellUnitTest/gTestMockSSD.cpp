@@ -91,3 +91,94 @@ TEST(MockSSDTest, IsInvalidValue_InvalidChars) {
   EXPECT_TRUE(ssd.IsInvalidValue("0x12#45678"));
   EXPECT_TRUE(ssd.IsInvalidValue("0x1234567!"));
 }
+
+TEST(MockSSDTest, Erase_Single) {
+  MockSSD ssd;
+  ssd.Write(10, "0x10000000");
+  ssd.Write(11, "0x11000000");
+  ssd.Write(12, "0x12000000");
+  ssd.Write(13, "0x13000000");
+  ssd.Write(14, "0x14000000");
+
+  ssd.Erase(9, 1);
+  ssd.Erase(12, 1);
+
+  EXPECT_EQ(ssd.Read(9), "0x00000000");
+  EXPECT_EQ(ssd.Read(10), "0x10000000");
+  EXPECT_EQ(ssd.Read(11), "0x11000000");
+  EXPECT_EQ(ssd.Read(12), "0x00000000");
+  EXPECT_EQ(ssd.Read(13), "0x13000000");
+  EXPECT_EQ(ssd.Read(14), "0x14000000");
+  EXPECT_EQ(ssd.Read(15), "0x00000000");
+}
+
+TEST(MockSSDTest, Erase_Double) {
+  MockSSD ssd;
+  ssd.Write(10, "0x10000000");
+  ssd.Write(11, "0x11000000");
+  ssd.Write(12, "0x12000000");
+  ssd.Write(13, "0x13000000");
+  ssd.Write(14, "0x14000000");
+
+  ssd.Erase(12, 2);
+
+  EXPECT_EQ(ssd.Read(9), "0x00000000");
+  EXPECT_EQ(ssd.Read(10), "0x10000000");
+  EXPECT_EQ(ssd.Read(11), "0x11000000");
+  EXPECT_EQ(ssd.Read(12), "0x00000000");
+  EXPECT_EQ(ssd.Read(13), "0x00000000");
+  EXPECT_EQ(ssd.Read(14), "0x14000000");
+  EXPECT_EQ(ssd.Read(15), "0x00000000");
+}
+
+TEST(MockSSDTest, Erase_All) {
+  MockSSD ssd;
+  ssd.Write(10, "0x10000000");
+  ssd.Write(11, "0x11000000");
+  ssd.Write(12, "0x12000000");
+  ssd.Write(13, "0x13000000");
+  ssd.Write(14, "0x14000000");
+
+  ssd.Erase(10, 5);
+
+  EXPECT_EQ(ssd.Read(10), "0x00000000");
+  EXPECT_EQ(ssd.Read(11), "0x00000000");
+  EXPECT_EQ(ssd.Read(12), "0x00000000");
+  EXPECT_EQ(ssd.Read(13), "0x00000000");
+  EXPECT_EQ(ssd.Read(14), "0x00000000");
+}
+
+TEST(MockSSDTest, Erase_Invalid) {
+  MockSSD ssd;
+  ssd.Write(10, "0x10000000");
+  ssd.Write(11, "0x11000000");
+  ssd.Write(12, "0x12000000");
+  ssd.Write(13, "0x13000000");
+  ssd.Write(14, "0x14000000");
+
+  ssd.Erase(8, 11);
+
+  EXPECT_EQ(ssd.Read(10), "0x10000000");
+  EXPECT_EQ(ssd.Read(11), "0x11000000");
+  EXPECT_EQ(ssd.Read(12), "0x12000000");
+  EXPECT_EQ(ssd.Read(13), "0x13000000");
+  EXPECT_EQ(ssd.Read(14), "0x14000000");
+}
+
+TEST(MockSSDTest, Erase_InvalidLBA) {
+  MockSSD ssd;
+  ssd.Write(0, "0x10000000");
+
+  ssd.Erase(-1, 2);
+
+  EXPECT_EQ(ssd.Read(0), "0x10000000");
+}
+
+TEST(MockSSDTest, Erase_InvalidRange) {
+  MockSSD ssd;
+  ssd.Write(99, "0x10000000");
+
+  ssd.Erase(99, 2);
+
+  EXPECT_EQ(ssd.Read(99), "0x10000000");
+}
