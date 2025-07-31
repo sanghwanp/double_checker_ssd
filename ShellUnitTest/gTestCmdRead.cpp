@@ -29,7 +29,7 @@ TEST_F(ReadTestFixture, ReadDefault) {
   EXPECT_TRUE(cmd.Call({"read", "1"}));
 
   std::string outputStr = GetCoutStr();
-  EXPECT_EQ("[Read] LBA 1 : 0x00000000\n", outputStr);
+  EXPECT_EQ("[Read] LBA 01 : 0x00000000\n", outputStr);
 }
 
 TEST_F(ReadTestFixture, ReadValue) {
@@ -38,7 +38,7 @@ TEST_F(ReadTestFixture, ReadValue) {
   EXPECT_TRUE(cmd.Call({"read", "1"}));
 
   std::string outputStr = GetCoutStr();
-  EXPECT_EQ("[Read] LBA 1 : 0x12345678\n", outputStr);
+  EXPECT_EQ("[Read] LBA 01 : 0x12345678\n", outputStr);
 }
 
 TEST_F(ReadTestFixture, ReadInvalidLBA) {

@@ -1,6 +1,7 @@
 #include "CmdRead.h"
 
 #include <iostream>
+#include <iomanip>
 
 CommandRead::CommandRead(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
@@ -22,7 +23,8 @@ bool CommandRead::Call(const std::vector<std::string>& program) {
 
   std::string value = ssd->Read(lba);
 
-  std::cout << "[Read] LBA " << lba << " : " << value << "\n";
+  std::cout << "[Read] LBA " << std::setw(2) << std::setfill('0') << lba << " : "
+            << value << "\n";
 
   // SUCCESS VALUE: true
   return true;
