@@ -5,7 +5,7 @@
 CommandFlush::CommandFlush(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
 bool CommandFlush::Call(const std::vector<std::string>& program) {
-  if (program.size() != 1) {
+  if (program.size() != COMMAND_SIZE) {
     printInvalidCommandMessage();
     return false;
   }
