@@ -1,5 +1,5 @@
 #pragma once
-#include <string>
+#include "Types.h"
 
 #define interface struct
 interface IArguments {
@@ -9,28 +9,24 @@ interface IArguments {
   virtual void Parse(const std::string& cmdStr) = 0;
 };
 
-using std::string;
-
-enum SSD_CMD { eWriteCmd, eReadCmd, eInvalidCmd };
-
 class IParam {
  public:
-  IParam(SSD_CMD cmd) : eCmd(cmd) {}
+  IParam(CMD_TYPE cmd) : eCmd(cmd) {}
   virtual ~IParam() {}
 
-  SSD_CMD eCmd;
+  CMD_TYPE eCmd;
 };
 
 class WriteParam : public IParam {
  public:
-  WriteParam(SSD_CMD cmd, string lba, string data)
+  WriteParam(CMD_TYPE cmd, LBA lba, DATA data)
       : IParam(cmd), lba(lba), data(data) {}
-  string lba;
-  string data;
+  LBA lba;
+  DATA data;
 };
 
 class ReadParam : public IParam {
  public:
-  ReadParam(SSD_CMD cmd, string lba) : IParam(cmd), lba(lba) {}
-  string lba;
+  ReadParam(CMD_TYPE cmd, LBA lba) : IParam(cmd), lba(lba) {}
+  LBA lba;
 };

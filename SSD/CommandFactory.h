@@ -14,10 +14,10 @@ class CommandFactory {
     return instance;
   }
 
-  void Register(SSD_CMD cmd, std::function<ICommand*()> creator);
+  void Register(CMD_TYPE cmd, std::function<ICommand*()> creator) {};
   void RegisterAllCommands();
 
-  ICommand* Create(SSD_CMD cmd) const {
+  ICommand* Create(CMD_TYPE cmd) const {
     auto it = registry.find(cmd);
     if (it != registry.end()) {
       return it->second();
@@ -26,5 +26,5 @@ class CommandFactory {
   }
 
  private:
-  std::unordered_map<SSD_CMD, std::function<ICommand*()>> registry;
+  std::unordered_map<CMD_TYPE, std::function<ICommand*()>> registry;
 };
