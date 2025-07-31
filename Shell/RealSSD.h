@@ -11,7 +11,7 @@ class RealSSD : public SSDInterface {
   string Read(int lba) override;
   bool IsInvalidLBA(int lba);
   bool IsInvalidValue(const string& value);
-  int execCommand(const std::string& cmd);
+  virtual int execCommand(const std::string& cmd);
 
  private:
   std::string ssdExe;
