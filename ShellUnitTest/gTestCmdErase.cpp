@@ -13,6 +13,8 @@ class EraseTestFixture : public Test {
   void SetUp() override {
     oldCoutStreamBuf = std::cout.rdbuf();
     std::cout.rdbuf(oss.rdbuf());
+
+    WritePresetValueAll();
   }
 
   void TearDown() override { std::cout.rdbuf(oldCoutStreamBuf); }
@@ -21,17 +23,32 @@ class EraseTestFixture : public Test {
 
   bool CheckSuccess() { return GetCoutStr() == "[Erase] Done\n"; }
 
-  bool ClearCoutStr() { oss.clear(); }
+  void ClearCoutStr() { oss.str(""); }
 
   std::string GetPresetValue(unsigned int lba) {
     std::stringstream ss;
-    ss << "0x" << std::setw(8) << std::setfill('0') << std::hex << lba;
+    // we print lba + 1, to avoid setting 0x00000000 for lba = 0
+    ss << "0x" << std::setw(8) << std::setfill('0') << std::hex << (lba + 1);
     return ss.str();
   }
 
   void WritePresetValue(unsigned int lba) {
     auto value = GetPresetValue(lba);
     ssd.Write(lba, value);
+  }
+
+  void WritePresetValueAll() {
+    for (unsigned int lba = 0; lba < 100; lba++) {
+      WritePresetValue(lba);
+    }
+  }
+
+  void CheckPreset(unsigned int lba) {
+    EXPECT_EQ(ssd.Read(lba), GetPresetValue(lba));
+  }
+
+  void CheckErased(unsigned int lba) {
+    EXPECT_EQ(ssd.Read(lba), DEFAULT_VALUE);
   }
 
   std::ostringstream oss;
@@ -44,152 +61,111 @@ class EraseTestFixture : public Test {
 
 TEST_F(EraseTestFixture, EraseInvalidLBA) {
   EXPECT_FALSE(cmd.Call({"erase", "-1", "20"}));
-  CheckSuccess();
+  EXPECT_FALSE(CheckSuccess());
+
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    CheckPreset(lba);
+  }
 }
 
 TEST_F(EraseTestFixture, EraseZero) {
   EXPECT_TRUE(cmd.Call({"erase", "0", "0"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
+  ClearCoutStr();
   EXPECT_TRUE(cmd.Call({"erase", "50", "0"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
+  ClearCoutStr();
   EXPECT_TRUE(cmd.Call({"erase", "99", "0"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
+
+  for (unsigned int lba = 0; lba < 100; lba++) {
+    CheckPreset(lba);
+  }
 }
 
 TEST_F(EraseTestFixture, EraseSingleCmd) {
-  for (unsigned int lba = 0; lba < 5; lba++) {
-    WritePresetValue(lba);
-  }
-
   EXPECT_TRUE(cmd.Call({"erase", "0", "5"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 5; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
+  }
+  for (unsigned int lba = 5; lba < 100; lba++) {
+    CheckPreset(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseSingleCmdBackwards) {
-  for (unsigned int lba = 0; lba < 5; lba++) {
-    WritePresetValue(lba);
-  }
-
   EXPECT_TRUE(cmd.Call({"erase", "4", "-5"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 5; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
+  }
+  for (unsigned int lba = 5; lba < 100; lba++) {
+    CheckPreset(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseMultiCmd) {
-  for (unsigned int lba = 0; lba < 15; lba++) {
-    WritePresetValue(lba);
-  }
-
   EXPECT_TRUE(cmd.Call({"erase", "0", "11"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 11; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
   }
-  for (unsigned int lba = 11; lba < 15; lba++) {
-    EXPECT_EQ(GetPresetValue(lba), ssd.Read(lba));
+  for (unsigned int lba = 11; lba < 100; lba++) {
+    CheckPreset(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseMultiCmdBackwards) {
-  for (unsigned int lba = 0; lba < 30; lba++) {
-    WritePresetValue(lba);
-  }
-
   EXPECT_TRUE(cmd.Call({"erase", "20", "-15"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 6; lba++) {
-    EXPECT_EQ(GetPresetValue(lba), ssd.Read(lba));
+    CheckPreset(lba);
   }
   for (unsigned int lba = 6; lba < 21; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
   }
-  for (unsigned int lba = 21; lba < 30; lba++) {
-    EXPECT_EQ(GetPresetValue(lba), ssd.Read(lba));
-  }
-  for (unsigned int lba = 30; lba < 31; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+  for (unsigned int lba = 21; lba < 100; lba++) {
+    CheckPreset(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseFull) {
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    WritePresetValue(lba);
-  }
-
-  cmd.Call({"erase", "0", "100"});
+  EXPECT_TRUE(cmd.Call({"erase", "0", "100"}));
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseFullBackwards) {
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    WritePresetValue(lba);
-  }
-
-  cmd.Call({"erase", "99", "-100"});
+  EXPECT_TRUE(cmd.Call({"erase", "99", "-100"}));
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseFullOverRange) {
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    WritePresetValue(lba);
-  }
-
-  cmd.Call({"erase", "0", "300"});
+  EXPECT_TRUE(cmd.Call({"erase", "0", "300"}));
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
   }
 }
 
 TEST_F(EraseTestFixture, EraseFullOverRangeBackwards) {
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    WritePresetValue(lba);
-  }
-
-  cmd.Call({"erase", "99", "-300"});
-
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
-  }
-}
-
-TEST_F(EraseTestFixture, EraseMultiCmdFull) {
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    WritePresetValue(lba);
-  }
-
-  EXPECT_TRUE(cmd.Call({"erase", "0", "300"}));
-  CheckSuccess();
-
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
-  }
-}
-
-TEST_F(EraseTestFixture, EraseMultiCmdFullBackwards) {
-  for (unsigned int lba = 0; lba < 100; lba++) {
-    WritePresetValue(lba);
-  }
-
   EXPECT_TRUE(cmd.Call({"erase", "99", "-300"}));
-  CheckSuccess();
+  EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
-    EXPECT_EQ(DEFAULT_VALUE, ssd.Read(lba));
+    CheckErased(lba);
   }
 }
