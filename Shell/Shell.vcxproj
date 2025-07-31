@@ -212,6 +212,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdExit.cpp" />
+    <ClCompile Include="CmdFlush.cpp" />
     <ClCompile Include="CmdErase.cpp" />
     <ClCompile Include="CmdFullRead.cpp" />
     <ClCompile Include="CmdFullWrite.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="ILogFileSystem.h" />
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="CmdExit.h" />
+    <ClInclude Include="CmdFlush.h" />
     <ClInclude Include="CmdHelp.h" />
     <ClInclude Include="CmdErase.h" />
     <ClInclude Include="IParam.h" />
@@ -246,6 +248,5 @@
     <ClInclude Include="TestShell.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>

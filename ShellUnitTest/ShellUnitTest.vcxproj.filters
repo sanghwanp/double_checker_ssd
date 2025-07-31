@@ -56,6 +56,9 @@
     <ClCompile Include="gTestCommandHelp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="gTestCmdFlush.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="gTestCmdErase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
