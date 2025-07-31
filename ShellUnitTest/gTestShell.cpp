@@ -21,7 +21,7 @@ class TestShellExecuter {
 
     std::string combined = std::accumulate(
         std::next(commands.begin()), commands.end(), commands[0],
-        [](const std::string& a, const std::string& b) { return a + " " + b; });
+        [](const std::string& a, const std::string& b) { return a + "\n" + b; });
 
     std::ostringstream oss;
     auto backupOutBuf = std::cout.rdbuf();

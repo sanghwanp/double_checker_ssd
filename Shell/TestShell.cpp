@@ -146,39 +146,71 @@ static void ts3() {
 
 int TestShell::Exec(void) {
   std::string command;
-  std::string lba;
-  std::string data;
-
   std::fill(ssd.begin(), ssd.end(), 0);
 
   while (true) {
     std::cout << "Shell> ";
-    std::cin >> command;
-    if (command == "exit") {
-      std::cout << "Shutting down\n";
+    std::getline(std::cin, command);
+
+    int eCmd = parseAndExecCommand(command);
+    if (eCmd == eExitCmd) break;
+  }
+  return 0;
+}
+
+int TestShell::parseAndExecCommand(std::string command) {
+  IParam* parsedCommand = parser.Parse(command);
+  int eCmd = parsedCommand->eCmd;
+
+  switch (eCmd) {
+    case eWriteCmd: {
+      WriteParam* writeCmd = dynamic_cast<WriteParam*>(parsedCommand);
+      write(stoi(writeCmd->lba), stoul(writeCmd->data, nullptr, 16));
       break;
-    } else if (command == "write") {
-      std::cin >> lba;
-      std::cin >> data;
-      write(stoi(lba), stoul(data, nullptr, 16));
-    } else if (command == "read") {
-      std::cin >> lba;
-      read(stoi(lba));
-    } else if (command == "fullwrite") {
-      std::cin >> data;
-      fullwrite(stoul(data, nullptr, 16));
-    } else if (command == "fullread") {
+    }
+    case eReadCmd: {
+      ReadParam* readCmd = dynamic_cast<ReadParam*>(parsedCommand);
+      read(stoi(readCmd->lba));
+      break;
+    }
+    case eHelpCmd: {
+      break;
+    }
+    case eExitCmd: {
+      std::cout << "Shutting down" << std::endl;
+      break;
+    }
+    case eFullwrite: {
+      FullWriteParam* fwCmd = dynamic_cast<FullWriteParam*>(parsedCommand);
+      fullwrite(stoul(fwCmd->data, nullptr, 16));
+      break;
+    }
+    case eFullread: {
       fullread();
-    } else if (command == "1_" || command == "1_FullWriteAndReadCompare") {
-      ts1();
-    } else if (command == "2_" || command == "2_PartialLBAWrite") {
-      ts2();
-    } else if (command == "3_" || command == "3_WriteReadAging") {
-      ts3();
-    } else {
+      break;
+    }
+    case eScriptCmd: {
+      ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(parsedCommand);
+      switch (scriptCmd->nScriptNumber) {
+        case 1:
+          ts1();
+          break;
+        case 2:
+          ts2();
+          break;
+        case 3:
+          ts3();
+          break;
+        default:
+          break;
+      }
+      break;
+    }
+    case eInvalidCmd:
+    default: {
       std::cout << "INVALID COMMAND" << std::endl;
+      break;
     }
   }
-
-  return 0;
+  return eCmd;
 }
