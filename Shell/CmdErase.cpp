@@ -31,13 +31,11 @@ bool CommandErase::Call(const std::vector<std::string>& program) {
     return false;
   }
 
-  if (size >= 0) {
-    ssd->Erase(lba, size);
-  } else {
-    int lbaStart = lba + size + 1;
-    int sizeForward = -size;
-    ssd->Erase(lbaStart, sizeForward);
-  }
+  // in case size < 0, convert lba & size to go forwards (lba 0 --> 99)
+  unsigned int lbaForward = GetForwardLBA(lba, size);
+  int sizeForward = GetForwardSize(size);
+
+  ssd->Erase(lbaForward, sizeForward);
 
   // SUCCESS
   std::cout << "[Erase] Done\n";
@@ -45,3 +43,19 @@ bool CommandErase::Call(const std::vector<std::string>& program) {
 }
 
 bool CommandErase::IsInvalidLBA(unsigned int lba) { return lba > MAX_LBA; }
+
+unsigned int CommandErase::GetForwardLBA(unsigned int lba, int size) {
+  if (size < 0) {
+    return lba + size + 1;
+  } else {
+    return lba;
+  }
+}
+
+int CommandErase::GetForwardSize(int size) {
+  if (size < 0) {
+    return -size;
+  } else {
+    return size;
+  }
+}

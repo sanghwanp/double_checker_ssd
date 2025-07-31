@@ -12,6 +12,8 @@ class CommandErase {
 
  private:
   bool IsInvalidLBA(unsigned int lba);
+  unsigned int GetForwardLBA(unsigned int lba, int size);
+  int GetForwardSize(int size);
 
   SSDInterface* ssd;
   const int LBA_INDEX = 1;
