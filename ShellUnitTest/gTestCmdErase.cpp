@@ -60,3 +60,20 @@ TEST_F(EraseTestFixture, EraseSingleCmd) {
   EXPECT_EQ(ssd.Read(3), DEFAULT_VALUE);
   EXPECT_EQ(ssd.Read(4), DEFAULT_VALUE);
 }
+
+TEST_F(EraseTestFixture, EraseSingleCmdBackwards) {
+  ssd.Write(0, "0x10000000");
+  ssd.Write(1, "0x11000000");
+  ssd.Write(2, "0x12000000");
+  ssd.Write(3, "0x13000000");
+  ssd.Write(4, "0x14000000");
+
+  EXPECT_TRUE(cmd.Call({"erase", "4", "-5"}));
+  CheckSuccess();
+
+  EXPECT_EQ(ssd.Read(0), DEFAULT_VALUE);
+  EXPECT_EQ(ssd.Read(1), DEFAULT_VALUE);
+  EXPECT_EQ(ssd.Read(2), DEFAULT_VALUE);
+  EXPECT_EQ(ssd.Read(3), DEFAULT_VALUE);
+  EXPECT_EQ(ssd.Read(4), DEFAULT_VALUE);
+}

@@ -31,7 +31,13 @@ bool CommandErase::Call(const std::vector<std::string>& program) {
     return false;
   }
 
-  ssd->Erase(lba, size);
+  if (size >= 0) {
+    ssd->Erase(lba, size);
+  } else {
+    int lbaStart = lba + size + 1;
+    int sizeForward = -size;
+    ssd->Erase(lbaStart, sizeForward);
+  }
 
   // SUCCESS
   std::cout << "[Erase] Done\n";
