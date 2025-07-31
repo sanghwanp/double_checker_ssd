@@ -2,5 +2,7 @@
 #include <string>
 
 class ILogger {
-  virtual void print(const std::string& location, const std::string& message) = 0;
+ public:
+  virtual void print(const std::string& functionName,
+                     const std::string& message) = 0;
 };

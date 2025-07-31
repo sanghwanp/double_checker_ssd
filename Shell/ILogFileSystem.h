@@ -1,7 +1,6 @@
 #pragma once
-
-// FileSystem.h
 #include <filesystem>
+#include <string>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -9,8 +8,11 @@ namespace fs = std::filesystem;
 class ILogFileSystem {
  public:
   virtual ~ILogFileSystem() = default;
+
+  virtual bool exists(const fs::path& path) const = 0;
+  virtual std::uintmax_t file_size(const fs::path& path) const = 0;
   virtual std::vector<fs::directory_entry> listFiles(
-      const std::string& path) const = 0;
+      const fs::path& dir) const = 0;
   virtual bool isRegularFile(const fs::directory_entry& entry) const = 0;
   virtual std::string filename(const fs::directory_entry& entry) const = 0;
   virtual fs::file_time_type lastWriteTime(

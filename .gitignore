@@ -413,6 +413,7 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+*.zip
 
 ##Custom for D-Team
 ssd_nand.txt

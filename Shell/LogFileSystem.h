@@ -1,14 +1,18 @@
 #pragma once
 #include "ILogFileSystem.h"
+
 class LogFileSystem : public ILogFileSystem {
  public:
-  std::vector<fs::directory_entry> listFiles(
-      const std::string& path) const override;
-  bool isRegularFile(const fs::directory_entry& entry) const;
-  std::string filename(const fs::directory_entry& entry) const;
-  fs::file_time_type lastWriteTime(const fs::directory_entry& entry) const;
-  void rename(const fs::path& from, const fs::path& to);
-
-  private:
-  ILogFileSystem* fileSystem;
+  bool exists(const std::filesystem::path& path) const override;
+  std::uintmax_t file_size(const std::filesystem::path& path) const override;
+  std::vector<std::filesystem::directory_entry> listFiles(
+      const std::filesystem::path& dir) const override;
+  bool isRegularFile(
+      const std::filesystem::directory_entry& entry) const override;
+  std::string filename(
+      const std::filesystem::directory_entry& entry) const override;
+  std::filesystem::file_time_type lastWriteTime(
+      const std::filesystem::directory_entry& entry) const override;
+  void rename(const std::filesystem::path& from,
+              const std::filesystem::path& to) override;
 };

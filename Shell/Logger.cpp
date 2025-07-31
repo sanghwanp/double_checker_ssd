@@ -1,35 +1,40 @@
 #include "Logger.h"
 
-#include <algorithm>
 #include <chrono>
 #include <ctime>
-#include <filesystem>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <vector>
 
-namespace fs = std::filesystem;
+#include "LogFileSystem.h"
 
 namespace {
 constexpr std::uintmax_t MAX_FILE_SIZE = 10 * 1024;  // 10KB
-std::ofstream logFile;
-}  // namespace
-
-Logger& Logger::getInstance() {
-  static Logger instance;
-  return instance;
 }
 
-Logger::Logger() : consoleOutput(true), logFileName("latest.log") {
+Logger::Logger()
+    : consoleOutput(true),
+      logFileName("latest.log"),
+      fileSystem(new LogFileSystem()),
+      ownsFileSystem(true) {
   openLogFile();
 }
-Logger::Logger(ILogFileSystem* fs) : fileSystem(fs) {}
+
+Logger::Logger(ILogFileSystem* fs, bool ConsoleOn)
+    : consoleOutput(ConsoleOn),
+      logFileName("latest.log"),
+      fileSystem(fs),
+      ownsFileSystem(false) {
+  openLogFile();
+}
 
 Logger::~Logger() {
   if (logFile.is_open()) {
     logFile.close();
+  }
+  if (ownsFileSystem) {
+    delete fileSystem;
   }
 }
 
@@ -44,7 +49,6 @@ void Logger::print(const std::string& functionName,
   funcOss << std::left << std::setw(40) << functionName;
 
   formatted << "[" << timestamp << "] " << funcOss.str() << ": " << message;
-
   std::string logLine = formatted.str();
 
   if (consoleOutput) {
@@ -62,7 +66,6 @@ void Logger::openLogFile() { logFile.open(logFileName, std::ios::app); }
 
 std::string Logger::getCurrentTimestamp(bool forFile) {
   using namespace std::chrono;
-
   auto now = system_clock::now();
   std::time_t t = system_clock::to_time_t(now);
   std::tm localTime{};
@@ -89,15 +92,15 @@ std::string Logger::getCurrentTimestamp(bool forFile) {
 }
 
 void Logger::checkAndRotateLogFile() {
-  if (!fs::exists(logFileName)) return;
+  if (!fileSystem->exists(logFileName)) return;
 
-  std::uintmax_t fileSize = fs::file_size(logFileName);
+  std::uintmax_t fileSize = fileSystem->file_size(logFileName);
   if (fileSize < MAX_FILE_SIZE) return;
 
   logFile.close();
 
   std::string rotatedName = "until_" + getCurrentTimestamp(true) + ".log";
-  fs::rename(logFileName, rotatedName);
+  fileSystem->rename(logFileName, rotatedName);
 
   openLogFile();
   manageOldLogs();
@@ -110,26 +113,27 @@ bool Logger::ends_with(const std::string& str, const std::string& suffix) {
 }
 
 void Logger::manageOldLogs() {
-  std::vector<fs::directory_entry> untilLogs;
+  std::vector<std::filesystem::directory_entry> untilLogs;
 
-  for (const auto& entry : fs::directory_iterator(".")) {
-    if (entry.is_regular_file()) {
-      std::string name = entry.path().filename().string();
+  for (const auto& entry : fileSystem->listFiles(".")) {
+    if (fileSystem->isRegularFile(entry)) {
+      std::string name = fileSystem->filename(entry);
       if (name.rfind("until_", 0) == 0 && ends_with(name, ".log")) {
         untilLogs.push_back(entry);
       }
     }
   }
 
-  if (untilLogs.size() <= 2) return;
+  if (untilLogs.size() <= 1) return;
 
-  std::sort(untilLogs.begin(), untilLogs.end(),
-            [](const auto& a, const auto& b) {
-              return fs::last_write_time(a) < fs::last_write_time(b);
-            });
-
-  const auto& oldest = untilLogs.front();
-  fs::path zipPath = oldest.path();
-  zipPath.replace_extension(".zip");
-  fs::rename(oldest.path(), zipPath);
+  std::sort(
+      untilLogs.begin(), untilLogs.end(), [&](const auto& a, const auto& b) {
+        return fileSystem->lastWriteTime(a) < fileSystem->lastWriteTime(b);
+      });
+  untilLogs.pop_back();  // Remove the most recent log
+  for (auto oldLog : untilLogs) {
+    std::filesystem::path zipPath = oldLog.path();
+    zipPath.replace_extension(".zip");
+    fileSystem->rename(oldLog.path(), zipPath);
+  } 
 }
