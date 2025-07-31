@@ -1,19 +1,28 @@
 #pragma once
 #include <vector>
+
+#include "SSDConfig.h"
+#include "FileDriver.h"
+
 #include "IArguments.h"
 #include "ICmd.h"
+
 #include "ReadArguments.h"
 #include "ReadCmd.h"
-#include "SSDConfig.h"
 #include "WriteArguments.h"
 #include "WriteCmd.h"
 
 class SSD {
  public:
-  SSD();
+  SSD::SSD() {
+    if (filedriver.CheckFileExist(STORAGE_FILE_NAME))
+      Open();
+    else
+      Format();
+  }
 
- public:
-  void Clear();
+  void Format();
+  void Open();
   void SetWriteCmd(ICmd *cmd);
   void SetReadCmd(ICmd *cmd);
   unsigned int Read(IArguments *args);
@@ -22,8 +31,12 @@ class SSD {
 
  private:
   void SaveToOutputFile(unsigned int readData);
+
+  FileDriver filedriver;
+
   std::vector<unsigned int> cache;
-  // ReadCmd readCmd;
+  unsigned int storageCache[MAX_STORAGE_IDX] = {0};
+  
   ICmd *writeCmd = nullptr;
   ICmd *readCmd = nullptr;
 };

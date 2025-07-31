@@ -5,10 +5,12 @@
 #include <iostream>
 #include <sstream>
 
-SSD::SSD() { Clear(); }
-void SSD::Clear() {
-  cache.clear();
-  cache.resize(SsdConfig::kStorageSize, SsdConfig::kStorageInitValue);
+void SSD::Format() {
+  filedriver.SaveFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
+}
+
+void SSD::Open() {
+  filedriver.LoadFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
 }
 
 void SSD::SetWriteCmd(ICmd *cmd) { this->writeCmd = cmd; }
