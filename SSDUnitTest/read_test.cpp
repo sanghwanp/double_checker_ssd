@@ -6,7 +6,7 @@
 #include "../SSD/SSD.h"
 #include "../SSD/ReadCmd.h"
 #include "../SSD/ReadArguments.h"
-#include "../SSD/IArguments.h"
+#include "../SSD/IParam.h"
 #include "gmock/gmock.h"
 
 using namespace testing;

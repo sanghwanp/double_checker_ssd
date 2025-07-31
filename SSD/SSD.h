@@ -3,26 +3,30 @@
 
 #include "SSDConfig.h"
 #include "FileDriver.h"
+#include "Parser.h"
 
-#include "IArguments.h"
+#include "IParam.h"
 #include "ICmd.h"
 
 #include "ReadArguments.h"
 #include "ReadCmd.h"
+
 #include "WriteArguments.h"
 #include "WriteCmd.h"
+
+using std::string;
 
 class SSD {
  public:
   SSD();
 
   static SSD instance;
-  static SSD& GetInstance() { return instance; }
-   
+  static SSD &GetInstance() { return instance; }
+
   void Format();
   void Open();
 
-  bool Run(std::vector<std::string> args);
+  bool Run(vector<string> argv);
   void SetWriteCmd(ICmd *cmd);
   void SetReadCmd(ICmd *cmd);
   unsigned int Read(IArguments *args);
@@ -33,8 +37,9 @@ class SSD {
   void SaveToOutputFile(unsigned int readData);
 
   FileDriver filedriver;
+  Parser parser;
 
-  std::vector<unsigned int> cache;
+  vector<unsigned int> cache;
   unsigned int storageCache[MAX_STORAGE_IDX] = {0};
 
   ICmd *writeCmd = nullptr;

@@ -263,6 +263,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FileDriver.cpp" />
+    <ClCompile Include="Paser.cpp" />
     <ClCompile Include="ReadArguments.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReadCmd.cpp" />
@@ -275,8 +276,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IArguments.h" />
+    <ClInclude Include="IParam.h" />
     <ClInclude Include="ICmd.h" />
+    <ClInclude Include="Parser.h" />
     <ClInclude Include="ReadArguments.h" />
     <ClInclude Include="ReadCmd.h" />
     <ClInclude Include="SSD.h" />

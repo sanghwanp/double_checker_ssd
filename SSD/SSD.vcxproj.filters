@@ -42,6 +42,9 @@
     <ClCompile Include="FileDriver.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Paser.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -65,13 +68,16 @@
     <ClInclude Include="ICmd.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="IArguments.h">
+    <ClInclude Include="IParam.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="WriteArguments.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="SSDConfig.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

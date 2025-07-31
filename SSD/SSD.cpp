@@ -22,36 +22,23 @@ void SSD::Open() {
   filedriver.LoadFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
 }
 
-bool SSD::Run(std::vector<std::string> args) {
-  if (args.size() <= 1 || args.size() >= 4) {
-    throw std::invalid_argument("Usage1: R <LBA>\nUsage2: W <LBA> <Data>");
-  }
+bool SSD::Run(vector<string> args) {
+  IParam *cmd;
 
-  const std::string &cmdTypeStr = args[0];
-  std::string argsStr;
-  for (int i = 0; i < args.size(); i++) {
-    argsStr += args[i];
-    if (i != args.size() - 1) argsStr += " ";
-  }
+  cmd = parser.Parse(args);
 
-  ReadCmd readCmd;
-  WriteCmd writeCmd;
+  switch (cmd->eCmd) {
+    case SSD_CMD::eWriteCmd:
+      // Write(cmd);
+      break;
+    case SSD_CMD::eReadCmd:
+      // Read(cmd);
+      break;
+    case SSD_CMD::eInvalidCmd:
 
-  SetReadCmd(&readCmd);
-  SetWriteCmd(&writeCmd);
-
-  if (cmdTypeStr == "R" || cmdTypeStr == "read") {
-    ReadArguments readArgs;
-    readArgs.Parse(argsStr);
-    unsigned int result = Read(&readArgs);
-
-  } else if (cmdTypeStr == "W" || cmdTypeStr == "write") {
-    WriteArguments writeArgs;
-    writeArgs.Parse(argsStr);
-
-    Write(&writeArgs);
-  } else {
-    throw std::invalid_argument("Unknown command type");  // ERROR
+      break;
+    default:
+      break;
   }
 
   return false;
