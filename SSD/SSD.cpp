@@ -8,58 +8,36 @@
 SSD SSD::instance;
 
 SSD::SSD() {
-
   commandFactory = CommandFactory::GetInstance();
-
-  if (filedriver.CheckFileExist(STORAGE_FILE_NAME))
-    Open();
-  else
-    Format();
-}
-
-void SSD::Format() {
-  filedriver.SaveFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
-}
-
-void SSD::Open() {
-  filedriver.LoadFile(STORAGE_FILE_NAME, storageCache, MAX_STORAGE_IDX);
+  filedriver = FileDriver::GetInstance();
 }
 
 void SSD::Run(vector<string> args) {
   IParam *cmd;
-
   cmd = parser.Parse(args);
 
-  switch (cmd->eCmd) {
-    case SSD_CMD::eWriteCmd:
-      // Write(cmd);
-      break;
-    case SSD_CMD::eReadCmd:
-      // Read(cmd);
-      break;
-    case SSD_CMD::eInvalidCmd:
+  ExecuteCommand(cmd);
 
+}
+
+void SSD::ExecuteCommand(IParam *param) {
+  std::unique_ptr<ICommand> command;
+
+  switch (param->eCmd) {
+    case eWriteCmd:
+      command = std::make_unique<WriteCommand>();
+      break;
+    case eReadCmd:
+      command = std::make_unique<ReadCommand>();
       break;
     default:
+      std::cerr << "Invalid command\n";
+      command = std::make_unique<ICommand>();
       break;
   }
 
+  command->Execute(param);
 }
-
-void SSD::SaveToOutputFile(unsigned int readData) {
-  std::ofstream ofs;
-  ofs.open("C:\\ssd_output.txt");
-  ofs << (std::stringstream() << std::hex << readData).str();
-  ofs.close();
-}
-
-unsigned int SSD::Read(IArguments *args) {
-  unsigned int readData = readCmd->Run(args, cache);
-  SaveToOutputFile(readData);
-  return readData;
-}
-
-void SSD::Write(IArguments *args) { writeCmd->Run(args, cache); }
 
 unsigned int SSD::GetCachedData(unsigned int lba) {
   if (lba >= SSDConfig::kStorageSize) {
