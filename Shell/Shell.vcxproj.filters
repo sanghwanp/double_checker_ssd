@@ -46,6 +46,9 @@
     <ClCompile Include="CmdExit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="CmdErase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdFullRead.h">
@@ -69,6 +72,9 @@
     <ClInclude Include="Parser.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="IParam.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
     <ClInclude Include="RealSSD.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -79,6 +85,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CmdHelp.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdErase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="logger.h">
