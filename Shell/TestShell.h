@@ -9,6 +9,8 @@
 #include "CmdExit.h"
 #include "CmdHelp.h"
 #include "CmdErase.h"
+#include "CmdFlush.h"
+
 
 class TestShell {
  public:
@@ -26,4 +28,5 @@ class TestShell {
   CommandExit commandExit;
   CommandHelp commandHelp;
   CommandErase commandErase{&ssdDriver};
+  CommandFlush commandFlush{&ssdDriver};
 };

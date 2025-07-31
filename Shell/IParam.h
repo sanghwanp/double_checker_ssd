@@ -8,6 +8,7 @@ enum TestShellCMD {
   eExitCmd,
   eFullwrite,
   eFullread,
+  eFlushCmd,
   eEraseCmd,
   eScriptCmd,
   eInvalidCmd

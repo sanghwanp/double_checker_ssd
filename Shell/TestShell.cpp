@@ -35,13 +35,13 @@ static void fullread() {
 
 static void ts1() {
   /*
-  1. 0 ~ 4¹ø LBA±îÁö Write ¸í·É¾î¸¦ ¼öÇàÇÑ´Ù
-  2. 0 ~ 4¹ø LBA±îÁö ReadCompare ¼öÇà
-  3. 5 ~ 9¹ø LBA±îÁö ´Ù¸¥ °ªÀ¸·ÎWrite ¸í·É¾î¸¦ ¼öÇàÇÑ´Ù
-  4. 5 ~ 9¹ø LBA±îÁö ReadCompare ¼öÇà
-  5. 10 ~ 14¹ø LBA±îÁö ´Ù¸¥ °ªÀ¸·Î Write ¸í·É¾î¸¦ ¼öÇàÇÑ´Ù.
-  6. 10 ~ 14¹ø LBA±îÁö ReadCompare ¼öÇà
-  7. À§¿Í°°Àº±ÔÄ¢À¸·ÎÀüÃ¼¿µ¿ª¿¡´ëÇØFull Write + Read Compare¸¦ ¼öÇàÇÑ´Ù
+  1. 0 ~ 4ë²ˆ LBAê¹Œì§€ Write ëª…ë ¹ì–´ë¥¼ ìˆ˜í–‰í•œë‹¤
+  2. 0 ~ 4ë²ˆ LBAê¹Œì§€ ReadCompare ìˆ˜í–‰
+  3. 5 ~ 9ë²ˆ LBAê¹Œì§€ ë‹¤ë¥¸ ê°’ìœ¼ë¡œWrite ëª…ë ¹ì–´ë¥¼ ìˆ˜í–‰í•œë‹¤
+  4. 5 ~ 9ë²ˆ LBAê¹Œì§€ ReadCompare ìˆ˜í–‰
+  5. 10 ~ 14ë²ˆ LBAê¹Œì§€ ë‹¤ë¥¸ ê°’ìœ¼ë¡œ Write ëª…ë ¹ì–´ë¥¼ ìˆ˜í–‰í•œë‹¤.
+  6. 10 ~ 14ë²ˆ LBAê¹Œì§€ ReadCompare ìˆ˜í–‰
+  7. ìœ„ì™€ê°™ì€ê·œì¹™ìœ¼ë¡œì „ì²´ì˜ì—­ì—ëŒ€í•´Full Write + Read Compareë¥¼ ìˆ˜í–‰í•œë‹¤
   */
   unsigned int data;
   for (int idx = 0; idx < 100; idx += 5) {
@@ -76,13 +76,13 @@ static void ts1() {
 
 static void ts2() {
   /*
-  Loop´Â 30È¸
-  1. 4¹ø LBA¿¡ °ªÀ»Àû´Â´Ù.
-  2. 0¹ø LBA¿¡ °°Àº °ªÀ» Àû´Â´Ù.
-  3. 3¹ø LBA¿¡ °°Àº °ªÀ» Àû´Â´Ù.
-  4. 1¹ø LBA¿¡ °°Àº °ªÀ» Àû´Â´Ù.
-  5. 2¹ø LBA¿¡ °°Àº °ªÀ» Àû´Â´Ù.
-  6. LBA 0 ~4¹ø, ReadCompare
+  LoopëŠ” 30íšŒ
+  1. 4ë²ˆ LBAì— ê°’ì„ì ëŠ”ë‹¤.
+  2. 0ë²ˆ LBAì— ê°™ì€ ê°’ì„ ì ëŠ”ë‹¤.
+  3. 3ë²ˆ LBAì— ê°™ì€ ê°’ì„ ì ëŠ”ë‹¤.
+  4. 1ë²ˆ LBAì— ê°™ì€ ê°’ì„ ì ëŠ”ë‹¤.
+  5. 2ë²ˆ LBAì— ê°™ì€ ê°’ì„ ì ëŠ”ë‹¤.
+  6. LBA 0 ~4ë²ˆ, ReadCompare
 */
   unsigned int data;
   for (int idx = 0; idx < 30; ++idx) {
@@ -117,10 +117,10 @@ static void ts2() {
 
 static void ts3() {
   /*
-  Loop 200È¸
-  1. 0¹ø LBA¿¡ ·£´ı°ªÀ» Àû´Â´Ù.
-  2. 99¹ø LBA¿¡ ·£´ı°ªÀ» Àû´Â´Ù.
-  3. LBA 0¹ø°ú 99¹ø, ReadCompare¸¦ ¼öÇà
+  Loop 200íšŒ
+  1. 0ë²ˆ LBAì— ëœë¤ê°’ì„ ì ëŠ”ë‹¤.
+  2. 99ë²ˆ LBAì— ëœë¤ê°’ì„ ì ëŠ”ë‹¤.
+  3. LBA 0ë²ˆê³¼ 99ë²ˆ, ReadCompareë¥¼ ìˆ˜í–‰
  */
 
   std::random_device rd;
@@ -201,6 +201,11 @@ int TestShell::parseAndExecCommand(std::string command) {
       EraseParam* eraseCmd = dynamic_cast<EraseParam*>(parsedCommand);
       std::vector<std::string> program = {"erase", eraseCmd->lba, eraseCmd->size};
       commandErase.Call(program);
+      break;
+    }
+    case eFlushCmd: {
+      std::vector<std::string> program = {"flush"};
+      commandFlush.Call(program);
       break;
     }
     case eScriptCmd: {
