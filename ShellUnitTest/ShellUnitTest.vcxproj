@@ -218,6 +218,7 @@
     <ClCompile Include="..\Shell\CmdWrite.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
     <ClCompile Include="gTestCmdExit.cpp" />
+    <ClCompile Include="gTestCmdErase.cpp" />
     <ClCompile Include="gTestCmdFullRead.cpp" />
     <ClCompile Include="gTestCmdRead.cpp" />
     <ClCompile Include="gTestCommandHelp.cpp" />

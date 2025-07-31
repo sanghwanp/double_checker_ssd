@@ -212,6 +212,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdExit.cpp" />
+    <ClCompile Include="CmdErase.cpp" />
     <ClCompile Include="CmdFullRead.cpp" />
     <ClCompile Include="CmdFullWrite.cpp" />
     <ClCompile Include="CmdHelp.cpp" />
@@ -228,6 +229,7 @@
   <ItemGroup>
     <ClInclude Include="CmdExit.h" />
     <ClInclude Include="CmdHelp.h" />
+    <ClInclude Include="CmdErase.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="CmdFullRead.h" />
     <ClInclude Include="CmdFullWrite.h" />
