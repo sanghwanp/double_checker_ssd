@@ -188,3 +188,13 @@ TEST_F(FixtureParser, script_command_parse_invalid_name) {
   cmd = parser.Parse(testStr);
   EXPECT_EQ(cmd->eCmd, eInvalidCmd);
 }
+TEST_F(FixtureParser, flush_command_fail_over_args) {
+  SetupInputString("flush 1123");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eInvalidCmd);
+}
+TEST_F(FixtureParser, flush_command_success) {
+  SetupInputString("flush");
+  cmd = parser.Parse(testStr);
+  EXPECT_EQ(cmd->eCmd, eFlushCmd);
+}
