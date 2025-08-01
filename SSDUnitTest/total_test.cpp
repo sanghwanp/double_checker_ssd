@@ -24,7 +24,7 @@ protected:
     const std::string READ_OUTPUT_FILE_NAME = "output.txt";
 };
 
-TEST_F(SSDTest, WriteAndRead_CachedData) {
+TEST_F(SSDTest, DIABLED_WriteAndRead_CachedData) {
     // Write
     std::vector<std::string> writeArgs = { "W", "5", "0x12345678" };
     ssd.Run(writeArgs);

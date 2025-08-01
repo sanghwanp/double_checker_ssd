@@ -1,7 +1,7 @@
 #include <vector>
 
-#include "CmdBuffer.h"
-#include "Interval.h"
+#include "../SSD/CmdBuffer.h"
+#include "../SSD/Interval.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
