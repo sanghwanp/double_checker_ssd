@@ -15,6 +15,20 @@ CommandBufferEntry::CommandBufferEntry(CmdType cmdType, unsigned int startLba,
 
 int CommandBufferEntry::Length() const { return endLba - startLba + 1; }
 
+std::string CommandBufferEntry::ToString() const {
+  std::string result;
+  if (cmdType == CmdType::WRITE) {
+    result = "W_";
+  } else if (cmdType == CmdType::ERASE) {
+    result = "E_";
+  } else {
+    throw std::invalid_argument("Invalid CmdType: " + ToString(cmdType));
+  }
+  result += std::to_string(startLba) + "_" + std::to_string(endLba) + "_" +
+            std::to_string(data);
+  return result;
+}
+
 std::string CommandBufferEntry::ToString(CmdType cmdType) const {
   if (cmdType == CmdType::WRITE)
     return "WRITE";

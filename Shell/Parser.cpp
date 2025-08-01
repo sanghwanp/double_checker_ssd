@@ -4,10 +4,10 @@
 #include "Parser.h"
 
 string Parser::ExtractScriptNumberIfValidFormat(const std::string& str) {
-  static const std::regex pattern(R"(^(\d+)_.*$)");
+  static const std::regex cmdBufFileRegexPattern(R"(^(\d+)_.*$)");
   std::smatch match;
 
-  if (std::regex_match(str, match, pattern)) {
+  if (std::regex_match(str, match, cmdBufFileRegexPattern)) {
     return match[1].str();  // 첫 번째 캡처 그룹(숫자) 반환
   }
 

@@ -417,4 +417,6 @@ FodyWeavers.xsd
 
 ##Custom for D-Team
 ssd_nand.txt
+ssd_output.txt
 output.txt
+*.cmdbuf
