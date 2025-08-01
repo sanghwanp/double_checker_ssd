@@ -56,6 +56,7 @@
     <ProjectGuid>{7babe87a-ecbe-42f9-b579-43fc4e5cb03a}</ProjectGuid>
     <RootNamespace>SSD</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>ssd</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -267,6 +268,7 @@
     <ClCompile Include="CommandBufferOptimizer.cpp" />
     <ClCompile Include="CommandBufferEntry.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
+    <ClCompile Include="EraseCommand.cpp" />
     <ClCompile Include="FileDriver.cpp" />
     <ClCompile Include="Paser.cpp" />
     <ClCompile Include="main.cpp" />
@@ -285,6 +287,7 @@
     <ClInclude Include="CommandBufferHandler.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="CommandBufferEntry.h" />
+    <ClInclude Include="EraseCommand.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="Parser.h" />

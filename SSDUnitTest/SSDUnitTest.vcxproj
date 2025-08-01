@@ -278,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cmdbuffer_test.cpp" />
+    <ClCompile Include="erase_test.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="read_test.cpp" />
     <ClCompile Include="total_test.cpp" />

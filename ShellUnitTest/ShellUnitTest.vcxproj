@@ -185,7 +185,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>MAIN_SELECT=4;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNIT_TEST;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -217,6 +217,7 @@
   <ItemGroup>
     <ClCompile Include="..\Shell\CmdWrite.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="gTestCmdEraseRange.cpp" />
     <ClCompile Include="gTestCmdExit.cpp" />
     <ClCompile Include="gTestCmdFlush.cpp" />
     <ClCompile Include="gTestCmdErase.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="gTestCmdFullWrite.cpp" />
     <ClCompile Include="gTestParser.cpp" />
     <ClCompile Include="gTestRealSSD.cpp" />
+    <ClCompile Include="gTestScriptRunner.cpp" />
     <ClCompile Include="gTestShell.cpp" />
     <ClCompile Include="gTestTestScriptCase.cpp" />
     <ClCompile Include="main.cpp" />
@@ -243,9 +245,29 @@
     <ClCompile Include="..\Shell\SSDInterface.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Shell\CmdErase.h" />
+    <ClInclude Include="..\Shell\CmdExit.h" />
+    <ClInclude Include="..\Shell\CmdFlush.h" />
+    <ClInclude Include="..\Shell\CmdFullRead.h" />
     <ClInclude Include="..\Shell\CmdFullWrite.h" />
+    <ClInclude Include="..\Shell\CmdHelp.h" />
+    <ClInclude Include="..\Shell\CmdRead.h" />
+    <ClInclude Include="..\Shell\CmdTestScript.h" />
     <ClInclude Include="..\Shell\CmdWrite.h" />
+    <ClInclude Include="..\Shell\ILogFileSystem.h" />
+    <ClInclude Include="..\Shell\ILogger.h" />
+    <ClInclude Include="..\Shell\IParam.h" />
+    <ClInclude Include="..\Shell\ITestScriptCase.h" />
+    <ClInclude Include="..\Shell\LogFileSystem.h" />
+    <ClInclude Include="..\Shell\logger.h" />
+    <ClInclude Include="..\Shell\Parser.h" />
     <ClInclude Include="..\Shell\RealSSD.h" />
+    <ClInclude Include="..\Shell\ScriptRunner.h" />
+    <ClInclude Include="..\Shell\TestScriptCase1.h" />
+    <ClInclude Include="..\Shell\TestScriptCase2.h" />
+    <ClInclude Include="..\Shell\TestScriptCase3.h" />
+    <ClInclude Include="..\Shell\TestScriptCase4.h" />
+    <ClInclude Include="..\Shell\TestShell.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

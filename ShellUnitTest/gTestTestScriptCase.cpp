@@ -10,7 +10,7 @@ using namespace testing;
 class MockTestScriptCase : public ITestScriptCase {
  public:
   MockTestScriptCase(SSDInterface* ssdinterface)
-      : ITestScriptCase(ssdinterface, 0) {}
+      : ITestScriptCase(ssdinterface, 0, "mock") {}
   MOCK_METHOD(bool, Call, (), (override));
 };
 

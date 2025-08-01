@@ -25,7 +25,7 @@ std::string CommandBufferEntry::ToString(CmdType cmdType) const {
 }
 
 void CommandBufferEntry::Print() const {
-  printf("[%d,%d]->val:%llu, cmdType:%startLba\n", startLba, endLba, data,
+  printf("[%d,%d]->val:%llu, cmdType:%s\n", startLba, endLba, data,
          ToString(cmdType).c_str());
 }
 

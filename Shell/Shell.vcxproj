@@ -212,6 +212,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CmdEraseRange.cpp" />
     <ClCompile Include="CmdExit.cpp" />
     <ClCompile Include="CmdFlush.cpp" />
     <ClCompile Include="CmdErase.cpp" />
@@ -229,6 +230,7 @@
     <ClCompile Include="MockSSD.cpp" />
     <ClCompile Include="MockSSD.h" />
     <ClCompile Include="RealSSD.cpp" />
+    <ClCompile Include="ScriptRunner.cpp" />
     <ClCompile Include="SSDInterface.h" />
     <ClCompile Include="TestScriptCase1.cpp" />
     <ClCompile Include="TestScriptCase2.cpp" />
@@ -237,6 +239,7 @@
     <ClCompile Include="TestShell.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CmdEraseRange.h" />
     <ClInclude Include="ILogFileSystem.h" />
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="CmdExit.h" />
@@ -252,6 +255,7 @@
     <ClInclude Include="LogFileSystem.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="ITestScriptCase.h" />
+    <ClInclude Include="ScriptRunner.h" />
     <ClInclude Include="TestScriptCase1.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="RealSSD.h" />

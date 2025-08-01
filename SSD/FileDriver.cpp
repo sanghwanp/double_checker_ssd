@@ -46,8 +46,12 @@ void FileDriver::SaveFile(const char* filename, const std::string& message) {
   ofs.close();
 }
 
-const unsigned int* FileDriver::GetBufferData(unsigned int lba) {
+const unsigned int* FileDriver::GetBufferAddr(unsigned int lba) {
   return &storageCache[lba];
+}
+
+const unsigned int FileDriver::GetBufferData(unsigned int lba) {
+  return storageCache[lba];
 }
 
 void FileDriver::SetBufferData(unsigned int lba, unsigned int data) {
