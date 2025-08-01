@@ -185,7 +185,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_TestShellUnit_test|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>MAIN_SELECT=4;</PreprocessorDefinitions>
+      <PreprocessorDefinitions>UNIT_TEST;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -217,6 +217,7 @@
   <ItemGroup>
     <ClCompile Include="..\Shell\CmdWrite.cpp" />
     <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="gTestCmdEraseRange.cpp" />
     <ClCompile Include="gTestCmdExit.cpp" />
     <ClCompile Include="gTestCmdFlush.cpp" />
     <ClCompile Include="gTestCmdErase.cpp" />

@@ -1,5 +1,6 @@
 #pragma once
 #include <cctype>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -7,7 +8,7 @@
 
 using std::string;
 
-enum CMD_TYPE { eWriteCmd, eReadCmd, eInvalidCmd };
+enum CMD_TYPE { eWriteCmd, eReadCmd, eEraseCmd, eInvalidCmd };
 
 struct LBA {
   unsigned int val;
@@ -39,5 +40,27 @@ struct DATA {
 
   static unsigned int Parse(const string& str) {
     return std::stoul(str, nullptr, 16);
+  }
+
+  std::string ToString() {
+    std::stringstream ss;
+    ss << std::hex << val;  // 16진수로 변환
+    return "0x" + ss.str();
+  }
+};
+
+struct SIZE_E {
+  unsigned int val;
+  SIZE_E(unsigned int val) : val(val) {}
+
+  static bool IsValid(const string& str1, const string& str2) {
+    if (str1.empty() || str2.empty()) return false;
+    unsigned int val1 = std::stoul(str1, nullptr, 0);
+    unsigned int val2 = std::stoul(str2, nullptr, 0);
+    return (val1 + val2) <= MAX_LBA_CNT && val2 <= MAX_ERASE_SIZE;
+  }
+
+  static unsigned int Parse(const string& str) {
+    return std::stoul(str, nullptr, 0);
   }
 };

@@ -3,7 +3,7 @@
 #include <iostream>
 
 TestScriptCase1::TestScriptCase1(SSDInterface* ssdinterface)
-    : ITestScriptCase(ssdinterface, 1) {}
+    : ITestScriptCase(ssdinterface, 1, "FullWriteAndReadCompare") {}
 
 bool TestScriptCase1::Call() {
   /*

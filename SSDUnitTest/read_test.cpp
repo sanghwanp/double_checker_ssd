@@ -1,62 +1,39 @@
 #include <gtest/gtest.h>
+
+#include "../SSD/ReadCommand.h"
 #include "../SSD/SSD.h"
-#include "../SSD/FileDriver.h"
-/*
-class SSDTest : public ::testing::Test {
-public:
-    SSDTest() : ssd(SSD::GetInstance()), fileDriver(FileDriver::GetInstance()) {}
-    unsigned int GetCachedData(unsigned int lba) {
-        return *fileDriver.GetBufferData(lba);
-    }
-    std::string readOutputFile() {
-        std::ifstream file(READ_OUTPUT_FILE_NAME);
-        std::string content((std::istreambuf_iterator<char>(file)),
-                            std::istreambuf_iterator<char>());
-        return content;
-    }
-protected:
-    SSD ssd;
-    FileDriver& fileDriver;
-    const unsigned int TEST_LBA = 5;
-    const unsigned int TEST_DATA = 0x12345678;
-    const std::string WRITE_CMD = "W 5 0x12345678";
-    const std::string READ_CMD = "R 5";
-    const std::string READ_OUTPUT_FILE_NAME = "output.txt";
+
+
+class FixtureReadCommand : public ::testing::Test {
+
+  public:
+  ReadParam MakeReadParam(unsigned int lba)
+  {
+     LBA lbaObj = {lba};
+     return ReadParam(CMD_TYPE::eReadCmd, lbaObj);
+  }
 };
 
-TEST_F(SSDTest, WriteAndRead_CachedData) {
-    // Write
-    std::vector<std::string> writeArgs = { "W", "5", "0x12345678" };
-    ssd.Run(writeArgs);
+TEST_F(FixtureReadCommand, Execute_ValidLBA) {
 
-    // Read
-    std::vector<std::string> readArgs = { "R", "5" };
-    ssd.Run(readArgs);
+  // arrage
+  ReadParam& readParam = MakeReadParam(5);
 
-    // Check cache
-    unsigned int cached = GetCachedData(TEST_LBA);
-    EXPECT_EQ(cached, TEST_DATA);
+  // Execute the read command
+  ReadCommand readCommand;
+  bool ret = readCommand.Execute(&readParam);
+
+  EXPECT_EQ(ret, true);
 }
 
-TEST_F(SSDTest, ReadCommand_InvalidLBA) {
+TEST_F(FixtureReadCommand, Execute_InvalidLBA) {
 
-    // Read
-    std::vector<std::string> readArgs = { "R", "140" };
-    ssd.Run(readArgs);
+  // Prepare an invalid ReadParam
+  ReadParam& readParam = MakeReadParam(140);
 
-    string output = readOutputFile();
+  // Execute the read command
+  ReadCommand readCommand;
+  bool ret = readCommand.Execute(&readParam);
 
-    EXPECT_EQ(output, "ERROR\n");
+  EXPECT_EQ(ret, false);
 }
-
-TEST_F(SSDTest, Run_InvalidCommandType) {
-    std::vector<std::string> invalidArgs = { "invalid", "5", "0x12345678" };
-    // 정상적으로 처리하지 못하면 내부적으로 "Invalid command" 출력
-    // 예외는 발생하지 않으나, 캐시에는 변화 없음
-    unsigned int before = GetCachedData(TEST_LBA);
-    ssd.Run(invalidArgs);
-    unsigned int after = GetCachedData(TEST_LBA);
-    EXPECT_EQ(before, after);
-}
-
-*/
