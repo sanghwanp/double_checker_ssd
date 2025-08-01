@@ -35,7 +35,7 @@ static void HelpPrint(const HelpString& str) {
   }
 }
 
-bool CommandHelp::Call(const std::vector<std::string>& program) {
+bool CommandHelp::Call(IParam& param) {
   std::cout << "[Team Info] CRA Double Checker Team\n";
   std::cout << " - Team leader: Sanghwan Park\n";
   std::cout << " - Team members: Yena Gwak, Yeonwoo Kim, Sieun Park, Donghyuk Yang, Jooseong Jeong\n\n";

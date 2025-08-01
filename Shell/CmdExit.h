@@ -1,8 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "ICommand.h"
 
-class CommandExit {
+class CommandExit : public IShellCommand {
  public:
-  bool Call(const std::vector<std::string>& tokens);
+  bool Call(IParam& param) override;
 };

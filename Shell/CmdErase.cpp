@@ -5,23 +5,14 @@
 
 CommandErase::CommandErase(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
-bool CommandErase::Call(const std::vector<std::string>& program) {
-  // program example:
-  // {"erase", "5", "20"}
-  // {"erase", "60", "-200"}
-  // {"erase", "99", "0"}
-
-  // precondition check
-  if (program.size() != PROGRAM_SIZE) {
-    // ERROR
-    return false;
-  }
+bool CommandErase::Call(IParam& param) {
+  EraseParam* eraseParam = dynamic_cast<EraseParam*>(&param);
 
   unsigned int lba;
   int size;
   try {
-    lba = std::stoi(program[LBA_INDEX]);
-    size = std::stoi(program[SIZE_INDEX]);
+    lba = std::stoi(eraseParam->lba);
+    size = std::stoi(eraseParam->size);
   } catch (...) {
     // ERROR
     return false;

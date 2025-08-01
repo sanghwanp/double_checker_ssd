@@ -9,7 +9,7 @@
 class CommandEraseRange : public CommandErase {
  public:
   CommandEraseRange(SSDInterface* ssdInterface);
-  bool Call(const std::vector<std::string>& program);
+  bool Call(IParam& param) override;
 
  private:
   const int LBA_START_INDEX = 1;

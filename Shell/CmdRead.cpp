@@ -5,17 +5,10 @@
 
 CommandRead::CommandRead(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
-bool CommandRead::Call(const std::vector<std::string>& program) {
-  // program example:
-  // {"read", 1}
+bool CommandRead::Call(IParam& param) {
+  ReadParam& readParam = dynamic_cast<ReadParam&>(param);
 
-  // precondition check
-  if (program.size() != PROGRAM_SIZE) {
-    // ERROR VALUE: false
-    return false;
-  }
-
-  unsigned int lba = std::stoi(program[LBA_INDEX]);
+  unsigned int lba = std::stoi(readParam.lba);
   if (IsInvalidLBA(lba)) {
     // ERROR VALUE: false
     return false;
