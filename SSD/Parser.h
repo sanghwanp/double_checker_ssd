@@ -50,5 +50,13 @@ class Parser {
           return LBA::IsValid(tokens[1]) &&
                  SIZE_E::IsValid(tokens[1], tokens[2]);
         }}},
+      {"F",
+       {1, CMD_TYPE::eFlushCmd,
+        [](const vector<string>& tokens) {
+          return new FlushParam(CMD_TYPE::eFlushCmd);
+        },
+        [](const vector<string>& tokens) {
+          return true;
+        }}},
   };
 };

@@ -30,3 +30,8 @@ class EraseParam : public IParam {
   LBA lba;
   SIZE_E size;
 };
+
+class FlushParam : public IParam {
+ public:
+  FlushParam(CMD_TYPE cmd) : IParam(cmd) {}
+};

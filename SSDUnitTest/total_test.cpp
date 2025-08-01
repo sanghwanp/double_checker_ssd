@@ -21,8 +21,27 @@ class SSDTest : public ::testing::Test {
   const std::string WRITE_CMD = "W 5 0x12345678";
   const std::string READ_CMD = "R 5";
   const std::string ERASE_CMD = "E 5 1";
+  const std::string FLUSH_CMD = "F";
   const std::string READ_OUTPUT_FILE_NAME = "output.txt";
 };
+
+TEST_F(SSDTest, FLUSH_CMD) {
+  // Write
+  std::vector<std::string> writeArgs = {"W", "5", "0x12345678"};
+  ssd.Run(writeArgs);
+
+  // Read
+  std::vector<std::string> readArgs = {"R", "5"};
+  ssd.Run(readArgs);
+
+  // Flush
+  std::vector<std::string> flushArgs = {"F"};
+  ssd.Run(flushArgs);
+
+  // Check cache
+  unsigned int cached = ssd.GetCachedData(TEST_LBA);
+  EXPECT_EQ(cached, TEST_DATA);
+}
 
 TEST_F(SSDTest, DIABLED_WriteAndRead_CachedData) {
   // Write

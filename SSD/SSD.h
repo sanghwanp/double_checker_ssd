@@ -1,12 +1,11 @@
 #pragma once
 #include <vector>
 
-#include "SSDConfig.h"
 #include "CommandFactory.h"
 #include "FileDriver.h"
-#include "Parser.h"
-
 #include "ICommand.h"
+#include "Parser.h"
+#include "SSDConfig.h"
 
 using std::string;
 

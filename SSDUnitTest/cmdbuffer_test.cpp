@@ -5,10 +5,9 @@
 #include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/CommandBufferHandler.h"
 #include "gmock/gmock.h"
-
+#include "Types.h"
 using namespace testing;
 using std::vector;
-using CmdType = CommandBufferConfig::CmdType;
 
 struct OptimizeTestCase {
   vector<CommandBufferEntry> input;
@@ -21,30 +20,30 @@ class CmdBufferParamTestFixture : public TestWithParam<OptimizeTestCase> {
 };
 
 // 공통 검증: data != 0이면 WRITE여야 함
-TEST_P(CmdBufferParamTestFixture, CmdTypeIsWriteWhenDataIsNotZero) {
+TEST_P(CmdBufferParamTestFixture, CMD_TYPEIsWriteWhenDataIsNotZero) {
   const auto& tc = GetParam();
   for (const auto& cmd : tc.input) {
     if (cmd.data != 0) {
-      EXPECT_EQ(cmd.cmdType, CmdType::WRITE);
+      EXPECT_EQ(cmd.cmdType, eWriteCmd);
     }
   }
 }
 
 // 공통 검증: WRITE이면 s == e 이어야 함
-TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCmdTypeIsWrite) {
+TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCMD_TYPEIsWrite) {
   const auto& tc = GetParam();
   for (const auto& cmd : tc.input) {
-    if (cmd.cmdType == CmdType::WRITE) {
+    if (cmd.cmdType == eWriteCmd) {
       EXPECT_EQ(cmd.startLba, cmd.endLba);
     }
   }
 }
 
 // 공통 검증: ERASE이면 data == 0 이어야 함
-TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCmdTypeIsErase) {
+TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCMD_TYPEIsErase) {
   const auto& tc = GetParam();
   for (const auto& cmd : tc.input) {
-    if (cmd.cmdType == CmdType::ERASE) {
+    if (cmd.cmdType == eEraseCmd) {
       EXPECT_EQ(cmd.data, 0);
     }
   }
@@ -71,18 +70,18 @@ TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
 }
 
 INSTANTIATE_TEST_SUITE_P(CmdTestCases, CmdBufferParamTestFixture,
-                         Values(OptimizeTestCase{{{CmdType::ERASE, 1, 10, 0},
-                                                  {CmdType::WRITE, 9, 9, 2},
-                                                  {CmdType::WRITE, 7, 7, 2},
-                                                  {CmdType::WRITE, 8, 8, 1},
-                                                  {CmdType::ERASE, 4, 6, 0}},
+                         Values(OptimizeTestCase{{{eEraseCmd, 1, 10, 0},
+                                                  {eWriteCmd, 9, 9, 2},
+                                                  {eWriteCmd, 7, 7, 2},
+                                                  {eWriteCmd, 8, 8, 1},
+                                                  {eEraseCmd, 4, 6, 0}},
                                                  4},
-                                OptimizeTestCase{{{CmdType::WRITE, 20, 20, 1},
-                                                  {CmdType::WRITE, 21, 21, 2},
-                                                  {CmdType::WRITE, 20, 20, 3}},
+                                OptimizeTestCase{{{eWriteCmd, 20, 20, 1},
+                                                  {eWriteCmd, 21, 21, 2},
+                                                  {eWriteCmd, 20, 20, 3}},
                                                  2},
-                                OptimizeTestCase{{{CmdType::WRITE, 1, 1, 1},
-                                                  {CmdType::WRITE, 1, 1, 1}},
+                                OptimizeTestCase{{{eWriteCmd, 1, 1, 1},
+                                                  {eWriteCmd, 1, 1, 1}},
                                                  1}));
 
 class CmdBufferHandlerFixture : public Test{

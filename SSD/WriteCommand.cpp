@@ -3,12 +3,35 @@
 #include "FileDriver.h"
 
 bool WriteCommand::Execute(IParam* param) {
-  auto* writeparam = dynamic_cast<WriteParam*>(param);
-  if (!writeparam) return false;
-  if (writeparam->lba.val >= MAX_STORAGE_IDX) return false;
+  writeParam = dynamic_cast<WriteParam*>(param);
 
-  FileDriver* FD = FileDriver::GetInstance();
-  FD->SetBufferData(writeparam->lba.val, writeparam->data.val);
-  FD->SaveFile(STORAGE_FILE_NAME, FD->GetBufferAddr(), MAX_STORAGE_IDX);
+  if (!CheckPrecondition()) return false;
+
+  UpdateDataBuffer();
+
+#if (USING_COMMAND_BUFFER == 1)
+  SaveCommandBuffer();
+#else
+  UpdateDataBuffer();
+  SaveFile();
+#endif
   return true;
+}
+
+bool WriteCommand::CheckPrecondition() {
+  if (!writeParam) return false;
+  if (writeParam->lba.val >= MAX_STORAGE_IDX) return false;
+  return true;
+}
+
+void WriteCommand::UpdateDataBuffer() {
+  fileDriver->SetBufferData(writeParam->lba.val, writeParam->data.val);
+}
+
+void WriteCommand::SaveFile() {
+  fileDriver->SaveFile(STORAGE_FILE_NAME, fileDriver->GetBufferAddr(), MAX_STORAGE_IDX);
+}
+
+void WriteCommand::SaveCommandBuffer() {
+  cmdBufHandler.AddWrite(writeParam->lba.val, writeParam->data.val);
 }
