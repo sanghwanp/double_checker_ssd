@@ -229,6 +229,7 @@
     <ClCompile Include="MockSSD.cpp" />
     <ClCompile Include="MockSSD.h" />
     <ClCompile Include="RealSSD.cpp" />
+    <ClCompile Include="ScriptRunner.cpp" />
     <ClCompile Include="SSDInterface.h" />
     <ClCompile Include="TestScriptCase1.cpp" />
     <ClCompile Include="TestScriptCase2.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="LogFileSystem.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="ITestScriptCase.h" />
+    <ClInclude Include="ScriptRunner.h" />
     <ClInclude Include="TestScriptCase1.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="RealSSD.h" />
