@@ -263,9 +263,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommandBuffer.cpp" />
+    <ClCompile Include="CommandBufferHandler.cpp" />
+    <ClCompile Include="CommandBufferOptimizer.cpp" />
+    <ClCompile Include="CommandBufferEntry.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="FileDriver.cpp" />
-    <ClCompile Include="Interval.cpp" />
     <ClCompile Include="Paser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReadCommand.cpp" />
@@ -278,9 +280,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandBuffer.h" />
+    <ClInclude Include="CommandBufferOptimizer.h" />
+    <ClInclude Include="CommandBufferConfig.h" />
     <ClInclude Include="CommandBufferHandler.h" />
     <ClInclude Include="CommandFactory.h" />
-    <ClInclude Include="Interval.h" />
+    <ClInclude Include="CommandBufferEntry.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="Parser.h" />

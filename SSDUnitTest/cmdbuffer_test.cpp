@@ -1,22 +1,21 @@
 #include <vector>
 
-#include "../SSD/CommandBuffer.h"
-#include "../SSD/Interval.h"
+#include "../SSD/CommandBufferEntry.h"
+#include "../SSD/CommandBufferOptimizer.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
 using std::vector;
 
 struct OptimizeTestCase {
-  vector<Interval> input;
+  vector<CommandBufferEntry> input;
   size_t expected_size;
 };
 
 class CmdBufferParamTestFixture : public TestWithParam<OptimizeTestCase> {
  public:
-  CommandBuffer cmdBuffer;
+  CommandBufferOptimizer cmdBufferOptimizer;
 };
-
 
 // 공통 검증: data != 0이면 WRITE여야 함
 TEST_P(CmdBufferParamTestFixture, CmdTypeIsWriteWhenDataIsNotZero) {
@@ -33,7 +32,7 @@ TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCmdTypeIsWrite) {
   const auto& tc = GetParam();
   for (const auto& cmd : tc.input) {
     if (cmd.cmdType == CmdType::WRITE) {
-      EXPECT_EQ(cmd.s, cmd.e);
+      EXPECT_EQ(cmd.startLba, cmd.endLba);
     }
   }
 }
@@ -62,24 +61,23 @@ TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
   for (const auto& cmd : tc.input) cmd.Print();
 
   puts("Output:");
-  vector<Interval> result = cmdBuffer.Optimize(tc.input);
+  vector<CommandBufferEntry> result = cmdBufferOptimizer.Optimize(tc.input);
   for (const auto& intv : result) intv.Print();
 
   EXPECT_EQ(result.size(), tc.expected_size);
 }
-// ... includes, fixture, TEST_P(...) 들 전부 ...
 
 INSTANTIATE_TEST_SUITE_P(CmdTestCases, CmdBufferParamTestFixture,
-                         Values(OptimizeTestCase{{{1, 10, 0, CmdType::ERASE},
-                                                  {9, 9, 2, CmdType::WRITE},
-                                                  {7, 7, 2, CmdType::WRITE},
-                                                  {8, 8, 1, CmdType::WRITE},
-                                                  {4, 6, 0, CmdType::ERASE}},
+                         Values(OptimizeTestCase{{{CmdType::ERASE, 1, 10, 0},
+                                                  {CmdType::WRITE, 9, 9, 2},
+                                                  {CmdType::WRITE, 7, 7, 2},
+                                                  {CmdType::WRITE, 8, 8, 1},
+                                                  {CmdType::ERASE, 4, 6, 0}},
                                                  4},
-                                OptimizeTestCase{{{20, 20, 1, CmdType::WRITE},
-                                                  {21, 21, 2, CmdType::WRITE},
-                                                  {20, 20, 3, CmdType::WRITE}},
+                                OptimizeTestCase{{{CmdType::WRITE, 20, 20, 1},
+                                                  {CmdType::WRITE, 21, 21, 2},
+                                                  {CmdType::WRITE, 20, 20, 3}},
                                                  2},
-                                OptimizeTestCase{{{1, 1, 1, CmdType::WRITE},
-                                                  {1, 1, 1, CmdType::WRITE}},
+                                OptimizeTestCase{{{CmdType::WRITE, 1, 1, 1},
+                                                  {CmdType::WRITE, 1, 1, 1}},
                                                  1}));
