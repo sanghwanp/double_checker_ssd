@@ -50,7 +50,8 @@ vector<CommandBufferEntry> CommandBufferHandler::AddErase(unsigned int lba,
 bool CommandBufferHandler::TryFastRead(unsigned int lba,
                                        unsigned int &out_value) const {
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  for (const CommandBufferEntry &cmdEntry : savedCmds) {
+  for (int i = savedCmds.size() - 1; i >= 0; i--) {
+    const CommandBufferEntry &cmdEntry = savedCmds[i];
     if (cmdEntry.startLba <= lba && lba <= cmdEntry.endLba) {
       out_value = static_cast<unsigned int>(cmdEntry.data);
       return true;
