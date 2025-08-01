@@ -64,6 +64,13 @@ int TestShell::parseAndExecCommand(std::string command) {
       commandErase.Call(program);
       break;
     }
+    case eEraseRangeCmd: {
+      EraseRangeParam* eraseRangeCmd =
+          dynamic_cast<EraseRangeParam*>(parsedCommand);
+      std::vector<std::string> program = {"erase_range", eraseRangeCmd->lbaStart, eraseRangeCmd->lbaEnd};
+      commandEraseRange.Call(program);
+      break;
+    }
     case eFlushCmd: {
       std::vector<std::string> program = {"flush"};
       commandFlush.Call(program);
