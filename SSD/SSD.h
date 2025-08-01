@@ -1,29 +1,37 @@
 #pragma once
 #include <vector>
-#include "IArguments.h"
-#include "ICmd.h"
+
+#include "SSDConfig.h"
+#include "CommandFactory.h"
+#include "FileDriver.h"
+#include "Parser.h"
+
+#include "ICommand.h"
+#include "WriteCommand.h"
+#include "ReadCommand.h"
 #include "ReadArguments.h"
-#include "ReadCmd.h"
 #include "WriteArguments.h"
-#include "WriteCmd.h"
-#include "SsdConfig.h"
+
+using std::string;
 
 class SSD {
  public:
-  SSD();
+     SSD();
 
- public:
-  void Clear();
-  void SetWriteCmd(ICmd *cmd);
-  void SetReadCmd(ICmd *cmd);
-  unsigned int Read(IArguments *args);
-  void Write(IArguments *args);
+  static SSD instance;
+  static SSD &GetInstance() { return instance; }
+
+  void Run(vector<string> argv);
+  void ExecuteCommand(IParam *param);
+
   unsigned int GetCachedData(unsigned int lba);
 
  private:
-  void SaveToOutputFile(unsigned int readData);
-  std::vector<unsigned int> cache;
-  // ReadCmd readCmd;
-  ICmd *writeCmd = nullptr;
-  ICmd *readCmd = nullptr;
+  CommandFactory commandFactory;
+  FileDriver filedriver;
+  Parser parser;
+
+  vector<unsigned int> cache;
+  unsigned int storageCache[MAX_STORAGE_IDX] = {0};
+
 };

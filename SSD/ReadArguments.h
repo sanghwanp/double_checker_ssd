@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "IArguments.h"
+#include "IParam.h"
 
 class ReadArguments : public IArguments {
   enum CmdType { CMD_TYPE_OTHER, CMD_TYPE_WRITE, CMD_TYPE_READ };
