@@ -9,8 +9,8 @@ vector<CommandBufferEntry> CommandBufferHandler::AddWrite(unsigned int lba,
                                     static_cast<unsigned long long>(data));
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
+  commandBuffer.FlushBuffer();
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
-    commandBuffer.FlushBuffer();
     commandBuffer.WriteCmdsToBuffer({ newCmd });
     return savedCmds;
   } else {  // 일반적인 Case
@@ -34,9 +34,9 @@ vector<CommandBufferEntry> CommandBufferHandler::AddErase(unsigned int lba,
   CommandBufferEntry newCmd(CmdType::ERASE, startLba, endLba, 0ULL);
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
+  commandBuffer.FlushBuffer();
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
-    commandBuffer.FlushBuffer();
-    commandBuffer.WriteCmdsToBuffer({ newCmd });
+    commandBuffer.WriteCmdsToBuffer({newCmd});
     return savedCmds;
   } else {  // 일반적인 Case
     savedCmds.push_back(newCmd);
