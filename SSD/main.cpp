@@ -1,4 +1,4 @@
-#if (MAIN_SELECT == 1)
+
 
 #include "SSD.h"
 
@@ -12,5 +12,3 @@ int main(int argc, char* argv[]) {
   SSD::GetInstance().Run(args);
   return 0;
 }
-
-#endif
