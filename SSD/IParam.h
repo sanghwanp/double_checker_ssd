@@ -22,3 +22,11 @@ class ReadParam : public IParam {
   ReadParam(CMD_TYPE cmd, LBA lba) : IParam(cmd), lba(lba) {}
   LBA lba;
 };
+
+class EraseParam : public IParam {
+ public:
+  EraseParam(CMD_TYPE cmd, LBA lba, SIZE_E size)
+      : IParam(cmd), lba(lba), size(size) {}
+  LBA lba;
+  SIZE_E size;
+};

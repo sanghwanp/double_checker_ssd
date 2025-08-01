@@ -12,22 +12,20 @@ using std::string;
 
 class SSD {
  public:
-     SSD();
+  SSD();
 
-  static SSD instance;
-  static SSD &GetInstance() { return instance; }
+  static SSD& GetInstance() {
+    static SSD instance;
+    return instance;
+  }
 
   void Run(vector<string> argv);
-  void ExecuteCommand(IParam *param);
+  void ExecuteCommand(IParam* param);
 
   unsigned int GetCachedData(unsigned int lba);
 
  private:
-  CommandFactory commandFactory;
-  FileDriver filedriver;
+  CommandFactory* commandFactory;
+  FileDriver* filedriver;
   Parser parser;
-
-  vector<unsigned int> cache;
-  unsigned int storageCache[MAX_STORAGE_IDX] = {0};
-
 };

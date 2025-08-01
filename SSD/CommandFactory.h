@@ -9,9 +9,9 @@ class CommandFactory {
  public:
   CommandFactory();
 
-  static CommandFactory& GetInstance() {
+  static CommandFactory* GetInstance() {
     static CommandFactory instance;
-    return instance;
+    return &instance;
   }
 
   void Register(CMD_TYPE cmd, std::function<ICommand*()> creator) {};

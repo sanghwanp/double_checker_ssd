@@ -3,5 +3,5 @@
 
 class ReadCommand : public ICommand {
  public:
-     bool Execute(IParam* param) override;
+  bool Execute(IParam* param) override;
 };
