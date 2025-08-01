@@ -53,7 +53,6 @@ IParam* Parser::Parse(const std::string& input) {
   }
 
   if (false == IsValidCommandStructure(tokens)) {
-    std::cerr << "INVALID COMMAND" << std::endl;
     return GetInvalidCommand();
   }
 
