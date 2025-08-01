@@ -3,7 +3,7 @@
 #include <iostream>
 
 TestScriptCase4::TestScriptCase4(SSDInterface* ssdinterface)
-    : ITestScriptCase(ssdinterface, 4) {}
+    : ITestScriptCase(ssdinterface, 4, "EraseAndWriteAging") {}
 
 bool TestScriptCase4::Call() {
   /*
