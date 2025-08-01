@@ -1,14 +1,6 @@
 #pragma once
 #include "Types.h"
 
-#define interface struct
-interface IArguments {
- public:
-  virtual ~IArguments() = default;
-  virtual unsigned int GetLba() const = 0;
-  virtual void Parse(const std::string& cmdStr) = 0;
-};
-
 class IParam {
  public:
   IParam(CMD_TYPE cmd) : eCmd(cmd) {}
