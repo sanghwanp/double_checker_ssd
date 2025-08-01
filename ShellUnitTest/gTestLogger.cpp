@@ -2,6 +2,7 @@
 #include "../Shell/ILogFileSystem.h"
 #include "../Shell/Logger.h"
 
+using namespace testing;
 class MockFileSystem : public ILogFileSystem {
  public:
   MOCK_METHOD(bool, Exists, (const std::filesystem::path&), (const, override));
@@ -20,16 +21,28 @@ class MockFileSystem : public ILogFileSystem {
               (override));
 };
 
+class LoggerTestFixture : public ::testing::Test {
+ protected:
+  void SetUp() override {
+    logger.SetLoggerFileSystem(&mockFS);
+    logger.SetConsoleOutput(true);
+  }
+  void TearDown() override {
 
-TEST(LoggerTest, RotatesLogFileWhenSizeExceedsMax) {
+    logger.RestoreLoggerFileSystem();
+  }
+  Logger& logger = Logger::GetInstance();
+  NiceMock<MockFileSystem> mockFS;
+  
+};
+
+
+TEST_F(LoggerTestFixture, RotatesLogFileWhenSizeExceedsMax) {
   using namespace std;
   using namespace testing;
   using namespace std::filesystem;
 
   // Arrange
-  testing::NiceMock<MockFileSystem> mockFS;
-  Logger logger(&mockFS, true);
-
   const std::string logFileName = "latest.log";
   const std::filesystem::path logFilePath(logFileName);
 
@@ -44,27 +57,30 @@ TEST(LoggerTest, RotatesLogFileWhenSizeExceedsMax) {
   logger.LogPrint("RotateTestFunc", "Trigger log rotation by exceeding file size");
 }
 
-TEST(LoggerTest, ConsoleOutputDisabled_DoesNotPrintToConsole) {
-  testing::NiceMock<MockFileSystem> mockFS;
+TEST_F(LoggerTestFixture, ConsoleOutputDisabled_DoesNotPrintToConsole) {
 
-  Logger logger(&mockFS, true);
   logger.SetConsoleOutput(false);
-
-  // std::cout 캡쳐 또는 Redirect 필요 (예: testing::internal::CaptureStdout())
   testing::internal::CaptureStdout();
   logger.LogPrint("Func", "Message");
   std::string output = testing::internal::GetCapturedStdout();
-
   EXPECT_TRUE(output.empty());
 }
 
-TEST(LoggerTest, EndsWithFunction_WorksCorrectly) {
-  Logger logger;
+TEST_F(LoggerTestFixture, EndsWithFunction_WorksCorrectly) {
   ILogger* loggerPtr = &logger;
 
   logger.LogPrint("TestFunc()", "Testing ends_with function");
   loggerPtr->LogPrint("TestFunc()", "Testing ends_with function from interface");
 }
+
+TEST_F(LoggerTestFixture, Call_ILogger) {
+  testing::internal::CaptureStdout();
+
+  ILogger::GetInstance().LogPrint("TestFunc()", "ILogger::GetInstance().LogPrint");
+  std::string output = testing::internal::GetCapturedStdout();
+  EXPECT_TRUE(output.size() > 30);
+}
+
 
 //TEST(LoggerTest, loggerPrint_10000) {
 //  ILogger* loggerPtr = new Logger;
