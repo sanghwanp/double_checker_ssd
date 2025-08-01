@@ -23,7 +23,8 @@ class CommandBuffer {
   bool MatchCmdBufFilename(const std::string &filename) const;
 
   CommandBufferEntry MakeCmdBufEntry(const std::string &filename) const;
+  unsigned int GetOrderFromCmdBufFilename(const std::string &filename) const;
 
   const std::regex cmdBufFileRegexPattern{
-      R"(^(W|E)_(\d+)_(\d+)_(\d+)\.cmdbuf$)"};
+      R"(^(\d+)_(W|E)_(\d+)_(\d+)_(\d+)\.cmdbuf$)"};
 };

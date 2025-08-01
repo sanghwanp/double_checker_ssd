@@ -1,32 +1,49 @@
 #include "CommandBuffer.h"
 
+#include <map>
+#include <string>
+#include <string_view>
+
 std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
-  std::vector<CommandBufferEntry> result;
+  static std::map<int, CommandBufferEntry> result_map;
+  result_map.clear();
+
   std::filesystem::path curDirPath("./");
   auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(curDirPath));
   for (auto cmdBufFile : cmdBufFiles) {
     std::string filename = cmdBufFile.u8string();
     if (!MatchCmdBufFilename(filename)) continue;
-    result.push_back(MakeCmdBufEntry(filename));
+    int order = GetOrderFromCmdBufFilename(filename);
+    result_map[order] = MakeCmdBufEntry(filename);
   }
 
+  std::vector<CommandBufferEntry> result;
+  for (const auto& it : result_map) {
+    result.emplace_back(it.second);
+  }
   return result;
 }
 
 void CommandBuffer::WriteCmdsToBuffer(
     const std::vector<CommandBufferEntry>& cmds) {
   FlushBuffer();
-  std::string filename;
-  for (const CommandBufferEntry& cmd : cmds) {
-    filename = cmd.ToString() + ".cmdbuf";
+  std::string filename, order;
+  for (int i = 0; i < cmds.size(); i++) {
+    const CommandBufferEntry& cmd = cmds[i];
+    order = std::to_string(i);
+    filename = order + "_" + cmd.ToString() +
+               CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
     ofs.open(filename);
     ofs.close();
   }
 }
 
 void CommandBuffer::FlushBuffer() {
-  std::filesystem::path curDirPath("./");
-  auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(curDirPath));
+  std::string_view cmdBufDirPath = CommandBufferConfig::COMMAND_BUFFER_FILEPATH;
+  if (!std::filesystem::exists(cmdBufDirPath)) {
+    std::filesystem::create_directories(cmdBufDirPath);
+  }
+  auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(cmdBufDirPath));
   for (auto cmdBufFile : cmdBufFiles) {
     std::string filename = cmdBufFile.u8string();
     if (!MatchCmdBufFilename(filename)) continue;
@@ -45,7 +62,9 @@ std::vector<std::filesystem::path> CommandBuffer::GetCmdbufFiles(
   }
 
   for (const auto& entry : std::filesystem::directory_iterator(dirPath)) {
-    if (entry.is_regular_file() && entry.path().extension() == ".cmdbuf") {
+    if (entry.is_regular_file() &&
+        entry.path().extension().string() ==
+            CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION) {
       cmdbufFiles.push_back(entry.path());
     }
   }
@@ -57,12 +76,21 @@ bool CommandBuffer::MatchCmdBufFilename(const std::string& filename) const {
   return std::regex_match(filename, cmdBufFileRegexPattern);
 }
 
+unsigned int CommandBuffer::GetOrderFromCmdBufFilename(
+    const std::string& filename) const {
+  std::smatch match;
+  std::regex_match(filename, match, cmdBufFileRegexPattern);
+
+  unsigned int order = static_cast<unsigned int>(std::stoul(match[1].str()));
+  return order;
+}
+
 CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
     const std::string& filename) const {
   std::smatch match;
   std::regex_match(filename, match, cmdBufFileRegexPattern);
 
-  std::string cmdTypeStr = match[1].str();
+  std::string cmdTypeStr = match[2].str();
   CommandBufferConfig::CmdType cmdType;
 
   if (cmdTypeStr == "W")
@@ -72,9 +100,9 @@ CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
   else
     throw std::runtime_error("Invalid CmdType: " + cmdTypeStr);
 
-  unsigned int startLba = static_cast<unsigned int>(std::stoul(match[2].str()));
-  unsigned int endLba = static_cast<unsigned int>(std::stoul(match[3].str()));
-  unsigned int data = static_cast<unsigned int>(std::stoul(match[4].str()));
+  unsigned int startLba = static_cast<unsigned int>(std::stoul(match[3].str()));
+  unsigned int endLba = static_cast<unsigned int>(std::stoul(match[4].str()));
+  unsigned int data = static_cast<unsigned int>(std::stoul(match[5].str()));
 
   return CommandBufferEntry(cmdType, startLba, endLba, data);
 }
