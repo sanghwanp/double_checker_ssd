@@ -82,10 +82,10 @@ std::vector<CommandBufferEntry> CommandBufferOptimizer::Optimize(
         }
       }
 
-      uint startLba = CommandBufferConfig::NotAvailable, endLba = mnLba;
+      uint startLba = CommandBufferConfig::NOT_AVAILABLE, endLba = mnLba;
       for (uint lba = mnLba; lba <= mxLba; lba++) {
         if (lbaChk[lba]) {
-          if (startLba == CommandBufferConfig::NotAvailable) startLba = lba;
+          if (startLba == CommandBufferConfig::NOT_AVAILABLE) startLba = lba;
           endLba = lba;
           covered[lba] = data;
         } else {
@@ -95,11 +95,11 @@ std::vector<CommandBufferEntry> CommandBufferOptimizer::Optimize(
           } else {
             // 새로운 구간 생성
             result.push_back(CommandBufferEntry(startLba, endLba, data));
-            startLba = CommandBufferConfig::NotAvailable;  // start지점 초기화
+            startLba = CommandBufferConfig::NOT_AVAILABLE;  // start지점 초기화
           }
         }
       }
-      if (startLba != CommandBufferConfig::NotAvailable) {
+      if (startLba != CommandBufferConfig::NOT_AVAILABLE) {
         result.push_back(CommandBufferEntry(startLba, endLba, data));
       }
     }

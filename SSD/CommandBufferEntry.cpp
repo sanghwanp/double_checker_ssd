@@ -3,8 +3,8 @@ using CmdType = CommandBufferConfig::CmdType;
 
 CommandBufferEntry::CommandBufferEntry()
     : cmdType(CmdType::INVALID),
-      startLba(CommandBufferConfig::NotAvailable),
-      endLba(CommandBufferConfig::NotAvailable),
+      startLba(CommandBufferConfig::NOT_AVAILABLE),
+      endLba(CommandBufferConfig::NOT_AVAILABLE),
       data(0) {}
 CommandBufferEntry::CommandBufferEntry(CmdType cmdType, unsigned int startLba,
                                        unsigned int endLba,
