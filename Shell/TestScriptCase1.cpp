@@ -24,16 +24,12 @@ bool TestScriptCase1::Call() {
     }
 
     for (int read_count = 0; read_count < 5; ++read_count) {
-      std::cout << "count: " << repeat_count << " " << read_count
-                << std::endl;
       if (ReadCompare(std::to_string(repeat_count + read_count), data) !=
           true) {
-        PrintFailResult();
         return false;
       }
     }
   }
 
-  PrintPassResult();
   return true;
 }

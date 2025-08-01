@@ -231,6 +231,9 @@
     <ClCompile Include="RealSSD.cpp" />
     <ClCompile Include="SSDInterface.h" />
     <ClCompile Include="TestScriptCase1.cpp" />
+    <ClCompile Include="TestScriptCase2.cpp" />
+    <ClCompile Include="TestScriptCase3.cpp" />
+    <ClCompile Include="TestScriptCase4.cpp" />
     <ClCompile Include="TestShell.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +255,9 @@
     <ClInclude Include="TestScriptCase1.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="RealSSD.h" />
+    <ClInclude Include="TestScriptCase2.h" />
+    <ClInclude Include="TestScriptCase3.h" />
+    <ClInclude Include="TestScriptCase4.h" />
     <ClInclude Include="TestShell.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

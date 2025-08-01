@@ -5,6 +5,9 @@
 
 #include "ITestScriptCase.h"
 
+const std::string ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT = "PASS";
+const std::string ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT = "FAIL";
+
 ITestScriptCase::ITestScriptCase(SSDInterface* ssdinterface, int number)
     : ssd(ssdinterface), number(number) {}
 

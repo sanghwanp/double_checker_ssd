@@ -12,13 +12,13 @@ class ITestScriptCase {
 
   bool ReadCompare(std::string lba, std::string expected);
   std::string GetRandomInputData();
-  void PrintPassResult();
-  void PrintFailResult();
+  static void PrintPassResult();
+  static void PrintFailResult();
   virtual bool Call() = 0;
 
   SSDInterface* ssd;
   int number;
 
-  const std::string TEST_SCRIPT_PASS_OUTPUT = "PASS";
-  const std::string TEST_SCRIPT_FAIL_OUTPUT = "FAIL";
+  static const std::string TEST_SCRIPT_PASS_OUTPUT;
+  static const std::string TEST_SCRIPT_FAIL_OUTPUT;
 };

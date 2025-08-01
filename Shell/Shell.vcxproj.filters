@@ -61,6 +61,15 @@
     <ClCompile Include="TestScriptCase1.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="TestScriptCase2.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScriptCase3.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScriptCase4.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdFullRead.h">
@@ -130,6 +139,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TestScriptCase1.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScriptCase2.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScriptCase3.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TestScriptCase4.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
