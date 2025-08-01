@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
   }
 
   SSD::GetInstance().Run(args);
-  return 0
+  return 0;
 }
 
 #endif
