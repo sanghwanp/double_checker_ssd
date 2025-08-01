@@ -1,11 +1,11 @@
 #include "CommandBufferHandler.h"
+#include "Types.h"
 
-using CmdType = CommandBufferConfig::CmdType;
 using std::vector;
 
 vector<CommandBufferEntry> CommandBufferHandler::AddWrite(unsigned int lba,
                                                           unsigned int data) {
-  CommandBufferEntry newCmd(CmdType::WRITE, lba, lba,
+  CommandBufferEntry newCmd(eWriteCmd, lba, lba,
                                     static_cast<unsigned long long>(data));
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
@@ -31,7 +31,7 @@ vector<CommandBufferEntry> CommandBufferHandler::AddErase(unsigned int lba,
                                                           int delta) {
   const int startLba = GetStartLba(lba, delta);
   const int endLba = GetEndLba(lba, delta);
-  CommandBufferEntry newCmd(CmdType::ERASE, startLba, endLba, 0ULL);
+  CommandBufferEntry newCmd(eEraseCmd, startLba, endLba, 0ULL);
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
   commandBuffer.FlushBuffer();

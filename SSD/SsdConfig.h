@@ -1,5 +1,7 @@
 #pragma once
 
+#define USING_COMMAND_BUFFER (1)
+
 static constexpr char* STORAGE_FILE_NAME = "ssd_nand.txt";
 static constexpr char* OUTPUT_FILE_NAME = "ssd_output.txt";
 

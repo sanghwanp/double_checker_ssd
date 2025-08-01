@@ -21,9 +21,9 @@ std::vector<CommandBufferEntry> CommandBufferOptimizer::Optimize(
   unsigned long long orderMask = INIT_ORDER_MASK;
   for (int i = 0; i < cmds.size(); i++) {
     if (cmds[i].data == 0) {
-      cmds[i].cmdType = CommandBufferConfig::CmdType::ERASE;  // Write 0은 전부 Erase로 취급
+      cmds[i].cmdType = eEraseCmd;  // Write 0은 전부 Erase로 취급
     }
-    if (cmds[i].cmdType == CommandBufferConfig::CmdType::WRITE) {
+    if (cmds[i].cmdType == eWriteCmd) {
       cmds[i].data |= orderMask;
       orderMask = (orderMask << 1) | orderMask;
     }
@@ -132,13 +132,13 @@ std::vector<CommandBufferEntry> CommandBufferOptimizer::Optimize(
     // 2번째 후처리: 처음에 붙였던 Mask bit를 data에서 떼어준다.
     for (int i = 0; i < result.size(); i++) {
       result[i].data &= REAL_DATA_MASK;
-      if (result[i].data == 0) result[i].cmdType = CommandBufferConfig::CmdType::ERASE;
+      if (result[i].data == 0) result[i].cmdType = eEraseCmd;
     }
 
     // 3번째 후처리: ERASE가 10개 넘어가면 끊어준다.
     std::vector<CommandBufferEntry> newResult;
     for (int i = 0; i < result.size(); i++) {
-      // if (result[i].cmdType == CommandBufferConfig::CmdType::ERASE) { //-> WRITE도 그냥
+      // if (result[i].cmdType == eEraseCmd) { //-> WRITE도 그냥
       // 끊어주자.
       while (result[i].Length() > 0) {
         int ne = std::min(result[i].startLba + 10 - 1, result[i].endLba);
