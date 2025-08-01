@@ -52,6 +52,9 @@
     <ClCompile Include="CmdErase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="CmdEraseRange.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="CmdTestSciprt.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -133,6 +136,9 @@
       <Filter>소스 파일\Logger</Filter>
     </ClInclude>
     <ClInclude Include="ILogFileSystem.h">
+      <Filter>소스 파일\Logger</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdEraseRange.h">
       <Filter>소스 파일\Logger</Filter>
     </ClInclude>
     <ClInclude Include="ITestScriptCase.h">
