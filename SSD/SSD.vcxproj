@@ -262,7 +262,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CmdBuffer.cpp" />
+    <ClCompile Include="CommandBuffer.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="FileDriver.cpp" />
     <ClCompile Include="Interval.cpp" />
@@ -277,7 +277,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CmdBuffer.h" />
+    <ClInclude Include="CommandBuffer.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="Interval.h" />
     <ClInclude Include="IParam.h" />

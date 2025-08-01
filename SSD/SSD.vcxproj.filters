@@ -42,7 +42,7 @@
     <ClCompile Include="CommandFactory.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="CmdBuffer.cpp">
+    <ClCompile Include="CommandBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Interval.cpp">
@@ -83,7 +83,7 @@
     <ClInclude Include="Types.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CmdBuffer.h">
+    <ClInclude Include="CommandBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Interval.h">

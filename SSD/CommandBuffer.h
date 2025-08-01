@@ -10,7 +10,7 @@ constexpr int NA = -1;
 
 using LBA = unsigned int;
 using DATA = unsigned long long;
-class CmdBuffer {
+class CommandBuffer {
  public:
   std::vector<Interval> Optimize(const std::vector<Interval> &in_cmds);
 

@@ -1,4 +1,4 @@
-#include "CmdBuffer.h"
+#include "CommandBuffer.h"
 
 #include <algorithm>
 #include <cstdio>
@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <vector>
 
-std::vector<Interval> CmdBuffer::Optimize(const std::vector<Interval>& in_cmds) {
+std::vector<Interval> CommandBuffer::Optimize(const std::vector<Interval>& in_cmds) {
     std::vector<Interval> cmds = in_cmds;
 
   unsigned long long orderMask = INIT_ORDER_MASK;
@@ -43,7 +43,7 @@ std::vector<Interval> CmdBuffer::Optimize(const std::vector<Interval>& in_cmds) 
     data_lbaChk_udic[data][lba] = true;
   }
 
-  // 3. CmdBuffer에 존재하는 data들을 중복 제거하여 list로 만듦.
+  // 3. CommandBuffer에 존재하는 data들을 중복 제거하여 list로 만듦.
   std::vector<DATA> data_list;
   for (int i = 0; i < cmds.size(); i++) {
     data_list.push_back(cmds[i].data);

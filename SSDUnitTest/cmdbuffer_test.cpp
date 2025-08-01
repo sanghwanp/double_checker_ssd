@@ -1,6 +1,6 @@
 #include <vector>
 
-#include "../SSD/CmdBuffer.h"
+#include "../SSD/CommandBuffer.h"
 #include "../SSD/Interval.h"
 #include "gmock/gmock.h"
 
@@ -14,7 +14,7 @@ struct OptimizeTestCase {
 
 class CmdBufferParamTestFixture : public TestWithParam<OptimizeTestCase> {
  public:
-  CmdBuffer cmdBuffer;
+  CommandBuffer cmdBuffer;
 };
 
 INSTANTIATE_TEST_SUITE_P(
