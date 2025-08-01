@@ -17,22 +17,6 @@ class CmdBufferParamTestFixture : public TestWithParam<OptimizeTestCase> {
   CommandBuffer cmdBuffer;
 };
 
-INSTANTIATE_TEST_SUITE_P(
-    CmdTestCases, CmdBufferParamTestFixture,
-    Values(OptimizeTestCase{{{1, 10, 0, CmdType::ERASE},  // input: cmds[0]
-                             {9, 9, 2, CmdType::WRITE},
-                             {7, 7, 2, CmdType::WRITE},
-                             {8, 8, 1, CmdType::WRITE},
-                             {4, 6, 0, CmdType::ERASE}},
-                            4},  // expected_size
-           OptimizeTestCase{
-               {{1, 10, 0, CmdType::ERASE},
-                {9, 9, 2, CmdType::WRITE},
-                {7, 7, 2, CmdType::WRITE},
-                {8, 8, 1, CmdType::WRITE},
-                {4, 6, 0, CmdType::ERASE}},
-               4  // ← 다른 기대값
-           }));
 
 // 공통 검증: data != 0이면 WRITE여야 함
 TEST_P(CmdBufferParamTestFixture, CmdTypeIsWriteWhenDataIsNotZero) {
@@ -83,3 +67,19 @@ TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
 
   EXPECT_EQ(result.size(), tc.expected_size);
 }
+// ... includes, fixture, TEST_P(...) 들 전부 ...
+
+INSTANTIATE_TEST_SUITE_P(CmdTestCases, CmdBufferParamTestFixture,
+                         Values(OptimizeTestCase{{{1, 10, 0, CmdType::ERASE},
+                                                  {9, 9, 2, CmdType::WRITE},
+                                                  {7, 7, 2, CmdType::WRITE},
+                                                  {8, 8, 1, CmdType::WRITE},
+                                                  {4, 6, 0, CmdType::ERASE}},
+                                                 4},
+                                OptimizeTestCase{{{20, 20, 1, CmdType::WRITE},
+                                                  {21, 21, 2, CmdType::WRITE},
+                                                  {20, 20, 3, CmdType::WRITE}},
+                                                 2},
+                                OptimizeTestCase{{{1, 1, 1, CmdType::WRITE},
+                                                  {1, 1, 1, CmdType::WRITE}},
+                                                 1}));

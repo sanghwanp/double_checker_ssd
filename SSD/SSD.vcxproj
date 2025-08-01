@@ -278,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandBuffer.h" />
+    <ClInclude Include="CommandBufferHandler.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="Interval.h" />
     <ClInclude Include="IParam.h" />

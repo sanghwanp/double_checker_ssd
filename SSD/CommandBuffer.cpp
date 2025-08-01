@@ -65,6 +65,7 @@ std::vector<Interval> CommandBuffer::Optimize(const std::vector<Interval>& in_cm
     for (int i = 0; i < data_list.size(); ++i) {
       DATA data = data_list[i];
       std::vector<bool>& lbaChk = data_lbaChk_udic[data];
+      if (lbaChk.empty()) continue;
 
       LBA mnLba = INF, mxLba = 0;
       for (LBA lba = 0; lba < STORAGE_SIZE; lba++) {
