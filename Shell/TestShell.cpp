@@ -6,7 +6,9 @@
 #include <string>
 #include <vector>
 
+#include "CmdTestScript.h"
 #include "ICommand.h"
+#include "ICommandFactory.h"
 
 int TestShell::Exec(void) {
   std::string command;
@@ -22,29 +24,37 @@ int TestShell::Exec(void) {
 }
 
 int TestShell::parseAndExecCommand(std::string command) {
-  IParam& param = *parser.Parse(command);
   bool ret = true;
+  std::string result;
 
-  IShellCommand* cmd =
-      ICommandFactory::GetInstance()->CreateCommand(param, ssdDriver);
+  IParam& param = ParseCommand(command);
+
+  IShellCommand* cmd = GetCommand(param);
 
   // execute the command
   if (cmd != nullptr) {
     ret = cmd->Call(param);
+  } else if (param.eCmd == eScriptCmd) {
+    result = GetScriptCommand(param)->Call(param);
+    std::cout << result << std::endl;
+  } else {
+    std::cout << "INVALID COMMAND" << std::endl;
   }
 
-  // post processing
-  switch (param.eCmd) {
-    case eScriptCmd: {
-      CommandTestScript commandTestScript(ssdDriver);
-      std::string result = commandTestScript.CallSciprt(param);
-      std::cout << result << std::endl;
-      break;
-    }
-    case eInvalidCmd: {
-      std::cout << "INVALID COMMAND" << std::endl;
-      break;
-    }
-  }
   return param.eCmd;
+}
+
+IShellCommand* TestShell::GetCommand(IParam& param) {
+  return ICommandFactory::GetInstance()->CreateCommand(param, ssdDriver);
+}
+
+IScriptCommand* TestShell::GetScriptCommand(IParam& param) {
+  if (param.eCmd == eScriptCmd) {
+    return new CommandTestScript{ssdDriver};
+  }
+  return nullptr;
+}
+
+IParam& TestShell::ParseCommand(std::string& command) {
+  return *parser.Parse(command);
 }

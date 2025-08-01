@@ -1,62 +1,25 @@
 #include "CommandFactory.h"
-
-#include "CmdErase.h"
-#include "CmdEraseRange.h"
-#include "CmdExit.h"
-#include "CmdFlush.h"
-#include "CmdFullRead.h"
-#include "CmdFullWrite.h"
-#include "CmdHelp.h"
-#include "CmdRead.h"
-#include "CmdTestScript.h"
-#include "CmdWrite.h"
-#include "MockSSD.h"
-#include "RealSSD.h"
+#include "ICommandFactory.h"
 
 ICommandFactory* ICommandFactory::GetInstance() {
   return CommandFactory::GetInstance();
 }
 
-CommandFactory::CommandFactory()
-{
-
+// factory method to create commands based on the command type
+IShellCommand* CommandFactory::CreateCommand(IParam& param, SSDInterface* ssd) {
+  auto it = factories.find(param.eCmd);
+  if (it != factories.end()) {
+    return it->second->CreateCommand(param, ssd);
+  }
+  return nullptr;
 }
 
-IShellCommand* CommandFactory::CreateCommand(IParam& param, SSDInterface* ssd) {
-  IShellCommand* command = nullptr;
-
-  switch (param.eCmd) {
-    case eWriteCmd:
-      command = new CommandWrite(ssd);
-      break;
-    case eReadCmd:
-      command = new CommandRead(ssd);
-      break;
-    case eEraseCmd:
-      command = new CommandErase(ssd);
-      break;
-    case eEraseRangeCmd:
-      command = new CommandEraseRange(ssd);
-      break;
-    case eFlushCmd:
-      command = new CommandFlush(ssd);
-      break;
-    case eFullread:
-      command = new CommandFullRead(ssd);
-      break;
-    case eFullwrite:
-      command = new CommandFullWrite(ssd);
-      break;
-    case eHelpCmd:
-      command = new CommandHelp();
-      break;
-    case eExitCmd:
-      command = new CommandExit();
-      break;
-    default:
-        // nothing to do here
-      break;
+// this part is register pattern implementation
+// register a command factory for a specific command type
+// This allows the CommandFactory to create commands dynamically
+void CommandFactory::Register(TestShellCMD cmd, ICommandFactory* factory) {
+  if (factories.find(cmd) == factories.end()) {
+    factories[cmd] = factory;
   }
 
-  return command;
 }

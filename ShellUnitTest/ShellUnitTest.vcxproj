@@ -191,12 +191,17 @@
     <ClCompile>
       <PreprocessorDefinitions>UNIT_TEST;</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions> %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
       <AdditionalDependencies>Shell.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
     </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug_SSDUnitTest|x64'">
     <ClCompile>
@@ -240,8 +245,16 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Shell\CmdWrite.cpp" />
-    <ClCompile Include="..\Shell\MockSSD.cpp" />
+    <ClCompile Include="..\Shell\CommandFactory.cpp" />
+    <ClCompile Include="..\Shell\FactoryEraseCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryEraseRangeCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryExitCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryFlushCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryFullReadCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryFullWriteCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryHelpCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryReadCommand.cpp" />
+    <ClCompile Include="..\Shell\FactoryWriteCommand.cpp" />
     <ClCompile Include="gTestCmdEraseRange.cpp" />
     <ClCompile Include="gTestCmdExit.cpp" />
     <ClCompile Include="gTestCmdFlush.cpp" />
@@ -293,6 +306,7 @@
     <ClInclude Include="..\Shell\TestScriptCase3.h" />
     <ClInclude Include="..\Shell\TestScriptCase4.h" />
     <ClInclude Include="..\Shell\TestShell.h" />
+    <ClInclude Include="gTestCommandCallCommon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

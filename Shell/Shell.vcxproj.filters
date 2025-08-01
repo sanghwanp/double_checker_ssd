@@ -1,79 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="CmdErase.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdEraseRange.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdExit.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdFlush.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdFullRead.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdFullWrite.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdHelp.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdRead.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdTestSciprt.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="CmdWrite.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ITestSciprtCase.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="LogFileSystem.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Logger.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="MockSSD.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Parser.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="RealSSD.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptRunner.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScriptCase1.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScriptCase2.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScriptCase3.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TestScriptCase4.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="TestShell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MockSSD.h" />
     <ClCompile Include="SSDInterface.h" />
+    <ClCompile Include="CmdErase.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdEraseRange.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdExit.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdFlush.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdFullRead.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdFullWrite.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdHelp.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdRead.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdTestSciprt.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdWrite.cpp">
+      <Filter>소스 파일\Command</Filter>
+    </ClCompile>
     <ClCompile Include="CommandFactory.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="LogFileSystem.cpp">
+      <Filter>소스 파일\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>소스 파일\Logger</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScriptCase1.cpp">
+      <Filter>소스 파일\TestScript</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScriptCase2.cpp">
+      <Filter>소스 파일\TestScript</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScriptCase3.cpp">
+      <Filter>소스 파일\TestScript</Filter>
+    </ClCompile>
+    <ClCompile Include="TestScriptCase4.cpp">
+      <Filter>소스 파일\TestScript</Filter>
+    </ClCompile>
+    <ClCompile Include="ITestSciprtCase.cpp">
+      <Filter>소스 파일\TestScript</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryWriteCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryFullReadCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryFullWriteCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryHelpCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryReadCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryEraseCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryExitCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryFlushCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandFactoryRegisterer.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryEraseRangeCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="MockSSD.cpp">
+      <Filter>소스 파일\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="RealSSD.cpp">
+      <Filter>소스 파일\Driver</Filter>
+    </ClCompile>
+    <ClCompile Include="Parser.cpp">
+      <Filter>소스 파일\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptRunner.cpp">
+      <Filter>소스 파일\Executor</Filter>
+    </ClCompile>
+    <ClCompile Include="TestShell.cpp">
+      <Filter>소스 파일\Executor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +179,18 @@
     <ClInclude Include="TestShell.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="CommandFactory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommand.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ICommandFactory.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FactoryWriteCommand.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="소스 파일">
@@ -159,6 +201,27 @@
     </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{4b6007fa-553b-4223-a63e-96709c7791d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Command">
+      <UniqueIdentifier>{e3a07ec6-021f-4f3f-abca-6541daad5100}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\CommandFactory">
+      <UniqueIdentifier>{f9cd1d1d-3980-44c7-9286-bcc97160e814}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Logger">
+      <UniqueIdentifier>{26a2f4f7-9e8c-4f45-9239-5d7efaf43c5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\TestScript">
+      <UniqueIdentifier>{0fca2335-0f01-43cf-9bd1-960da79f602e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Driver">
+      <UniqueIdentifier>{8915ceb5-ff66-44ff-b223-cb6f93b5b24f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Util">
+      <UniqueIdentifier>{b3686e93-1183-47e9-b0e2-d0b3ff8c432f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\Executor">
+      <UniqueIdentifier>{4495b9ec-f940-440c-b7a4-14ada55c235b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
