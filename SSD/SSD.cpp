@@ -1,10 +1,10 @@
 #include "SSD.h"
+
+#include "EraseCommand.h"
 #include "ReadCommand.h"
 #include "WriteCommand.h"
 
-SSD SSD::instance;
-
-SSD::SSD() : cache(100) {
+SSD::SSD() {
   commandFactory = CommandFactory::GetInstance();
   filedriver = FileDriver::GetInstance();
 }
@@ -12,9 +12,7 @@ SSD::SSD() : cache(100) {
 void SSD::Run(vector<string> args) {
   IParam *cmd;
   cmd = parser.Parse(args);
-
   ExecuteCommand(cmd);
-
 }
 
 void SSD::ExecuteCommand(IParam *param) {
@@ -27,13 +25,19 @@ void SSD::ExecuteCommand(IParam *param) {
     case eReadCmd:
       command = std::make_unique<ReadCommand>();
       break;
+    case eEraseCmd:
+      command = std::make_unique<EraseCommand>();
+      break;
     default:
       command = std::make_unique<ICommand>();
       break;
   }
 
-  if (false == command->Execute(param))
-  {
-    FileDriver::GetInstance().SaveFile(OUTPUT_FILE_NAME, "ERROR");
+  if (false == command->Execute(param)) {
+    filedriver->SaveFile(OUTPUT_FILE_NAME, "ERROR");
   }
+}
+
+unsigned int SSD::GetCachedData(unsigned int lba) {
+  return filedriver->GetBufferData(lba);
 }

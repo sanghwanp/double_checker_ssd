@@ -40,5 +40,15 @@ class Parser {
           return new ReadParam(CMD_TYPE::eReadCmd, LBA::Parse(tokens[1]));
         },
         [](const vector<string>& tokens) { return LBA::IsValid(tokens[1]); }}},
+      {"E",
+       {3, CMD_TYPE::eEraseCmd,
+        [](const vector<string>& tokens) {
+          return new EraseParam(CMD_TYPE::eEraseCmd, LBA::Parse(tokens[1]),
+                                SIZE_E::Parse(tokens[2]));
+        },
+        [](const vector<string>& tokens) {
+          return LBA::IsValid(tokens[1]) &&
+                 SIZE_E::IsValid(tokens[1], tokens[2]);
+        }}},
   };
 };

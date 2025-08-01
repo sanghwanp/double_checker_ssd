@@ -10,9 +10,9 @@
 class FileDriver {
  public:
   FileDriver();
-  static FileDriver& GetInstance() {
+  static FileDriver* GetInstance() {
     static FileDriver instance;
-    return instance;
+    return &instance;
   }
   void Init();
   bool CheckFileExist(const char* filename);
@@ -20,7 +20,8 @@ class FileDriver {
   void SaveFile(const char* filename, const unsigned int* data, size_t size);
   void SaveFile(const char* filename, const std::string& message);
 
-  const unsigned int* FileDriver::GetBufferData(unsigned int lba);
+  const unsigned int* GetBufferAddr(unsigned int lba = 0);
+  const unsigned int GetBufferData(unsigned int lba);
   void SetBufferData(unsigned int lba, unsigned int data);
 
  private:

@@ -264,6 +264,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CommandFactory.cpp" />
+    <ClCompile Include="EraseCommand.cpp" />
     <ClCompile Include="FileDriver.cpp" />
     <ClCompile Include="Paser.cpp" />
     <ClCompile Include="main.cpp" />
@@ -277,6 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandFactory.h" />
+    <ClInclude Include="EraseCommand.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="Parser.h" />

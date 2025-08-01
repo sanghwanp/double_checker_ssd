@@ -1,9 +1,5 @@
 #include "WriteCommand.h"
 
-#include <cstring>
-#include <fstream>
-#include <iomanip>
-
 #include "FileDriver.h"
 
 bool WriteCommand::Execute(IParam* param) {
@@ -11,8 +7,8 @@ bool WriteCommand::Execute(IParam* param) {
   if (!writeparam) return false;
   if (writeparam->lba.val >= MAX_STORAGE_IDX) return false;
 
-  FileDriver FD = FileDriver::GetInstance();
-  FD.SetBufferData(writeparam->lba.val, writeparam->data.val);
-  FD.SaveFile(STORAGE_FILE_NAME, FD.GetBufferData(0), MAX_STORAGE_IDX);
+  FileDriver* FD = FileDriver::GetInstance();
+  FD->SetBufferData(writeparam->lba.val, writeparam->data.val);
+  FD->SaveFile(STORAGE_FILE_NAME, FD->GetBufferAddr(), MAX_STORAGE_IDX);
   return true;
 }
