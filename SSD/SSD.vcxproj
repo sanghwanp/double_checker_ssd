@@ -263,6 +263,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandBuffer.cpp" />
+    <ClCompile Include="CommandBufferHandler.cpp" />
+    <ClCompile Include="CommandBufferOptimizer.cpp" />
+    <ClCompile Include="CommandBufferEntry.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="EraseCommand.cpp" />
     <ClCompile Include="FileDriver.cpp" />
@@ -277,7 +281,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandBuffer.h" />
+    <ClInclude Include="CommandBufferOptimizer.h" />
+    <ClInclude Include="CommandBufferConfig.h" />
+    <ClInclude Include="CommandBufferHandler.h" />
     <ClInclude Include="CommandFactory.h" />
+    <ClInclude Include="CommandBufferEntry.h" />
     <ClInclude Include="EraseCommand.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="ICommand.h" />
