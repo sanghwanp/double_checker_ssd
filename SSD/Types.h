@@ -2,6 +2,7 @@
 #include <cctype>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 
 #include "SSDConfig.h"
 
@@ -39,5 +40,12 @@ struct DATA {
 
   static unsigned int Parse(const string& str) {
     return std::stoul(str, nullptr, 16);
+  }
+
+  std::string ToString()
+  {
+    std::stringstream ss;
+    ss << std::hex << val;  // 16진수로 변환
+    return "0x" + ss.str();
   }
 };

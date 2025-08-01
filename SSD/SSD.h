@@ -7,10 +7,6 @@
 #include "Parser.h"
 
 #include "ICommand.h"
-#include "WriteCommand.h"
-#include "ReadCommand.h"
-#include "ReadArguments.h"
-#include "WriteArguments.h"
 
 using std::string;
 
