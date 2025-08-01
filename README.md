@@ -39,14 +39,14 @@ TDD(Test-Driven Development) 방식으로 구현되었으며, GoogleTest/GMock �
 - `read [LBA]`  
   지정된 LBA에서 값을 읽어 화면/출력 파일에 표시
 
-- `erase [LBA]`  
-  단일 LBA를 초기값(0x00000000)으로 지움
+- `erase [LBA] [SIZE]`  
+  SIZE만큼의 LBA를 초기값(0x00000000)으로 지움
 
-- `erase_range [START_LBA] [SIZE]`  
-  START_LBA부터 SIZE 개수만큼 연속된 LBA를 초기값으로 지움
+- `erase_range [START_LBA] [END_LBA]`  
+  START_LBA부터 END_LBA까지 연속된 LBA를 초기값으로 지움
 
 - `flush`  
-  내부에 버퍼링된 모든 `write`/`erase` 명령을 실제 SSD에 커밋
+  내부에 버퍼링된 모든 `write`/`erase` 명령을 실제 SSD에 커밋 후 버퍼를 비움
 
 - `fullwrite [VALUE]`  
   LBA 0~99 전체에 동일한 VALUE를 기록
