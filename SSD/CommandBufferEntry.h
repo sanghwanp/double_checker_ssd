@@ -16,6 +16,7 @@ class CommandBufferEntry {
 
   int Length() const;
 
+  std::string ToString() const;
   std::string ToString(CommandBufferConfig::CmdType cmdType) const;
   void Print() const;
 

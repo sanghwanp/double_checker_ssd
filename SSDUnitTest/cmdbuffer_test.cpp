@@ -3,6 +3,7 @@
 #include "../SSD/CommandBufferConfig.h"
 #include "../SSD/CommandBufferEntry.h"
 #include "../SSD/CommandBufferOptimizer.h"
+#include "../SSD/CommandBufferHandler.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
@@ -83,3 +84,55 @@ INSTANTIATE_TEST_SUITE_P(CmdTestCases, CmdBufferParamTestFixture,
                                 OptimizeTestCase{{{CmdType::WRITE, 1, 1, 1},
                                                   {CmdType::WRITE, 1, 1, 1}},
                                                  1}));
+
+class CmdBufferHandlerFixture : public Test{
+public:
+  CommandBufferHandler cmdBufferHandler;
+
+  void SetUp() {
+      cmdBufferHandler.Flush();
+  }
+};
+
+TEST_F(CmdBufferHandlerFixture, TC06_E1_10_FR0FR1) {
+  cmdBufferHandler.AddErase(1, 10);
+  unsigned int value = 0;
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
+
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 0);
+}
+
+TEST_F(CmdBufferHandlerFixture, TC07_W1_10_FR0FR1) {
+  cmdBufferHandler.AddWrite(1, 10);
+  unsigned int value = 0;
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
+
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 10);
+}
+
+TEST_F(CmdBufferHandlerFixture, TC08_Write5More_FR0FR1) {
+  cmdBufferHandler.Flush();
+  cmdBufferHandler.AddWrite(1, 10);
+  cmdBufferHandler.AddWrite(2, 11);
+  cmdBufferHandler.AddWrite(3, 12);
+  cmdBufferHandler.AddWrite(4, 13);
+  cmdBufferHandler.AddWrite(5, 14);
+  unsigned int value = 0;
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
+
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 10);
+
+  std::vector<CommandBufferEntry> cmds = cmdBufferHandler.AddWrite(1, 20);
+  for(int i=0; i<cmds.size(); i++) {
+      std::cout << cmds[i].ToString() << "\n";
+  }
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 20);
+}
+
