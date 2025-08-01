@@ -1,9 +1,6 @@
 #include "SSD.h"
-
-#include <fstream>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
+#include "ReadCommand.h"
+#include "WriteCommand.h"
 
 SSD SSD::instance;
 
@@ -36,11 +33,4 @@ void SSD::ExecuteCommand(IParam *param) {
   }
 
   command->Execute(param);
-}
-
-unsigned int SSD::GetCachedData(unsigned int lba) {
-  if (lba >= SSDConfig::kStorageSize) {
-    throw std::invalid_argument("Invalid LBA access");
-  }
-  return cache[lba];
 }
