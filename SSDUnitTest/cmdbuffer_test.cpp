@@ -1,11 +1,13 @@
 #include <vector>
 
+#include "../SSD/CommandBufferConfig.h"
 #include "../SSD/CommandBufferEntry.h"
 #include "../SSD/CommandBufferOptimizer.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
 using std::vector;
+using CmdType = CommandBufferConfig::CmdType;
 
 struct OptimizeTestCase {
   vector<CommandBufferEntry> input;

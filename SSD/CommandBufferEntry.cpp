@@ -1,4 +1,6 @@
 #include "CommandBufferEntry.h"
+using CmdType = CommandBufferConfig::CmdType;
+
 CommandBufferEntry::CommandBufferEntry()
     : cmdType(CmdType::INVALID),
       startLba(CommandBufferConfig::NotAvailable),

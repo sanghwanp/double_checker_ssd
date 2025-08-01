@@ -7,11 +7,15 @@
 
 class CommandBufferHandler {
  public:
-  void AddWrite(unsigned int lba, unsigned long long data);
-  void AddErase(unsigned int lba);
+  void AddWrite(unsigned int lba, unsigned int data);
+  void AddErase(unsigned int lba, int delta);
+  bool TryFastRead(unsigned int lba, unsigned int & out_value);
   std::vector<CommandBufferEntry> Flush();
 
  private:
   CommandBuffer buffer;
   CommandBufferOptimizer optimizer;
+
+  int GetStartLba(int lba, int delta) const;
+  int GetEndLba(int lba, int delta) const;
 };
