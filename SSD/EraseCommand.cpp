@@ -16,4 +16,5 @@ bool EraseCommand::Execute(IParam* param) {
     FD->SetBufferData(lba, 0);
   }
   FD->SaveFile(STORAGE_FILE_NAME, FD->GetBufferAddr(), MAX_STORAGE_IDX);
+  return true;
 }
