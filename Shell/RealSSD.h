@@ -12,8 +12,6 @@ class RealSSD : public SSDInterface {
   void Erase(int lba, int size) override;
   void Flush() override;
 
-  bool IsInvalidLBA(int lba);
-  bool IsInvalidValue(const string& value);
   virtual int execCommand(const std::string& cmd);
 
  private:
