@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 
-#include "gmock/gmock.h"
 #include "../Shell/TestShell.h"
+#include "../Shell/ITestScriptCase.h"
+#include "gmock/gmock.h"
 
 #define SHELL_PREFIX_OUTPUT "Shell> "
 #define SHELL_EXIT_OUTPUT SHELL_PREFIX_OUTPUT "Shutting down\n"
@@ -21,7 +22,9 @@ class TestShellExecuter {
 
     std::string combined = std::accumulate(
         std::next(commands.begin()), commands.end(), commands[0],
-        [](const std::string& a, const std::string& b) { return a + "\n" + b; });
+        [](const std::string& a, const std::string& b) {
+          return a + "\n" + b;
+        });
 
     std::ostringstream oss;
     auto backupOutBuf = std::cout.rdbuf();
@@ -58,6 +61,20 @@ class TestShellFixture : public Test {
                          const std::string& expected) {
     std::string result = shellExecuter.Exec(command);
     EXPECT_EQ(expected, result);
+  }
+
+  void SendCommandToMockForTestScript(const std::vector<std::string>& command) {
+    EXPECT_CALL(mockShellExecuter, Exec(_))
+        .WillOnce(Return(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT));
+    std::string result = mockShellExecuter.Exec(command);
+    EXPECT_THAT(result, AllOf(HasSubstr(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT),
+                      Not(HasSubstr(ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT))));
+  }
+
+  void SendCommandToRealForTestScript(const std::vector<std::string>& command) {
+    std::string result = shellExecuter.Exec(command);
+    EXPECT_THAT(result, AllOf(HasSubstr(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT),
+                      Not(HasSubstr(ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT))));
   }
 
   MockTestShellExecuter mockShellExecuter;
@@ -309,369 +326,18 @@ class TestShellFixture : public Test {
   // 9
   std::vector<std::string> ts1Command = {"1_FullWriteAndReadCompare", "exit"};
   std::vector<std::string> ts1CommandShort = {"1_", "exit"};
-  std::string ts1CommandResult = {
-      SHELL_PREFIX_OUTPUT SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000000\n"
-      "[Read] LBA 01 : 0x00000000\n"
-      "[Read] LBA 02 : 0x00000000\n"
-      "[Read] LBA 03 : 0x00000000\n"
-      "[Read] LBA 04 : 0x00000000\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 05 : 0x00000005\n"
-      "[Read] LBA 06 : 0x00000005\n"
-      "[Read] LBA 07 : 0x00000005\n"
-      "[Read] LBA 08 : 0x00000005\n"
-      "[Read] LBA 09 : 0x00000005\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 10 : 0x0000000A\n"
-      "[Read] LBA 11 : 0x0000000A\n"
-      "[Read] LBA 12 : 0x0000000A\n"
-      "[Read] LBA 13 : 0x0000000A\n"
-      "[Read] LBA 14 : 0x0000000A\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 15 : 0x0000000F\n"
-      "[Read] LBA 16 : 0x0000000F\n"
-      "[Read] LBA 17 : 0x0000000F\n"
-      "[Read] LBA 18 : 0x0000000F\n"
-      "[Read] LBA 19 : 0x0000000F\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 20 : 0x00000014\n"
-      "[Read] LBA 21 : 0x00000014\n"
-      "[Read] LBA 22 : 0x00000014\n"
-      "[Read] LBA 23 : 0x00000014\n"
-      "[Read] LBA 24 : 0x00000014\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 25 : 0x00000019\n"
-      "[Read] LBA 26 : 0x00000019\n"
-      "[Read] LBA 27 : 0x00000019\n"
-      "[Read] LBA 28 : 0x00000019\n"
-      "[Read] LBA 29 : 0x00000019\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 30 : 0x0000001E\n"
-      "[Read] LBA 31 : 0x0000001E\n"
-      "[Read] LBA 32 : 0x0000001E\n"
-      "[Read] LBA 33 : 0x0000001E\n"
-      "[Read] LBA 34 : 0x0000001E\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 35 : 0x00000023\n"
-      "[Read] LBA 36 : 0x00000023\n"
-      "[Read] LBA 37 : 0x00000023\n"
-      "[Read] LBA 38 : 0x00000023\n"
-      "[Read] LBA 39 : 0x00000023\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 40 : 0x00000028\n"
-      "[Read] LBA 41 : 0x00000028\n"
-      "[Read] LBA 42 : 0x00000028\n"
-      "[Read] LBA 43 : 0x00000028\n"
-      "[Read] LBA 44 : 0x00000028\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 45 : 0x0000002D\n"
-      "[Read] LBA 46 : 0x0000002D\n"
-      "[Read] LBA 47 : 0x0000002D\n"
-      "[Read] LBA 48 : 0x0000002D\n"
-      "[Read] LBA 49 : 0x0000002D\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 50 : 0x00000032\n"
-      "[Read] LBA 51 : 0x00000032\n"
-      "[Read] LBA 52 : 0x00000032\n"
-      "[Read] LBA 53 : 0x00000032\n"
-      "[Read] LBA 54 : 0x00000032\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 55 : 0x00000037\n"
-      "[Read] LBA 56 : 0x00000037\n"
-      "[Read] LBA 57 : 0x00000037\n"
-      "[Read] LBA 58 : 0x00000037\n"
-      "[Read] LBA 59 : 0x00000037\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 60 : 0x0000003C\n"
-      "[Read] LBA 61 : 0x0000003C\n"
-      "[Read] LBA 62 : 0x0000003C\n"
-      "[Read] LBA 63 : 0x0000003C\n"
-      "[Read] LBA 64 : 0x0000003C\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 65 : 0x00000041\n"
-      "[Read] LBA 66 : 0x00000041\n"
-      "[Read] LBA 67 : 0x00000041\n"
-      "[Read] LBA 68 : 0x00000041\n"
-      "[Read] LBA 69 : 0x00000041\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 70 : 0x00000046\n"
-      "[Read] LBA 71 : 0x00000046\n"
-      "[Read] LBA 72 : 0x00000046\n"
-      "[Read] LBA 73 : 0x00000046\n"
-      "[Read] LBA 74 : 0x00000046\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 75 : 0x0000004B\n"
-      "[Read] LBA 76 : 0x0000004B\n"
-      "[Read] LBA 77 : 0x0000004B\n"
-      "[Read] LBA 78 : 0x0000004B\n"
-      "[Read] LBA 79 : 0x0000004B\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 80 : 0x00000050\n"
-      "[Read] LBA 81 : 0x00000050\n"
-      "[Read] LBA 82 : 0x00000050\n"
-      "[Read] LBA 83 : 0x00000050\n"
-      "[Read] LBA 84 : 0x00000050\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 85 : 0x00000055\n"
-      "[Read] LBA 86 : 0x00000055\n"
-      "[Read] LBA 87 : 0x00000055\n"
-      "[Read] LBA 88 : 0x00000055\n"
-      "[Read] LBA 89 : 0x00000055\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 90 : 0x0000005A\n"
-      "[Read] LBA 91 : 0x0000005A\n"
-      "[Read] LBA 92 : 0x0000005A\n"
-      "[Read] LBA 93 : 0x0000005A\n"
-      "[Read] LBA 94 : 0x0000005A\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 95 : 0x0000005F\n"
-      "[Read] LBA 96 : 0x0000005F\n"
-      "[Read] LBA 97 : 0x0000005F\n"
-      "[Read] LBA 98 : 0x0000005F\n"
-      "[Read] LBA 99 : 0x0000005F\n" SHELL_EXIT_OUTPUT};
 
   // 10
   std::vector<std::string> ts2Command = {"2_PartialLBAWrite", "exit"};
   std::vector<std::string> ts2CommandShort = {"2_", "exit"};
-  std::string ts2CommandResult = {
-      SHELL_PREFIX_OUTPUT SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000000\n"
-      "[Read] LBA 01 : 0x00000000\n"
-      "[Read] LBA 02 : 0x00000000\n"
-      "[Read] LBA 03 : 0x00000000\n"
-      "[Read] LBA 04 : 0x00000000\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000001\n"
-      "[Read] LBA 01 : 0x00000001\n"
-      "[Read] LBA 02 : 0x00000001\n"
-      "[Read] LBA 03 : 0x00000001\n"
-      "[Read] LBA 04 : 0x00000001\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000002\n"
-      "[Read] LBA 01 : 0x00000002\n"
-      "[Read] LBA 02 : 0x00000002\n"
-      "[Read] LBA 03 : 0x00000002\n"
-      "[Read] LBA 04 : 0x00000002\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000003\n"
-      "[Read] LBA 01 : 0x00000003\n"
-      "[Read] LBA 02 : 0x00000003\n"
-      "[Read] LBA 03 : 0x00000003\n"
-      "[Read] LBA 04 : 0x00000003\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000004\n"
-      "[Read] LBA 01 : 0x00000004\n"
-      "[Read] LBA 02 : 0x00000004\n"
-      "[Read] LBA 03 : 0x00000004\n"
-      "[Read] LBA 04 : 0x00000004\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000005\n"
-      "[Read] LBA 01 : 0x00000005\n"
-      "[Read] LBA 02 : 0x00000005\n"
-      "[Read] LBA 03 : 0x00000005\n"
-      "[Read] LBA 04 : 0x00000005\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000006\n"
-      "[Read] LBA 01 : 0x00000006\n"
-      "[Read] LBA 02 : 0x00000006\n"
-      "[Read] LBA 03 : 0x00000006\n"
-      "[Read] LBA 04 : 0x00000006\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000007\n"
-      "[Read] LBA 01 : 0x00000007\n"
-      "[Read] LBA 02 : 0x00000007\n"
-      "[Read] LBA 03 : 0x00000007\n"
-      "[Read] LBA 04 : 0x00000007\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000008\n"
-      "[Read] LBA 01 : 0x00000008\n"
-      "[Read] LBA 02 : 0x00000008\n"
-      "[Read] LBA 03 : 0x00000008\n"
-      "[Read] LBA 04 : 0x00000008\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000009\n"
-      "[Read] LBA 01 : 0x00000009\n"
-      "[Read] LBA 02 : 0x00000009\n"
-      "[Read] LBA 03 : 0x00000009\n"
-      "[Read] LBA 04 : 0x00000009\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000000A\n"
-      "[Read] LBA 01 : 0x0000000A\n"
-      "[Read] LBA 02 : 0x0000000A\n"
-      "[Read] LBA 03 : 0x0000000A\n"
-      "[Read] LBA 04 : 0x0000000A\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000000B\n"
-      "[Read] LBA 01 : 0x0000000B\n"
-      "[Read] LBA 02 : 0x0000000B\n"
-      "[Read] LBA 03 : 0x0000000B\n"
-      "[Read] LBA 04 : 0x0000000B\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000000C\n"
-      "[Read] LBA 01 : 0x0000000C\n"
-      "[Read] LBA 02 : 0x0000000C\n"
-      "[Read] LBA 03 : 0x0000000C\n"
-      "[Read] LBA 04 : 0x0000000C\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000000D\n"
-      "[Read] LBA 01 : 0x0000000D\n"
-      "[Read] LBA 02 : 0x0000000D\n"
-      "[Read] LBA 03 : 0x0000000D\n"
-      "[Read] LBA 04 : 0x0000000D\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000000E\n"
-      "[Read] LBA 01 : 0x0000000E\n"
-      "[Read] LBA 02 : 0x0000000E\n"
-      "[Read] LBA 03 : 0x0000000E\n"
-      "[Read] LBA 04 : 0x0000000E\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000000F\n"
-      "[Read] LBA 01 : 0x0000000F\n"
-      "[Read] LBA 02 : 0x0000000F\n"
-      "[Read] LBA 03 : 0x0000000F\n"
-      "[Read] LBA 04 : 0x0000000F\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000010\n"
-      "[Read] LBA 01 : 0x00000010\n"
-      "[Read] LBA 02 : 0x00000010\n"
-      "[Read] LBA 03 : 0x00000010\n"
-      "[Read] LBA 04 : 0x00000010\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000011\n"
-      "[Read] LBA 01 : 0x00000011\n"
-      "[Read] LBA 02 : 0x00000011\n"
-      "[Read] LBA 03 : 0x00000011\n"
-      "[Read] LBA 04 : 0x00000011\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000012\n"
-      "[Read] LBA 01 : 0x00000012\n"
-      "[Read] LBA 02 : 0x00000012\n"
-      "[Read] LBA 03 : 0x00000012\n"
-      "[Read] LBA 04 : 0x00000012\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000013\n"
-      "[Read] LBA 01 : 0x00000013\n"
-      "[Read] LBA 02 : 0x00000013\n"
-      "[Read] LBA 03 : 0x00000013\n"
-      "[Read] LBA 04 : 0x00000013\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000014\n"
-      "[Read] LBA 01 : 0x00000014\n"
-      "[Read] LBA 02 : 0x00000014\n"
-      "[Read] LBA 03 : 0x00000014\n"
-      "[Read] LBA 04 : 0x00000014\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000015\n"
-      "[Read] LBA 01 : 0x00000015\n"
-      "[Read] LBA 02 : 0x00000015\n"
-      "[Read] LBA 03 : 0x00000015\n"
-      "[Read] LBA 04 : 0x00000015\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000016\n"
-      "[Read] LBA 01 : 0x00000016\n"
-      "[Read] LBA 02 : 0x00000016\n"
-      "[Read] LBA 03 : 0x00000016\n"
-      "[Read] LBA 04 : 0x00000016\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000017\n"
-      "[Read] LBA 01 : 0x00000017\n"
-      "[Read] LBA 02 : 0x00000017\n"
-      "[Read] LBA 03 : 0x00000017\n"
-      "[Read] LBA 04 : 0x00000017\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000018\n"
-      "[Read] LBA 01 : 0x00000018\n"
-      "[Read] LBA 02 : 0x00000018\n"
-      "[Read] LBA 03 : 0x00000018\n"
-      "[Read] LBA 04 : 0x00000018\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x00000019\n"
-      "[Read] LBA 01 : 0x00000019\n"
-      "[Read] LBA 02 : 0x00000019\n"
-      "[Read] LBA 03 : 0x00000019\n"
-      "[Read] LBA 04 : 0x00000019\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000001A\n"
-      "[Read] LBA 01 : 0x0000001A\n"
-      "[Read] LBA 02 : 0x0000001A\n"
-      "[Read] LBA 03 : 0x0000001A\n"
-      "[Read] LBA 04 : 0x0000001A\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000001B\n"
-      "[Read] LBA 01 : 0x0000001B\n"
-      "[Read] LBA 02 : 0x0000001B\n"
-      "[Read] LBA 03 : 0x0000001B\n"
-      "[Read] LBA 04 : 0x0000001B\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000001C\n"
-      "[Read] LBA 01 : 0x0000001C\n"
-      "[Read] LBA 02 : 0x0000001C\n"
-      "[Read] LBA 03 : 0x0000001C\n"
-      "[Read] LBA 04 : 0x0000001C\n" SHELL_WRITE_DONE_OUTPUT
-          SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-              SHELL_WRITE_DONE_OUTPUT SHELL_WRITE_DONE_OUTPUT
-      "[Read] LBA 00 : 0x0000001D\n"
-      "[Read] LBA 01 : 0x0000001D\n"
-      "[Read] LBA 02 : 0x0000001D\n"
-      "[Read] LBA 03 : 0x0000001D\n"
-      "[Read] LBA 04 : 0x0000001D\n" SHELL_EXIT_OUTPUT};
 
   // 11
   std::vector<std::string> ts3Command = {"3_WriteReadAging", "exit"};
   std::vector<std::string> ts3CommandShort = {"3_", "exit"};
-  std::string ts3CommandResult = {SHELL_PREFIX_OUTPUT SHELL_EXIT_OUTPUT};
+
+  // 12
+  std::vector<std::string> ts4Command = {"4_EraseAndWriteAging", "exit"};
+  std::vector<std::string> ts4CommandShort = {"4_", "exit"};
 };
 
 // 1
@@ -740,34 +406,44 @@ TEST_F(TestShellFixture, realInvalidCommand) {
 
 // 9
 TEST_F(TestShellFixture, mockTs1Command) {
-  SendCommandToMock(ts1Command, ts1CommandResult);
-  SendCommandToMock(ts1CommandShort, ts1CommandResult);
+  SendCommandToMockForTestScript(ts1Command);
+  SendCommandToMockForTestScript(ts1CommandShort);
 }
 
 TEST_F(TestShellFixture, realTs1Command) {
-  SendCommandToReal(ts1Command, ts1CommandResult);
-  SendCommandToReal(ts1CommandShort, ts1CommandResult);
+  SendCommandToRealForTestScript(ts1Command);
+  SendCommandToRealForTestScript(ts1CommandShort);
 }
 
 // 10
 TEST_F(TestShellFixture, mockTs2Command) {
-  SendCommandToMock(ts2Command, ts2CommandResult);
-  SendCommandToMock(ts2CommandShort, ts2CommandResult);
+  SendCommandToMockForTestScript(ts2Command);
+  SendCommandToMockForTestScript(ts2CommandShort);
 }
 
 TEST_F(TestShellFixture, realTs2Command) {
-  SendCommandToReal(ts2Command, ts2CommandResult);
-  SendCommandToReal(ts2CommandShort, ts2CommandResult);
+  SendCommandToRealForTestScript(ts2Command);
+  SendCommandToRealForTestScript(ts2CommandShort);
 }
 
 // 11
 TEST_F(TestShellFixture, mockTs3Command) {
-  SendCommandToMock(ts3Command, ts3CommandResult);
-  SendCommandToMock(ts3CommandShort, ts3CommandResult);
+  SendCommandToMockForTestScript(ts3Command);
+  SendCommandToMockForTestScript(ts3CommandShort);
 }
 
-// We need to consider a method to check the results using a random number test.
-TEST_F(TestShellFixture, DISABLED_realTs3Command) {
-  SendCommandToReal(ts3Command, ts3CommandResult);
-  SendCommandToReal(ts3CommandShort, ts3CommandResult);
+TEST_F(TestShellFixture, realTs3Command) {
+  SendCommandToRealForTestScript(ts3Command);
+  SendCommandToRealForTestScript(ts3CommandShort);
+}
+
+// 12
+TEST_F(TestShellFixture, mockTs4Command) {
+  SendCommandToMockForTestScript(ts4Command);
+  SendCommandToMockForTestScript(ts4CommandShort);
+}
+
+TEST_F(TestShellFixture, realTs4Command) {
+  SendCommandToRealForTestScript(ts4Command);
+  SendCommandToRealForTestScript(ts4CommandShort);
 }

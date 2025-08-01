@@ -10,7 +10,7 @@
 #include "CmdHelp.h"
 #include "CmdErase.h"
 #include "CmdFlush.h"
-
+#include "CmdTestScript.h"
 
 class TestShell {
  public:
@@ -29,4 +29,5 @@ class TestShell {
   CommandHelp commandHelp;
   CommandErase commandErase{&ssdDriver};
   CommandFlush commandFlush{&ssdDriver};
+  CommandTestScript commandTestScript{&ssdDriver};
 };
