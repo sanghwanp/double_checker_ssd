@@ -32,5 +32,8 @@ void SSD::ExecuteCommand(IParam *param) {
       break;
   }
 
-  command->Execute(param);
+  if (false == command->Execute(param))
+  {
+    FileDriver::GetInstance().SaveFile(OUTPUT_FILE_NAME, "ERROR");
+  }
 }

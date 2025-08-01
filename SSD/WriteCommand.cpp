@@ -4,11 +4,12 @@
 #include <fstream>
 #include <iomanip>
 
-void WriteCommand::Execute(IParam* param) {
+bool WriteCommand::Execute(IParam* param) {
     auto* writeparam = dynamic_cast<WriteParam*>(param);
-    if (!writeparam) return;
+  if (!writeparam) return false;
 
     FileDriver FD = FileDriver::GetInstance();
     FD.SetBufferData(writeparam->lba.val, writeparam->data.val);
     FD.SaveFile(STORAGE_FILE_NAME, FD.GetBufferData(0), MAX_STORAGE_IDX);
+    return true;
 }
