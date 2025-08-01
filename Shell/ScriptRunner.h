@@ -7,7 +7,7 @@
 class ScriptRunner {
  public:
   ScriptRunner(SSDInterface* ssd, const std::string& scriptPath);
-  void run();
+  void Run();
 
  private:
   SSDInterface* ssd;

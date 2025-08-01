@@ -11,7 +11,7 @@
 ScriptRunner::ScriptRunner(SSDInterface* ssd, const std::string& scriptPath)
     : ssd(ssd), scriptPath(scriptPath) {}
 
-void ScriptRunner::run() {
+void ScriptRunner::Run() {
   std::ifstream file(scriptPath.c_str());
   if (!file.is_open()) {
     std::cout << "Cannot open script file: " << scriptPath << "\n";
@@ -28,14 +28,31 @@ void ScriptRunner::run() {
 
     // 2) TestScript 호출
     bool ok = false;
-    if (line == TEST1_LONG || line == TEST1_SHORT)
-      ok = TestScriptCase1(ssd).Call();
-    else if (line == TEST2_LONG || line == TEST2_SHORT)
-      ok = TestScriptCase2(ssd).Call();
-    else if (line == TEST3_LONG || line == TEST3_SHORT)
-      ok = TestScriptCase3(ssd).Call();
-    else if (line == TEST4_LONG || line == TEST4_SHORT)
-      ok = TestScriptCase4(ssd).Call();
+    if (line == TEST1_LONG || line == TEST1_SHORT) {
+      try {
+        ok = TestScriptCase1(ssd).Call();
+      } catch (...) {
+        ok = false;
+      }
+    } else if (line == TEST2_LONG || line == TEST2_SHORT) {
+      try {
+        ok = TestScriptCase2(ssd).Call();
+      } catch (...) {
+        ok = false;
+      }
+    } else if (line == TEST3_LONG || line == TEST3_SHORT) {
+      try {
+        ok = TestScriptCase3(ssd).Call();
+      } catch (...) {
+        ok = false;
+      }
+    } else if (line == TEST4_LONG || line == TEST4_SHORT) {
+      try {
+        ok = TestScriptCase4(ssd).Call();
+      } catch (...) {
+        ok = false;
+      }
+    }
     else {
       std::cout << "INVALID SCRIPT\n";
       break;

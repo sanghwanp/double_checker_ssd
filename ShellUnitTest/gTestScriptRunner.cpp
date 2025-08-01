@@ -29,7 +29,7 @@ TEST_F(ScriptRunnerFileTest, NonexistentFile_ShowsError) {
   MockSSD ssd;
   ScriptRunner runner(&ssd, "no_such_file.txt");
 
-  runner.run();
+  runner.Run();
 
   std::string o = out.str();
   EXPECT_NE(o.find("Cannot open script file: no_such_file.txt"),
@@ -45,7 +45,7 @@ TEST_F(ScriptRunnerFileTest, UnknownScript_PrintsInvalidAndStops) {
 
   MockSSD ssd;
   ScriptRunner runner(&ssd, kScriptFile);
-  runner.run();
+  runner.Run();
 
   EXPECT_EQ("foobar --- Run...INVALID SCRIPT\n", out.str());
 }
@@ -59,7 +59,7 @@ TEST_F(ScriptRunnerFileTest, SingleKnownLong_PrintsRunPass) {
 
   MockSSD ssd;
   ScriptRunner runner(&ssd, kScriptFile);
-  runner.run();
+  runner.Run();
 
   std::string o = out.str();
   EXPECT_NE(o.find("1_FullWriteAndReadCompare --- Run...Pass\n"),
@@ -75,7 +75,7 @@ TEST_F(ScriptRunnerFileTest, SingleKnownShort_PrintsRunPass) {
 
   MockSSD ssd;
   ScriptRunner runner(&ssd, kScriptFile);
-  runner.run();
+  runner.Run();
 
   std::string o = out.str();
   EXPECT_NE(o.find("1_ --- Run...Pass\n"), std::string::npos);
@@ -93,7 +93,7 @@ TEST_F(ScriptRunnerFileTest, MultipleScripts_StopOnInvalid) {
 
   MockSSD ssd;
   ScriptRunner runner(&ssd, kScriptFile);
-  runner.run();
+  runner.Run();
 
   std::string o = out.str();
   EXPECT_NE(o.find("1_ --- Run...Pass\n"), std::string::npos);
