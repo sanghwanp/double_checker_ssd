@@ -1,9 +1,10 @@
+#include <iostream>
 #include <vector>
 
 #include "../SSD/CommandBufferConfig.h"
 #include "../SSD/CommandBufferEntry.h"
-#include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/CommandBufferHandler.h"
+#include "../SSD/CommandBufferOptimizer.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
@@ -20,50 +21,58 @@ class CmdBufferParamTestFixture : public TestWithParam<OptimizeTestCase> {
   CommandBufferOptimizer cmdBufferOptimizer;
 };
 
-// 공통 검증: data != 0이면 WRITE여야 함
-TEST_P(CmdBufferParamTestFixture, CmdTypeIsWriteWhenDataIsNotZero) {
-  const auto& tc = GetParam();
-  for (const auto& cmd : tc.input) {
+namespace {  // input인 cmds vector가 valid한지 Test
+void ExpectWriteHasData(const vector<CommandBufferEntry>& cmds) {
+  for (const auto& cmd : cmds) {
     if (cmd.data != 0) {
       EXPECT_EQ(cmd.cmdType, CmdType::WRITE);
     }
   }
 }
 
-// 공통 검증: WRITE이면 s == e 이어야 함
-TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCmdTypeIsWrite) {
-  const auto& tc = GetParam();
-  for (const auto& cmd : tc.input) {
+void ExpectWriteIsLengthOne(const vector<CommandBufferEntry>& cmds) {
+  for (const auto& cmd : cmds) {
     if (cmd.cmdType == CmdType::WRITE) {
       EXPECT_EQ(cmd.startLba, cmd.endLba);
     }
   }
 }
 
-// 공통 검증: ERASE이면 data == 0 이어야 함
-TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCmdTypeIsErase) {
-  const auto& tc = GetParam();
-  for (const auto& cmd : tc.input) {
+void ExpectEraseHasZeroData(const vector<CommandBufferEntry>& cmds) {
+  for (const auto& cmd : cmds) {
     if (cmd.cmdType == CmdType::ERASE) {
       EXPECT_EQ(cmd.data, 0);
     }
   }
 }
 
-// 공통 검증: cmds 길이는 5 이하
-TEST_P(CmdBufferParamTestFixture, CmdsVectorSizeLessThanEqual5) {
-  const auto& tc = GetParam();
-  EXPECT_LE(tc.input.size(), 5);
+void ExpectSizeAtMost(const vector<CommandBufferEntry>& cmds, size_t max) {
+  EXPECT_LE(cmds.size(), max);
+}
+}  // namespace
+
+TEST_P(CmdBufferParamTestFixture, CmdTypeIsWriteWhenDataIsNotZero) {
+  ExpectWriteHasData(GetParam().input);
 }
 
-// 최적화 결과 확인(예시)
+TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCmdTypeIsWrite) {
+  ExpectWriteIsLengthOne(GetParam().input);
+}
+
+TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCmdTypeIsErase) {
+  ExpectEraseHasZeroData(GetParam().input);
+}
+
+TEST_P(CmdBufferParamTestFixture, CmdsVectorSizeLessThanEqual5) {
+  ExpectSizeAtMost(GetParam().input, 5);
+}
+
 TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
   const auto& tc = GetParam();
-
-  puts("Input:");
+  std::cout << "Input:\n";
   for (const auto& cmd : tc.input) cmd.Print();
 
-  puts("Output:");
+  std::cout << "\nOutput:\n";
   vector<CommandBufferEntry> result = cmdBufferOptimizer.Optimize(tc.input);
   for (const auto& intv : result) intv.Print();
 
@@ -85,54 +94,55 @@ INSTANTIATE_TEST_SUITE_P(CmdTestCases, CmdBufferParamTestFixture,
                                                   {CmdType::WRITE, 1, 1, 1}},
                                                  1}));
 
-class CmdBufferHandlerFixture : public Test{
-public:
+class CmdBufferHandlerFixture : public Test {
+ public:
   CommandBufferHandler cmdBufferHandler;
 
-  void SetUp() {
-      cmdBufferHandler.Flush();
-  }
+  void SetUp() override { cmdBufferHandler.Flush(); }
 };
 
-TEST_F(CmdBufferHandlerFixture, TC06_E1_10_FR0FR1) {
+TEST_F(CmdBufferHandlerFixture, EraseThenReadReturnsZero) {
   cmdBufferHandler.AddErase(1, 10);
   unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+
+  EXPECT_FALSE(cmdBufferHandler.TryFastRead(0, value));
   EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
 
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_TRUE(cmdBufferHandler.TryFastRead(1, value));
   EXPECT_EQ(value, 0);
 }
 
-TEST_F(CmdBufferHandlerFixture, TC07_W1_10_FR0FR1) {
+TEST_F(CmdBufferHandlerFixture, WriteThenReadReturnsWrittenValue) {
   cmdBufferHandler.AddWrite(1, 10);
   unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+
+  EXPECT_FALSE(cmdBufferHandler.TryFastRead(0, value));
   EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
 
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_TRUE(cmdBufferHandler.TryFastRead(1, value));
   EXPECT_EQ(value, 10);
 }
 
-TEST_F(CmdBufferHandlerFixture, TC08_Write5More_FR0FR1) {
+TEST_F(CmdBufferHandlerFixture, WriteOverflowTriggersFlushAndUpdate) {
   cmdBufferHandler.Flush();
   cmdBufferHandler.AddWrite(1, 10);
   cmdBufferHandler.AddWrite(2, 11);
   cmdBufferHandler.AddWrite(3, 12);
   cmdBufferHandler.AddWrite(4, 13);
   cmdBufferHandler.AddWrite(5, 14);
+
   unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_FALSE(cmdBufferHandler.TryFastRead(0, value));
   EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
 
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_TRUE(cmdBufferHandler.TryFastRead(1, value));
   EXPECT_EQ(value, 10);
 
-  std::vector<CommandBufferEntry> cmds = cmdBufferHandler.AddWrite(1, 20);
-  for(int i=0; i<cmds.size(); i++) {
-      std::cout << cmds[i].ToString() << "\n";
+  std::vector<CommandBufferEntry> flushed = cmdBufferHandler.AddWrite(1, 20);
+  for (const auto& cmd : flushed) {
+    std::cout << cmd.ToString() << "\n";
   }
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+
+  EXPECT_TRUE(cmdBufferHandler.TryFastRead(1, value));
   EXPECT_EQ(value, 20);
 }
-
