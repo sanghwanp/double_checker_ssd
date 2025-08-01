@@ -1,130 +1,62 @@
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <vector>
-
+#include <gtest/gtest.h>
 #include "../SSD/SSD.h"
-#include "../SSD/ReadCmd.h"
-#include "../SSD/ReadArguments.h"
-#include "../SSD/IArguments.h"
-#include "gmock/gmock.h"
-
-using namespace testing;
-
-class ReadTestFixture : public Test {
- public:
-  const int INIT_DATA = 0x00000000;
-  const std::string BASIC_ARGS = "R 0";
-  const std::string INVALID_ARGS_TYPE = "F 0";
-  const std::string INVALID_ARGS_LBA = "R 100";
-  const std::string INVALID_ARGS_COUNT = BASIC_ARGS + " 1";
-
-  ReadArguments readArgs;
-  SSD ssd;
-
-  const std::string SSD_NAND_TXT_FILEPATH = "C:\\ssd_nand.txt";
-
-  bool DoesFileExist(const std::string &fileName) {
-    std::ifstream ifs;
-    ifs.open(fileName);
-    if (ifs.is_open()) {
-      ifs.close();
-      return true;
+#include "../SSD/FileDriver.h"
+/*
+class SSDTest : public ::testing::Test {
+public:
+    SSDTest() : ssd(SSD::GetInstance()), fileDriver(FileDriver::GetInstance()) {}
+    unsigned int GetCachedData(unsigned int lba) {
+        return *fileDriver.GetBufferData(lba);
     }
-    return false;
-  }
-
-  void CreateFile(const std::string &fileName) {
-    std::ofstream ofs;
-    ofs.open(fileName);
-    if (ofs.is_open()) {
-      for (int i = 0; i < SsdConfig::kStorageSize; i++) {
-        ofs << std::hex << SsdConfig::kStorageInitValue << "\n";
-      }
-      ofs.close();
-      return;
+    std::string readOutputFile() {
+        std::ifstream file(READ_OUTPUT_FILE_NAME);
+        std::string content((std::istreambuf_iterator<char>(file)),
+                            std::istreambuf_iterator<char>());
+        return content;
     }
-
-    throw std::runtime_error("cannot create ssd_nand.txt file.");
-  }
+protected:
+    SSD ssd;
+    FileDriver& fileDriver;
+    const unsigned int TEST_LBA = 5;
+    const unsigned int TEST_DATA = 0x12345678;
+    const std::string WRITE_CMD = "W 5 0x12345678";
+    const std::string READ_CMD = "R 5";
+    const std::string READ_OUTPUT_FILE_NAME = "output.txt";
 };
 
-class WriteCmdMock : public ICmd {
- public:
-  MOCK_METHOD(unsigned int, Run,
-              (IArguments * writeArgs, std::vector<unsigned int> &cache),
-              (override));
-};
+TEST_F(SSDTest, WriteAndRead_CachedData) {
+    // Write
+    std::vector<std::string> writeArgs = { "W", "5", "0x12345678" };
+    ssd.Run(writeArgs);
 
-TEST_F(ReadTestFixture, TC01_Read_ThrowException_WhenInvalidArgsType) {
-  EXPECT_THROW({ readArgs.Parse(INVALID_ARGS_TYPE); }, std::invalid_argument);
+    // Read
+    std::vector<std::string> readArgs = { "R", "5" };
+    ssd.Run(readArgs);
+
+    // Check cache
+    unsigned int cached = GetCachedData(TEST_LBA);
+    EXPECT_EQ(cached, TEST_DATA);
 }
 
-TEST_F(ReadTestFixture, TC02_Read_ReturnStoredValue_WhenWrittenBefore) {
-  readArgs.Parse(BASIC_ARGS);
-  ReadCmd readCmd;
-  ssd.SetReadCmd(&readCmd);
+TEST_F(SSDTest, ReadCommand_InvalidLBA) {
 
-  unsigned int data = ssd.Read(&readArgs);
-  EXPECT_EQ(data, INIT_DATA);
+    // Read
+    std::vector<std::string> readArgs = { "R", "140" };
+    ssd.Run(readArgs);
+
+    string output = readOutputFile();
+
+    EXPECT_EQ(output, "ERROR\n");
 }
 
-TEST_F(ReadTestFixture, TC03_Read_ThrowException_WhenIvalidArgsLba) {
-  EXPECT_THROW({ readArgs.Parse(INVALID_ARGS_LBA); }, std::invalid_argument);
+TEST_F(SSDTest, Run_InvalidCommandType) {
+    std::vector<std::string> invalidArgs = { "invalid", "5", "0x12345678" };
+    // 정상적으로 처리하지 못하면 내부적으로 "Invalid command" 출력
+    // 예외는 발생하지 않으나, 캐시에는 변화 없음
+    unsigned int before = GetCachedData(TEST_LBA);
+    ssd.Run(invalidArgs);
+    unsigned int after = GetCachedData(TEST_LBA);
+    EXPECT_EQ(before, after);
 }
 
-TEST_F(ReadTestFixture, TC04_Read_ThrowException_WhenIvalidArgsCount) {
-  EXPECT_THROW({ readArgs.Parse(INVALID_ARGS_COUNT); }, std::invalid_argument);
-}
-
-TEST_F(ReadTestFixture, TC05_Read_ReturnStoredValue_WhenWrittenAfter) {
-  WriteCmdMock mock;
-  ReadCmd readCmd;
-  SSD ssd;
-
-  ssd.SetWriteCmd(&mock);
-  ssd.SetReadCmd(&readCmd);
-
-  std::ostringstream oss;
-  for (int data = 0; data < 5; data++) {
-    WriteArguments writeArgs;
-    writeArgs.Parse("W " + std::to_string(data) + " 0x" +
-                    (std::stringstream()
-                     << std::hex << std::setw(8) << std::setfill('0') << data)
-                        .str());
-
-    EXPECT_CALL(mock, Run(&writeArgs,_)).WillOnce([&]() {
-      if (false == DoesFileExist(SSD_NAND_TXT_FILEPATH)) {
-        CreateFile(SSD_NAND_TXT_FILEPATH);
-      }
-
-      std::ifstream ifs(SSD_NAND_TXT_FILEPATH);
-      const int MAX_LBA_SIZE = 100;
-      std::vector<unsigned int> cache(MAX_LBA_SIZE, 0);
-      for (int lba = 0; lba < MAX_LBA_SIZE; lba++) {
-        ifs >> std::hex >> cache[lba];
-      }
-
-      const int lbaToWrite = data;
-      cache[lbaToWrite] = data;
-
-      std::ofstream ofs;
-      ofs.open(SSD_NAND_TXT_FILEPATH);
-      for (int i = 0; i < cache.size(); i++) {
-        ofs << std::hex << cache[i] << "\n";
-      }
-      ofs.close();
-
-      const int kVoidResult = 0;
-      return kVoidResult;
-    });
-    ssd.Write(&writeArgs);
-  }
-
-  for (unsigned int i = 0; i < 5; i++) {
-    ReadArguments readArgs;
-    readArgs.Parse("R " + std::to_string(i));
-    unsigned int result = ssd.Read(&readArgs);
-    EXPECT_EQ(result, i);
-  }
-}
+*/

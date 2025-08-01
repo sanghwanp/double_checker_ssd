@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "IArguments.h"
+#include "IParam.h"
 
 class WriteArguments : public IArguments {
 public:

@@ -5,36 +5,42 @@
 #include <iostream>
 #include <sstream>
 
-SSD::SSD() { Clear(); }
-void SSD::Clear() {
-  cache.clear();
-  cache.resize(SsdConfig::kStorageSize, SsdConfig::kStorageInitValue);
+SSD SSD::instance;
+
+SSD::SSD() : cache(100) {
+  commandFactory = CommandFactory::GetInstance();
+  filedriver = FileDriver::GetInstance();
 }
 
-void SSD::SetWriteCmd(ICmd *cmd) { this->writeCmd = cmd; }
+void SSD::Run(vector<string> args) {
+  IParam *cmd;
+  cmd = parser.Parse(args);
 
-void SSD::SetReadCmd(ICmd *cmd) { this->readCmd = cmd; }
+  ExecuteCommand(cmd);
 
-void SSD::SaveToOutputFile(unsigned int readData) {
-  std::ofstream ofs;
-  ofs.open("C:\\ssd_output.txt");
-  ofs << (std::stringstream() << std::hex << readData).str();
-  ofs.close();
 }
 
-// unsigned int SSD::Read(int lba) const { return readCmd.Run(lba, storage); }
-unsigned int SSD::Read(IArguments *args) {
-  unsigned int readData = readCmd->Run(args, cache);
-  // unsigned int readData = dynamic_cast<ReadCmd *>(readCmd)->GetReadResult();
-  SaveToOutputFile(readData);
-  return readData;
-}
+void SSD::ExecuteCommand(IParam *param) {
+  std::unique_ptr<ICommand> command;
 
-void SSD::Write(IArguments *args) { writeCmd->Run(args, cache); }
+  switch (param->eCmd) {
+    case eWriteCmd:
+      command = std::make_unique<WriteCommand>();
+      break;
+    case eReadCmd:
+      command = std::make_unique<ReadCommand>();
+      break;
+    default:
+      command = std::make_unique<ICommand>();
+      break;
+  }
+
+  command->Execute(param);
+}
 
 unsigned int SSD::GetCachedData(unsigned int lba) {
-	if(lba >= SsdConfig::kStorageSize) {
-		throw std::invalid_argument("Invalid LBA access");
-	}
-	return cache[lba];
+  if (lba >= SSDConfig::kStorageSize) {
+    throw std::invalid_argument("Invalid LBA access");
+  }
+  return cache[lba];
 }
