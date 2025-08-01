@@ -8,8 +8,16 @@
 const std::string ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT = "PASS";
 const std::string ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT = "FAIL";
 
-ITestScriptCase::ITestScriptCase(SSDInterface* ssdinterface, int number)
-    : ssd(ssdinterface), number(number) {}
+ITestScriptCase::ITestScriptCase(SSDInterface* ssdinterface, int number, std::string name)
+    : ssd(ssdinterface), number(number), name(name) {}
+
+std::string ITestScriptCase::GetName() { return name; }
+
+std::string ITestScriptCase::GetFullName() {
+  return std::to_string(number) + "_" + name;
+}
+
+int ITestScriptCase::GetNumber() { return number; }
 
 bool ITestScriptCase::ReadCompare(std::string lba, std::string expected) {
   unsigned int nLba = std::stoi(lba);

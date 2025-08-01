@@ -3,7 +3,7 @@
 #include <iostream>
 
 TestScriptCase2::TestScriptCase2(SSDInterface* ssdinterface)
-    : ITestScriptCase(ssdinterface, 2) {}
+    : ITestScriptCase(ssdinterface, 2, "PartialLBAWrite") {}
 
 bool TestScriptCase2::Call() {
   /*
