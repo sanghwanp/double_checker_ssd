@@ -10,6 +10,7 @@ enum TestShellCMD {
   eFullread,
   eFlushCmd,
   eEraseCmd,
+  eEraseRangeCmd,
   eScriptCmd,
   eInvalidCmd
 };
@@ -47,6 +48,14 @@ class EraseParam : public IParam {
   EraseParam(TestShellCMD cmd, string lba, string size) : IParam(cmd), lba(lba), size(size) {}
   string lba;
   string size;
+};
+
+class EraseRangeParam : public IParam {
+ public:
+  EraseRangeParam(TestShellCMD cmd, string lbaStart, string lbaEnd)
+      : IParam(cmd), lbaStart(lbaStart), lbaEnd(lbaEnd) {}
+  string lbaStart;
+  string lbaEnd;
 };
 
 class ScriptParam : public IParam {

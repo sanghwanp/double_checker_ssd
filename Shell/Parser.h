@@ -97,6 +97,14 @@ class Parser {
         [&](const std::vector<std::string>& tokens) {
           return IsNumber(tokens[1]) && IsNumber(tokens[2]);
         }}},
+      {"erase_range",
+       {3, TestShellCMD::eEraseRangeCmd,
+        [&](const std::vector<std::string>& tokens) {
+          return new EraseRangeParam(TestShellCMD::eEraseRangeCmd, tokens[1], tokens[2]);
+        },
+        [&](const std::vector<std::string>& tokens) {
+          return IsNumber(tokens[1]) && IsNumber(tokens[2]);
+        }}},
       {"script",
        {1, TestShellCMD::eScriptCmd,
         [&](const std::vector<std::string>& tokens) {

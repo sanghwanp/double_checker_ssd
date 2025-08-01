@@ -10,6 +10,7 @@
 #include "CmdExit.h"
 #include "CmdHelp.h"
 #include "CmdErase.h"
+#include "CmdEraseRange.h"
 #include "CmdFlush.h"
 #include "CmdTestScript.h"
 
@@ -33,6 +34,7 @@ class TestShell {
   CommandExit commandExit;
   CommandHelp commandHelp;
   CommandErase commandErase{&ssdDriver};
+  CommandEraseRange commandEraseRange{&ssdDriver};
   CommandFlush commandFlush{&ssdDriver};
   CommandTestScript commandTestScript{&ssdDriver};
 };
