@@ -109,7 +109,8 @@ class Parser {
        {1, TestShellCMD::eScriptCmd,
         [&](const std::vector<std::string>& tokens) {
           return new ScriptParam(TestShellCMD::eScriptCmd,
-                                 ExtractScriptNumberIfValidFormat(tokens[0]));
+                                 ExtractScriptNumberIfValidFormat(tokens[0]),
+                                 tokens[0]);
         },
         [](const std::vector<std::string>&) { return true; }}}};
 };

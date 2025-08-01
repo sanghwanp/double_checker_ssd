@@ -78,11 +78,8 @@ int TestShell::parseAndExecCommand(std::string command) {
     }
     case eScriptCmd: {
       ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(parsedCommand);
-      if (commandTestScript.Call(*parsedCommand)) {
-        ITestScriptCase::PrintPassResult();
-      } else {
-        ITestScriptCase::PrintFailResult();
-      }
+      std::string result = commandTestScript.CallSciprt(*parsedCommand);
+      std::cout << result << std::endl;
       break;
     }
     case eInvalidCmd:

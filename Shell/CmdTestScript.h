@@ -11,7 +11,7 @@
 class CommandTestScript {
  public:
   CommandTestScript(SSDInterface* ssdInterface);
-  bool Call(const IParam& param);
+  std::string CallSciprt(const IParam& param);
 
  private:
   SSDInterface* ssd;
