@@ -52,6 +52,8 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CommandBufferHandler.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="EraseCommand.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -103,6 +105,8 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CommandBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="EraseCommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
