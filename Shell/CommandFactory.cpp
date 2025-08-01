@@ -17,45 +17,38 @@ ICommandFactory* ICommandFactory::GetInstance() {
   return CommandFactory::GetInstance();
 }
 
-static MockSSD MockssdDriver;
-static RealSSD RealssdDriver;
-
 CommandFactory::CommandFactory()
 {
-#ifdef UNIT_TEST
-  ssdInterface = &MockssdDriver;
-#else
-  ssdInterface = &RealssdDriver;
-#endif
+
 }
 
-IShellCommand* CommandFactory::CreateCommand(IParam& param) {
+IShellCommand* CommandFactory::CreateCommand(IParam& param, SSDInterface* ssd) {
   IShellCommand* command = nullptr;
 
   switch (param.eCmd) {
     case eWriteCmd:
-      command = new CommandWrite(ssdInterface);
+      command = new CommandWrite(ssd);
       break;
     case eReadCmd:
-      command = new CommandRead(ssdInterface);
+      command = new CommandRead(ssd);
       break;
     case eEraseCmd:
-      command = new CommandErase(ssdInterface);
+      command = new CommandErase(ssd);
       break;
     case eEraseRangeCmd:
-      command = new CommandEraseRange(ssdInterface);
+      command = new CommandEraseRange(ssd);
       break;
     case eFlushCmd:
-      command = new CommandFlush(ssdInterface);
+      command = new CommandFlush(ssd);
       break;
     case eFullread:
-      command = new CommandFullRead(ssdInterface);
+      command = new CommandFullRead(ssd);
       break;
     case eFullwrite:
-      command = new CommandFullWrite(ssdInterface);
+      command = new CommandFullWrite(ssd);
       break;
     case eScriptCmd:
-      command = new CommandTestScript(ssdInterface);
+      command = new CommandTestScript(ssd);
       break;
     case eHelpCmd:
       command = new CommandHelp();
@@ -64,8 +57,7 @@ IShellCommand* CommandFactory::CreateCommand(IParam& param) {
       command = new CommandExit();
       break;
     default:
-
-      // Handle unknown command
+        // nothing to do here
       break;
   }
 

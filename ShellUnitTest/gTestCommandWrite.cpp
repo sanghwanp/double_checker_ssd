@@ -44,11 +44,11 @@ TEST_F(CommandWriteTest, WriteInvalidLBA) {
 }
 
 TEST_F(CommandWriteTest, WriteInvalidValue) {
-  EXPECT_FALSE(cmd->Call(GenParam("write 3 1234GHIJ")));
+  EXPECT_FALSE(CallCommand("write 3 1234GHIJ"));
   EXPECT_EQ(INVALID_COMMAND_MESSAGE, GetOutput());
 }
 
 TEST_F(CommandWriteTest, WriteMissingArgs) {
-  EXPECT_FALSE(cmd->Call(GenParam("write 3")));
+  EXPECT_FALSE(CallCommand("write 3"));
   EXPECT_EQ(INVALID_COMMAND_MESSAGE, GetOutput());
 }

@@ -2,6 +2,8 @@
 #include "gtest/gtest.h"
 #include "../Shell/Parser.h"
 #include "../Shell/ICommand.h"
+#include "../Shell/MockSSD.h"
+#include "../Shell/RealSSD.h"
 
 class CommandCallCommon : public ::testing::Test {
  public:
@@ -11,7 +13,7 @@ class CommandCallCommon : public ::testing::Test {
   }
   bool CallCommand(const std::string& args) {
     param = &GenParam(args);
-    cmdHandler = ICommandFactory::GetInstance()->CreateCommand(*param);
+    cmdHandler = ICommandFactory::GetInstance()->CreateCommand(*param, &mockSsd);
     if (cmdHandler == nullptr) {
       std::cout << INVALID_MESSAGE;
       return false;
@@ -26,5 +28,6 @@ class CommandCallCommon : public ::testing::Test {
   Parser parser;
   IShellCommand* cmdHandler;
   IParam* param;
+  MockSSD mockSsd;
 };
 

@@ -26,12 +26,12 @@ int TestShell::parseAndExecCommand(std::string command) {
   bool ret = true;
 
   IShellCommand* cmd =
-      ICommandFactory::GetInstance()->CreateCommand(parsedCommand);
+      ICommandFactory::GetInstance()->CreateCommand(parsedCommand, ssdDriver);
 
+  // execute the command
   if (cmd != nullptr) {
     ret = cmd->Call(parsedCommand);
   }
-  // execute the command
 
   // post processing
   switch (parsedCommand.eCmd) {
@@ -42,8 +42,8 @@ int TestShell::parseAndExecCommand(std::string command) {
       break;
     }
     case eInvalidCmd: {
-      std::cout << "INVALID COMMAND" << std::endl;
-      break;
+        std::cout << "INVALID COMMAND" << std::endl;
+        break;
     }
   }
   return parsedCommand.eCmd;

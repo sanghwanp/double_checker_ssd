@@ -6,6 +6,7 @@
 CommandWrite::CommandWrite(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
 bool CommandWrite::Call(IParam& param) {
+  if (param.eCmd == eInvalidCmd) return false;
   WriteParam& writeParam = dynamic_cast<WriteParam&>(param);
 
   int lba = std::stoi(writeParam.lba);

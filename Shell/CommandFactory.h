@@ -9,7 +9,7 @@ class CommandFactory : public ICommandFactory {
     static CommandFactory instance;
     return &instance;
   }
-  IShellCommand* CreateCommand(IParam& Param) override;
+  IShellCommand* CreateCommand(IParam& Param, SSDInterface* ssd) override;
 
  private:
   CommandFactory();
