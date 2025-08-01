@@ -8,10 +8,10 @@ std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
   static std::map<int, CommandBufferEntry> result_map;
   result_map.clear();
 
-  std::filesystem::path curDirPath("./");
-  auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(curDirPath));
-  for (auto cmdBufFile : cmdBufFiles) {
-    std::string filename = cmdBufFile.u8string();
+  std::filesystem::path curDirPath(GetAndMakeCmdBufferDirPath());
+  std::vector<std::filesystem::path> cmdBufFiles = GetCmdbufFiles(curDirPath);
+  for (const std::filesystem::path & cmdBufFile : cmdBufFiles) {
+    std::string filename = cmdBufFile.filename().string();
     if (!MatchCmdBufFilename(filename)) continue;
     int order = GetOrderFromCmdBufFilename(filename);
     result_map[order] = MakeCmdBufEntry(filename);
@@ -27,26 +27,24 @@ std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
 void CommandBuffer::WriteCmdsToBuffer(
     const std::vector<CommandBufferEntry>& cmds) {
   FlushBuffer();
-  std::string filename, order;
+  std::string filename, filepath, order;
   for (int i = 0; i < cmds.size(); i++) {
     const CommandBufferEntry& cmd = cmds[i];
     order = std::to_string(i);
-    filename = order + "_" + cmd.ToString() +
+    filename = order + "_" + cmd.ToString() + "." +
                CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
-    ofs.open(filename);
+    filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
+    ofs.open(filepath);
     ofs.close();
   }
 }
 
 void CommandBuffer::FlushBuffer() {
-  std::string_view cmdBufDirPath = CommandBufferConfig::COMMAND_BUFFER_FILEPATH;
-  if (!std::filesystem::exists(cmdBufDirPath)) {
-    std::filesystem::create_directories(cmdBufDirPath);
-  }
+  std::string_view cmdBufDirPath = GetAndMakeCmdBufferDirPath();
   auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(cmdBufDirPath));
   for (auto cmdBufFile : cmdBufFiles) {
-    std::string filename = cmdBufFile.u8string();
-    if (!MatchCmdBufFilename(filename)) continue;
+    std::string filepath = cmdBufFile.u8string();
+    if (!MatchCmdBufFilename(filepath)) continue;
     std::filesystem::remove(cmdBufFile);
   }
 }
