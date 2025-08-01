@@ -4,14 +4,20 @@
 #include "../SSD/SSD.h"
 
 
-TEST(ReadCommandTest, Execute_ValidLBA) {
+class FixtureReadCommand : public ::testing::Test {
+
+  public:
+  ReadParam MakeReadParam(unsigned int lba)
+  {
+     LBA lbaObj = {lba};
+     return ReadParam(CMD_TYPE::eReadCmd, lbaObj);
+  }
+};
+
+TEST_F(FixtureReadCommand, Execute_ValidLBA) {
 
   // arrage
-  // Prepare a valid ReadParam
-  LBA lba = {5};
-  DATA data(0x12345678);
-
-  ReadParam readParam(CMD_TYPE::eReadCmd, lba);
+  ReadParam& readParam = MakeReadParam(5);
 
   // Execute the read command
   ReadCommand readCommand;
@@ -20,11 +26,10 @@ TEST(ReadCommandTest, Execute_ValidLBA) {
   EXPECT_EQ(ret, true);
 }
 
-TEST(ReadCommandTest, Execute_InvalidLBA) {
+TEST_F(FixtureReadCommand, Execute_InvalidLBA) {
 
   // Prepare an invalid ReadParam
-  LBA lba = {140};  // Assuming this is out of bounds
-  ReadParam readParam(CMD_TYPE::eReadCmd, lba);
+  ReadParam& readParam = MakeReadParam(140);
 
   // Execute the read command
   ReadCommand readCommand;
