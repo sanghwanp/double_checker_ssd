@@ -9,20 +9,28 @@
 
 class Logger : public ILogger {
  public:
-  Logger();
-  Logger(ILogFileSystem* fs, bool ConsoleOn);
   ~Logger();
 
   void LogPrint(const std::string& functionName, const std::string& message) override;
   void MyPrint(const std::string& message) override;
   void SetConsoleOutput(bool on);
+  static Logger& GetInstance() {
+    static Logger instance;
+    return instance;
+  }
+  void SetLoggerFileSystem(ILogFileSystem* fs);
+  void RestoreLoggerFileSystem(void);
 
  private:
   std::string logFileName;
   std::ofstream logFile;
   ILogFileSystem* fileSystem;
+  ILogFileSystem* ownsfileSystem;
+
   bool ownsFileSystem = false;
   bool consoleOutput;
+
+  Logger();
 
   void OpenLogFile();
   std::string GetCurrentTimestamp(bool forFile = false);
@@ -31,4 +39,5 @@ class Logger : public ILogger {
   void ManageOldLogs();
   bool Ends_with(const std::string& str, const std::string& suffix);
 };
+
 

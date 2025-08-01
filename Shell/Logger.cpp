@@ -13,6 +13,7 @@ namespace {
 constexpr std::uintmax_t MAX_FILE_SIZE = 10 * 1024;  // 10KB
 }
 
+ILogger& ILogger::GetInstance() { return Logger::GetInstance(); }
 Logger::Logger()
     : consoleOutput(true),
       logFileName("latest.log"),
@@ -21,26 +22,29 @@ Logger::Logger()
   OpenLogFile();
 }
 
-Logger::Logger(ILogFileSystem* fs, bool ConsoleOn)
-    : consoleOutput(ConsoleOn),
-      logFileName("latest.log"),
-      fileSystem(fs),
-      ownsFileSystem(false) {
-  OpenLogFile();
-}
+
 
 Logger::~Logger() {
   if (logFile.is_open()) {
     logFile.close();
   }
   if (ownsFileSystem) {
-    delete fileSystem;
+    delete ownsfileSystem;
   }
 }
 void Logger::MyPrint(const std::string& message) {
   if (consoleOutput == true) {
     std::cout << message;
   }
+}
+
+void Logger::SetLoggerFileSystem(ILogFileSystem* fs) {
+  fileSystem = fs;
+  ownsFileSystem = false;
+}
+void Logger::RestoreLoggerFileSystem(void) {
+  fileSystem = ownsfileSystem;
+  ownsFileSystem = true;
 }
 
 void Logger::SetConsoleOutput(bool on) { consoleOutput = on; }
