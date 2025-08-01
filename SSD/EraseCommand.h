@@ -1,7 +1,7 @@
 #pragma once
 #include "ICommand.h"
 
-class WriteCommand : public ICommand {
+class EraseCommand : public ICommand {
  public:
   bool Execute(IParam* param) override;
 };
