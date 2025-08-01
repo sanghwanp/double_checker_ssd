@@ -1,26 +1,32 @@
 #include "CommandBuffer.h"
 
+#include <filesystem>
+#include <iostream>
 #include <map>
 #include <string>
 #include <string_view>
-#include <iostream>
 
-std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
+using Path = std::filesystem::path;
+
+std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromFile() const {
   static std::map<int, CommandBufferEntry> result_map;
   result_map.clear();
 
-  std::filesystem::path curDirPath(GetAndMakeCmdBufferDirPath());
-  std::vector<std::filesystem::path> cmdBufFiles = GetCmdbufFiles(curDirPath);
-  for (const std::filesystem::path & cmdBufFile : cmdBufFiles) {
-    std::string filename = cmdBufFile.filename().string();
-    if (!MatchCmdBufFilename(filename)) continue;
+  Path bufferDirPath(EnsureCommandBufferDirExistAndGetPath());
+  std::vector<Path> commandBufferFilePaths = GetCommandBufferFilePaths(bufferDirPath);
+  for (const Path& commandBufferFilePath : commandBufferFilePaths) {
+    std::string filename = commandBufferFilePath.filename().string();
+    if (not(MatchCommandBufferFilename(filename))) continue;
     int order = GetOrderFromCmdBufFilename(filename);
-    result_map[order] = MakeCmdBufEntry(filename);
+    result_map[order] = MakeCommandBufferEntry(filename);
   }
 
-  std::vector<CommandBufferEntry> result;
+  static std::vector<CommandBufferEntry> result;
+  result.clear();
+
   for (const auto& it : result_map) {
-    result.emplace_back(it.second);
+    const CommandBufferEntry& commandBufferEntry = it.second;
+    result.emplace_back(commandBufferEntry);
   }
   return result;
 }
@@ -33,29 +39,28 @@ void CommandBuffer::WriteCmdsToBuffer(
     const CommandBufferEntry& cmd = cmds[i];
     order = std::to_string(i);
     filename = order + "_" + cmd.ToString() +
-               CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
-    filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
+               CommandBufferConfig::CMD_BUF_EXT.data();
+    filepath = std::string(EnsureCommandBufferDirExistAndGetPath()) + filename;
     ofs.open(filepath);
     ofs.close();
   }
 }
 
 void CommandBuffer::FlushBuffer() {
-  std::string_view cmdBufDirPath = GetAndMakeCmdBufferDirPath();
-  auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(cmdBufDirPath));
+  std::string_view cmdBufDirPath = EnsureCommandBufferDirExistAndGetPath();
+  auto cmdBufFiles = GetCommandBufferFilePaths(Path(cmdBufDirPath));
   for (auto cmdBufFile : cmdBufFiles) {
     std::string filename = cmdBufFile.filename().u8string();
-    if (!MatchCmdBufFilename(filename)) continue;
+    if (not(MatchCommandBufferFilename(filename))) continue;
     std::filesystem::remove(cmdBufFile);
   }
 }
 
-std::vector<std::filesystem::path> CommandBuffer::GetCmdbufFiles(
-    const std::filesystem::path& dirPath) const {
-  std::vector<std::filesystem::path> cmdbufFiles;
+std::vector<Path> CommandBuffer::GetCommandBufferFilePaths(const Path& dirPath) const {
+  std::vector<Path> cmdbufFiles;
 
-  if (!std::filesystem::exists(dirPath) ||
-      !std::filesystem::is_directory(dirPath)) {
+  if (not(std::filesystem::exists(dirPath)) ||
+      not(std::filesystem::is_directory(dirPath))) {
     throw std::invalid_argument(std::string("Invalid directory: ") +
                                 dirPath.u8string());
   }
@@ -64,7 +69,7 @@ std::vector<std::filesystem::path> CommandBuffer::GetCmdbufFiles(
     // std::cout << "plzrun: " << std::filesystem::absolute(entry.path()) <<
     // '\n'; std::cout << entry.path().extension().string() << "\n";
     if (entry.path().extension().string() ==
-        CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION) {
+        CommandBufferConfig::CMD_BUF_EXT) {
       cmdbufFiles.push_back(entry.path());
     }
   }
@@ -72,7 +77,8 @@ std::vector<std::filesystem::path> CommandBuffer::GetCmdbufFiles(
   return cmdbufFiles;
 }
 
-bool CommandBuffer::MatchCmdBufFilename(const std::string& filename) const {
+bool CommandBuffer::MatchCommandBufferFilename(
+    const std::string& filename) const {
   return std::regex_match(filename, cmdBufFileRegexPattern);
 }
 
@@ -85,7 +91,7 @@ unsigned int CommandBuffer::GetOrderFromCmdBufFilename(
   return order;
 }
 
-CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
+CommandBufferEntry CommandBuffer::MakeCommandBufferEntry(
     const std::string& filename) const {
   std::smatch match;
   std::regex_match(filename, match, cmdBufFileRegexPattern);

@@ -288,6 +288,7 @@
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="CommandBufferEntry.h" />
     <ClInclude Include="EraseCommand.h" />
+    <ClInclude Include="GlobalConfig.h" />
     <ClInclude Include="IParam.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="Parser.h" />

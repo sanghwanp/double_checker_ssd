@@ -22,35 +22,29 @@ std::string CommandBufferEntry::ToString() const {
   } else if (cmdType == CmdType::ERASE) {
     result = "E_";
   } else {
-    throw std::invalid_argument("Invalid CmdType: " + ToString(cmdType));
+    throw std::invalid_argument("Invalid CmdType: " +
+                                CommandBufferConfig::GetCmdTypeString(cmdType));
   }
   result += std::to_string(startLba) + "_" + std::to_string(endLba) + "_" +
             std::to_string(data);
   return result;
 }
 
-std::string CommandBufferEntry::ToString(CmdType cmdType) const {
-  if (cmdType == CmdType::WRITE)
-    return "WRITE";
-  else if (cmdType == CmdType::ERASE)
-    return "ERASE";
-  else
-    return "NOTHING";
-}
-
 void CommandBufferEntry::Print() const {
   printf("[%d,%d]->val:%llu, cmdType:%s\n", startLba, endLba, data,
-         ToString(cmdType).c_str());
+         CommandBufferConfig::GetCmdTypeString(cmdType).c_str());
 }
 
 CommandBufferEntry::CommandBufferEntry(unsigned int startLba,
                                        unsigned int endLba,
                                        unsigned long long data)
     : startLba(startLba), endLba(endLba), data(data) {
-  if (data == 0)
+  if (data == 0) {
     cmdType = CmdType::ERASE;
-  else
+  } else {
     cmdType = CmdType::WRITE;
+  }
+
   Validator();
 }
 
@@ -73,3 +67,13 @@ void CommandBufferEntry::Validator() {
     }
   }
 }
+
+CommandBufferConfig::CmdType CommandBufferEntry::GetCmdType() const {
+  return cmdType;
+}
+
+unsigned int CommandBufferEntry::GetStartLba() const { return startLba; }
+
+unsigned int CommandBufferEntry::GetEndLba() const { return endLba; }
+
+unsigned long long CommandBufferEntry::GetData() const { return data; }

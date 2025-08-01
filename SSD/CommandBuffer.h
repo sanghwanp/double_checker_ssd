@@ -9,7 +9,7 @@
 #include "CommandBufferEntry.h"
 class CommandBuffer {
  public:
-  std::vector<CommandBufferEntry> LoadCmdsFromBuffer() const;
+  std::vector<CommandBufferEntry> LoadCmdsFromFile() const;
   void WriteCmdsToBuffer(const std::vector<CommandBufferEntry> &cmds);
   void FlushBuffer();
 
@@ -17,18 +17,18 @@ class CommandBuffer {
   std::ifstream ifs;
   std::ofstream ofs;
 
-  std::vector<std::filesystem::path> GetCmdbufFiles(
+  std::vector<std::filesystem::path> GetCommandBufferFilePaths(
       const std::filesystem::path &dirPath) const;
 
-  bool MatchCmdBufFilename(const std::string &filename) const;
+  bool MatchCommandBufferFilename(const std::string &filename) const;
 
-  CommandBufferEntry MakeCmdBufEntry(const std::string &filename) const;
+  CommandBufferEntry MakeCommandBufferEntry(const std::string &filename) const;
   unsigned int GetOrderFromCmdBufFilename(const std::string &filename) const;
 
-  std::string_view GetAndMakeCmdBufferDirPath() const {
+  std::string_view EnsureCommandBufferDirExistAndGetPath() const {
     std::string_view cmdBufDirPath =
-        CommandBufferConfig::COMMAND_BUFFER_DIRPATH;
-    if (!std::filesystem::exists(cmdBufDirPath)) {
+        CommandBufferConfig::CMD_BUF_DIRPATH;
+    if (not(std::filesystem::exists(cmdBufDirPath))) {
       std::filesystem::create_directories(cmdBufDirPath);
     }
     return cmdBufDirPath;
