@@ -62,6 +62,9 @@
     <ClCompile Include="gTestCmdErase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="gTestCmdEraseRange.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="gTestTestScriptCase.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
