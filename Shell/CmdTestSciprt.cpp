@@ -12,10 +12,25 @@ CommandTestScript::CommandTestScript(SSDInterface* ssdInterface)
   cases.push_back(std::make_unique<TestScriptCase4>(ssdInterface));
 }
 
-bool CommandTestScript::Call(const IParam& param) {
+std::string CommandTestScript::CallSciprt(const IParam& param) {
   const ScriptParam& scriptParam = dynamic_cast<const ScriptParam&>(param);
-  if (scriptParam.nScriptNumber - 1 < 0) {
-    return false;
+  const int requestedNumber = scriptParam.nScriptNumber;
+
+  if (!(requestedNumber >= 1 && requestedNumber <= cases.size())) {
+    return "INVALID_COMMAND";
   }
-  return cases[scriptParam.nScriptNumber - 1]->Call();
+
+  const std::string& requestedFullName = scriptParam.scriptName;
+  if ((requestedFullName != cases[requestedNumber - 1]->GetFullName()) &&
+      (requestedFullName !=
+          std::to_string(cases[requestedNumber - 1]->GetNumber()) + "_")) {
+    return "INVALID_COMMAND";
+  }
+
+  if (cases[scriptParam.nScriptNumber - 1]->Call()) {
+    return ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT;
+  }
+  else {
+    return ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT;
+  }
 }

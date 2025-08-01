@@ -60,10 +60,11 @@ class EraseRangeParam : public IParam {
 
 class ScriptParam : public IParam {
  public:
-  ScriptParam(TestShellCMD cmd, string number)
-      : IParam(cmd), scriptNumber(number) {
+  ScriptParam(TestShellCMD cmd, string number, string name)
+      : IParam(cmd), scriptNumber(number), scriptName(name) {
     nScriptNumber = scriptNumber.empty() ? 0 : std::stoi(scriptNumber);
   }
   string scriptNumber;
   int nScriptNumber;
+  string scriptName;
 };
