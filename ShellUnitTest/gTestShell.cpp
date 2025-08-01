@@ -6,13 +6,12 @@
 #include <vector>
 
 #include "../Shell/TestShell.h"
+#include "../Shell/ITestScriptCase.h"
 #include "gmock/gmock.h"
 
 #define SHELL_PREFIX_OUTPUT "Shell> "
 #define SHELL_EXIT_OUTPUT SHELL_PREFIX_OUTPUT "Shutting down\n"
 #define SHELL_WRITE_DONE_OUTPUT "[Write] Done\n"
-#define TEST_SCRIPT_PASS_OUTPUT "PASS"
-#define TEST_SCRIPT_FAIL_OUTPUT "FAIL"
 
 using namespace testing;
 
@@ -66,16 +65,16 @@ class TestShellFixture : public Test {
 
   void SendCommandToMockForTestScript(const std::vector<std::string>& command) {
     EXPECT_CALL(mockShellExecuter, Exec(_))
-        .WillOnce(Return(TEST_SCRIPT_PASS_OUTPUT));
+        .WillOnce(Return(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT));
     std::string result = mockShellExecuter.Exec(command);
-    EXPECT_THAT(result, AllOf(HasSubstr(TEST_SCRIPT_PASS_OUTPUT),
-                              Not(HasSubstr(TEST_SCRIPT_FAIL_OUTPUT))));
+    EXPECT_THAT(result, AllOf(HasSubstr(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT),
+                      Not(HasSubstr(ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT))));
   }
 
   void SendCommandToRealForTestScript(const std::vector<std::string>& command) {
     std::string result = shellExecuter.Exec(command);
-    EXPECT_THAT(result, AllOf(HasSubstr(TEST_SCRIPT_PASS_OUTPUT),
-                              Not(HasSubstr(TEST_SCRIPT_FAIL_OUTPUT))));
+    EXPECT_THAT(result, AllOf(HasSubstr(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT),
+                      Not(HasSubstr(ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT))));
   }
 
   MockTestShellExecuter mockShellExecuter;
@@ -335,6 +334,10 @@ class TestShellFixture : public Test {
   // 11
   std::vector<std::string> ts3Command = {"3_WriteReadAging", "exit"};
   std::vector<std::string> ts3CommandShort = {"3_", "exit"};
+
+  // 12
+  std::vector<std::string> ts4Command = {"4_EraseAndWriteAging", "exit"};
+  std::vector<std::string> ts4CommandShort = {"4_", "exit"};
 };
 
 // 1
@@ -432,4 +435,15 @@ TEST_F(TestShellFixture, mockTs3Command) {
 TEST_F(TestShellFixture, realTs3Command) {
   SendCommandToRealForTestScript(ts3Command);
   SendCommandToRealForTestScript(ts3CommandShort);
+}
+
+// 12
+TEST_F(TestShellFixture, mockTs4Command) {
+  SendCommandToMockForTestScript(ts4Command);
+  SendCommandToMockForTestScript(ts4CommandShort);
+}
+
+TEST_F(TestShellFixture, realTs4Command) {
+  SendCommandToRealForTestScript(ts4Command);
+  SendCommandToRealForTestScript(ts4CommandShort);
 }
