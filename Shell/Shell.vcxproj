@@ -248,6 +248,7 @@
     <ClCompile Include="CmdTestSciprt.cpp" />
     <ClCompile Include="CmdWrite.cpp" />
     <ClCompile Include="CmdRead.cpp" />
+    <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="LogFileSystem.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="ITestSciprtCase.cpp" />

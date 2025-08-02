@@ -70,17 +70,13 @@
     <ClCompile Include="TestShell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="MockSSD.h" />
+    <ClCompile Include="SSDInterface.h" />
     <ClCompile Include="CommandFactory.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-      <ClInclude Include="MockSSD.h">
-          <Filter>헤더 파일</Filter>
-      </ClInclude>
-      <ClInclude Include="SSDInterface.h">
-          <Filter>헤더 파일</Filter>
-      </ClInclude>
     <ClInclude Include="CmdErase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -151,9 +147,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="TestShell.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="CommandFactory.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

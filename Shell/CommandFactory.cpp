@@ -47,9 +47,6 @@ IShellCommand* CommandFactory::CreateCommand(IParam& param, SSDInterface* ssd) {
     case eFullwrite:
       command = new CommandFullWrite(ssd);
       break;
-    case eScriptCmd:
-      command = new CommandTestScript(ssd);
-      break;
     case eHelpCmd:
       command = new CommandHelp();
       break;

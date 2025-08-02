@@ -9,7 +9,7 @@
 #include "ITestScriptCase.h"
 #include "ICommand.h"
 
-class CommandTestScript : public IShellCommand {
+class CommandTestScript {
  public:
   CommandTestScript(SSDInterface* ssdInterface);
   std::string CallSciprt(const IParam& param);

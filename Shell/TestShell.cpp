@@ -22,29 +22,29 @@ int TestShell::Exec(void) {
 }
 
 int TestShell::parseAndExecCommand(std::string command) {
-  IParam& parsedCommand = *parser.Parse(command);
+  IParam& param = *parser.Parse(command);
   bool ret = true;
 
   IShellCommand* cmd =
-      ICommandFactory::GetInstance()->CreateCommand(parsedCommand, ssdDriver);
+      ICommandFactory::GetInstance()->CreateCommand(param, ssdDriver);
 
   // execute the command
   if (cmd != nullptr) {
-    ret = cmd->Call(parsedCommand);
+    ret = cmd->Call(param);
   }
 
   // post processing
-  switch (parsedCommand.eCmd) {
+  switch (param.eCmd) {
     case eScriptCmd: {
-      ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(parsedCommand);
-      std::string result = commandTestScript.CallSciprt(*parsedCommand);
+      CommandTestScript commandTestScript(ssdDriver);
+      std::string result = commandTestScript.CallSciprt(param);
       std::cout << result << std::endl;
       break;
     }
     case eInvalidCmd: {
-        std::cout << "INVALID COMMAND" << std::endl;
-        break;
+      std::cout << "INVALID COMMAND" << std::endl;
+      break;
     }
   }
-  return parsedCommand.eCmd;
+  return param.eCmd;
 }
