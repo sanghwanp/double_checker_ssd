@@ -1,12 +1,12 @@
 #include "CommandBufferEntry.h"
-using CmdType = CommandBufferConfig::CmdType;
+#include "Types.h"
 
 CommandBufferEntry::CommandBufferEntry()
-    : cmdType(CmdType::INVALID),
+    : cmdType(CMD_TYPE::eInvalidCmd),
       startLba(CommandBufferConfig::NOT_AVAILABLE),
       endLba(CommandBufferConfig::NOT_AVAILABLE),
       data(0) {}
-CommandBufferEntry::CommandBufferEntry(CmdType cmdType, unsigned int startLba,
+CommandBufferEntry::CommandBufferEntry(CMD_TYPE cmdType, unsigned int startLba,
                                        unsigned int endLba,
                                        unsigned long long data)
     : startLba(startLba), endLba(endLba), data(data), cmdType(cmdType) {
@@ -17,22 +17,22 @@ int CommandBufferEntry::Length() const { return endLba - startLba + 1; }
 
 std::string CommandBufferEntry::ToString() const {
   std::string result;
-  if (cmdType == CmdType::WRITE) {
+  if (cmdType == eWriteCmd) {
     result = "W_";
-  } else if (cmdType == CmdType::ERASE) {
+  } else if (cmdType == eEraseCmd) {
     result = "E_";
   } else {
-    throw std::invalid_argument("Invalid CmdType: " + ToString(cmdType));
+    throw std::invalid_argument("Invalid CMD_TYPE: " + ToString(cmdType));
   }
   result += std::to_string(startLba) + "_" + std::to_string(endLba) + "_" +
             std::to_string(data);
   return result;
 }
 
-std::string CommandBufferEntry::ToString(CmdType cmdType) const {
-  if (cmdType == CmdType::WRITE)
+std::string CommandBufferEntry::ToString(CMD_TYPE cmdType) const {
+  if (cmdType == eWriteCmd)
     return "WRITE";
-  else if (cmdType == CmdType::ERASE)
+  else if (cmdType == eEraseCmd)
     return "ERASE";
   else
     return "NOTHING";
@@ -48,27 +48,27 @@ CommandBufferEntry::CommandBufferEntry(unsigned int startLba,
                                        unsigned long long data)
     : startLba(startLba), endLba(endLba), data(data) {
   if (data == 0)
-    cmdType = CmdType::ERASE;
+    cmdType = eEraseCmd;
   else
-    cmdType = CmdType::WRITE;
+    cmdType = eWriteCmd;
   Validator();
 }
 
 void CommandBufferEntry::Validator() {
-  if (cmdType == CmdType::WRITE) {
+  if (cmdType == eWriteCmd) {
     if (startLba != endLba) {
-      throw std::invalid_argument("if CmdType is WRITE -> startLba == endLba");
+      throw std::invalid_argument("if CMD_TYPE is WRITE -> startLba == endLba");
     }
   }
 
-  if (cmdType == CmdType::ERASE) {
+  if (cmdType == eEraseCmd) {
     if (data != 0) {
-      throw std::invalid_argument("if CmdType is ERASE -> data == 0");
+      throw std::invalid_argument("if CMD_TYPE is ERASE -> data == 0");
     }
   }
 
   if (data != 0) {
-    if (cmdType != CmdType::WRITE) {
+    if (cmdType != eWriteCmd) {
       throw std::invalid_argument("If data != 0 -> cmdType must be WRITE");
     }
   }

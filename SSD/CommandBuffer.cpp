@@ -91,14 +91,14 @@ CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
   std::regex_match(filename, match, cmdBufFileRegexPattern);
 
   std::string cmdTypeStr = match[2].str();
-  CommandBufferConfig::CmdType cmdType;
+  CMD_TYPE cmdType;
 
   if (cmdTypeStr == "W")
-    cmdType = CommandBufferConfig::CmdType::WRITE;
+    cmdType = eWriteCmd;
   else if (cmdTypeStr == "E")
-    cmdType = CommandBufferConfig::CmdType::ERASE;
+    cmdType = eEraseCmd;
   else
-    throw std::runtime_error("Invalid CmdType: " + cmdTypeStr);
+    throw std::runtime_error("Invalid CMD_TYPE: " + cmdTypeStr);
 
   unsigned int startLba = static_cast<unsigned int>(std::stoul(match[3].str()));
   unsigned int endLba = static_cast<unsigned int>(std::stoul(match[4].str()));

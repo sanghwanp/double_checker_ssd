@@ -8,7 +8,7 @@
 
 using std::string;
 
-enum CMD_TYPE { eWriteCmd, eReadCmd, eEraseCmd, eInvalidCmd };
+enum CMD_TYPE { eWriteCmd, eReadCmd, eEraseCmd, eFlushCmd, eInvalidCmd };
 
 struct LBA {
   unsigned int val;

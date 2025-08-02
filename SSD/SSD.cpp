@@ -1,6 +1,7 @@
 #include "SSD.h"
 
 #include "EraseCommand.h"
+#include "FlushCommand.h"
 #include "ReadCommand.h"
 #include "WriteCommand.h"
 
@@ -27,6 +28,9 @@ void SSD::ExecuteCommand(IParam *param) {
       break;
     case eEraseCmd:
       command = std::make_unique<EraseCommand>();
+      break;
+    case eFlushCmd:
+      command = std::make_unique<FlushCommand>();
       break;
     default:
       command = std::make_unique<ICommand>();
