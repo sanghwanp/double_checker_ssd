@@ -1,21 +1,28 @@
 #pragma once
 
-#include <vector>
-#include <string>
+#include "CommandBufferHandler.h"
+#include "CommandFactory.h"
+#include "FileDriver.h"
 #include "ICommand.h"
-
-using namespace std;
+#include "IParam.h"
 
 class WriteCommand : public ICommand {
  public:
+  explicit WriteCommand(FileDriver* fileDriver,
+                        CommandBufferHandler* bufferHandler,
+                        CommandFactory* factory);
+
   bool Execute(IParam* param) override;
   bool CheckPrecondition() override;
 
-  void UpdateDataBuffer();
-  void SaveCommandBuffer();
-  void SaveFile();
-
  private:
+  void Write();
+  void SaveDataBuffer();
+  void SaveCommandBuffer();
+
+  FileDriver* fileDriver;
+  CommandBufferHandler* bufferHandler;
+  CommandFactory* factory;
+
   WriteParam* writeParam;
-  vector<string> cmds;
 };

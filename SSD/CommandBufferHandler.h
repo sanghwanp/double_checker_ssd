@@ -7,6 +7,12 @@
 
 class CommandBufferHandler {
  public:
+  static CommandBufferHandler *GetInstance() {
+    static CommandBufferHandler instance;  // 유일한 인스턴스를 static으로 생성
+    return &instance;
+  }
+
+  bool CheckBufferFull();
   std::vector<CommandBufferEntry> AddWrite(unsigned int lba, unsigned int data);
   std::vector<CommandBufferEntry> AddErase(unsigned int lba, int delta);
   bool TryFastRead(unsigned int lba, unsigned int &out_value) const;

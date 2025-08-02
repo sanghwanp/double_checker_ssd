@@ -22,8 +22,12 @@ vector<CommandBufferEntry> CommandBufferHandler::AddWrite(unsigned int lba,
   }
 }
 
-bool CommandBufferHandler::IsFullCmds(
-    std::vector<CommandBufferEntry> &savedCmds) {
+bool CommandBufferHandler::CheckBufferFull() {
+  vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
+  return savedCmds.size() >= CommandBufferConfig::MAX_BUFFER;
+}
+
+bool CommandBufferHandler::IsFullCmds(std::vector<CommandBufferEntry> &savedCmds) {
   return savedCmds.size() >= CommandBufferConfig::MAX_BUFFER;
 }
 

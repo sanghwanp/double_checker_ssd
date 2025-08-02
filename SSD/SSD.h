@@ -19,12 +19,13 @@ class SSD {
   }
 
   void Run(vector<string> argv);
-  void ExecuteCommand(IParam* param);
+  bool ExecuteCommand(IParam* param);
 
   unsigned int GetCachedData(unsigned int lba);
 
  private:
+  FileDriver* fileDriver;
+  CommandBufferHandler* bufferHandler;
   CommandFactory* commandFactory;
-  FileDriver* filedriver;
   Parser parser;
 };

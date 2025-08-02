@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
+
+#include <fstream>
 #include <sstream>
+#include <string>
+
 #include "../SSD/FileDriver.h"
 #include "../SSD/SSD.h"
 
@@ -49,11 +53,9 @@ TEST_F(SSDTest, Write_6times_check_flush) {
     std::vector<std::string> writeArgs = {"W", std::to_string(i), "0xFFFFFFFF"};
     ssd.Run(writeArgs);
   }
-  
+
   // Check cache
-
 }
-
 
 TEST_F(SSDTest, DIABLED_WriteAndRead_CachedData) {
   // Write

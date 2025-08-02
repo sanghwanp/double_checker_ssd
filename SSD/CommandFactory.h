@@ -1,30 +1,28 @@
 #pragma once
-#include <functional>
-#include <memory>
-#include <unordered_map>
 
+#include <memory>
+
+#include "CommandBufferHandler.h"
+#include "FileDriver.h"
 #include "ICommand.h"
 
 class CommandFactory {
  public:
-  CommandFactory();
+  CommandFactory() {}
+  CommandFactory(FileDriver* fileDriver, CommandBufferHandler* bufferHandler);
 
   static CommandFactory* GetInstance() {
-    static CommandFactory instance;
+    static CommandFactory instance(FileDriver::GetInstance(),
+                                   CommandBufferHandler::GetInstance());
     return &instance;
   }
-
-  void Register(CMD_TYPE cmd, std::function<ICommand*()> creator) {};
-  void RegisterAllCommands();
-
-  ICommand* Create(CMD_TYPE cmd) const {
-    auto it = registry.find(cmd);
-    if (it != registry.end()) {
-      return it->second();
-    }
-    return nullptr;
-  }
+  std::unique_ptr<ICommand> GetCommand(CMD_TYPE cmdType);
+  std::unique_ptr<ICommand> CreateReadCommand();
+  std::unique_ptr<ICommand> CreateWriteCommand();
+  std::unique_ptr<ICommand> CreateEraseCommand();
+  std::unique_ptr<ICommand> CreateFlushCommand();
 
  private:
-  std::unordered_map<CMD_TYPE, std::function<ICommand*()>> registry;
+  FileDriver* fileDriver;
+  CommandBufferHandler* bufferHandler;
 };

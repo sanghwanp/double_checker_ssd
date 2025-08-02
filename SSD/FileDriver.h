@@ -16,9 +16,10 @@ class FileDriver {
   }
   void Init();
   bool CheckFileExist(const char* filename);
-  void LoadFile(const char* filename, unsigned int* data, size_t size);
-  void SaveFile(const char* filename, const unsigned int* data, size_t size);
-  void SaveFile(const char* filename, const std::string& message);
+  void LoadData();
+  void StoreData();
+  void StoreOutput(unsigned int val);
+  void StoreError();
 
   const unsigned int* GetBufferAddr(unsigned int lba = 0);
   const unsigned int GetBufferData(unsigned int lba);
