@@ -9,10 +9,15 @@
 #include "CmdTestScript.h"
 #include "ICommand.h"
 #include "ICommandFactory.h"
+#include "ILogger.h"
 
+TestShell::TestShell(SSDInterface* ssdDriver) : ssdDriver(ssdDriver) {
+  ILogger::GetInstance()->LogPrint("TestShell::TestShell",
+                                   ssdDriver->GetName() + "is loaded", false);
+}
 int TestShell::Exec(void) {
   std::string command;
-
+  ILogger::GetInstance()->LogPrint("TestShell::Exec", "Shell is starting", false);
   while (true) {
     std::cout << "Shell> ";
     std::getline(std::cin, command);
@@ -29,15 +34,18 @@ int TestShell::parseAndExecCommand(std::string command) {
 
   IParam& param = ParseCommand(command);
 
-  IShellCommand* cmd = GetCommand(param);
-
   // execute the command
-  if (cmd != nullptr) {
-    ret = cmd->Call(param);
-  } else if (param.eCmd == eScriptCmd) {
+  if (param.eCmd == eScriptCmd) {
     result = GetScriptCommand(param)->Call(param);
     std::cout << result << std::endl;
+  } else if (param.eCmd == eInvalidCmd) {
+    ret = false;
   } else {
+    IShellCommand* cmd = GetCommand(param);
+    ret = cmd->Call(param);
+  }
+
+  if (ret == false) {
     std::cout << "INVALID COMMAND" << std::endl;
   }
 
@@ -45,6 +53,7 @@ int TestShell::parseAndExecCommand(std::string command) {
 }
 
 IShellCommand* TestShell::GetCommand(IParam& param) {
+  if (param.eCmd == eInvalidCmd) return nullptr;
   return ICommandFactory::GetInstance()->CreateCommand(param, ssdDriver);
 }
 

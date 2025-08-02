@@ -17,7 +17,6 @@ bool CommandFullWrite::Call(IParam& param) {
 
   const std::string& value = writeFullParam->data;
   if (IsInvalidValue(value)) {
-    printInvalidCommandMessage();
     return false;
   }
 

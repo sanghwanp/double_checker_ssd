@@ -2,21 +2,11 @@
 
 #include "ICommand.h"
 #include "Parser.h"
-#include "CmdWrite.h"
-#include "CmdRead.h"
-#include "CmdFullWrite.h"
-#include "CmdFullRead.h"
-#include "CmdExit.h"
-#include "CmdHelp.h"
-#include "CmdErase.h"
-#include "CmdEraseRange.h"
-#include "CmdFlush.h"
-#include "CmdTestScript.h"
 #include "SSDInterface.h"
 
 class TestShell {
  public:
-  TestShell(SSDInterface* ssdDriver) : ssdDriver(ssdDriver) {}
+  TestShell(SSDInterface* ssdDriver);
   int Exec(void);
 
  private:

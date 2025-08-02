@@ -5,11 +5,11 @@
 #include <string>
 #include <vector>
 
-#include "ScriptRunner.h"
-#include "TestShell.h"
+#include "ILogger.h"
 #include "MockSSD.h"
 #include "RealSSD.h"
-#include "ILogger.h"
+#include "ScriptRunner.h"
+#include "TestShell.h"
 
 int main(int argc, char* argv[]) {
 #ifdef UNIT_TEST

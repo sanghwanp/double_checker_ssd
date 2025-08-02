@@ -20,7 +20,7 @@ IShellCommand* CommandFactory::CreateCommand(IParam& param, SSDInterface* ssd) {
   }
     ILogger::GetInstance()->LogPrint(
         "CommandFactory::CreateCommand",
-      "No factory registered for command: " + std::to_string(param.eCmd));
+      "No factory registered for command: " + std::to_string(param.eCmd),false);
   return nullptr;
 }
 
@@ -30,8 +30,8 @@ IShellCommand* CommandFactory::CreateCommand(IParam& param, SSDInterface* ssd) {
 void CommandFactory::Register(TestShellCMD cmd, ICommandFactory* factory) {
   if (factories.find(cmd) == factories.end()) {
     ILogger::GetInstance()->LogPrint(
-        "CommandFactory::Register", "Registering command factory for command: " +
-                                std::to_string(cmd));
+        "CommandFactory::Register", "Registering command factory for command: " + std::to_string(cmd),
+        false);
     factories[cmd] = factory;
   }
 

@@ -6,7 +6,9 @@
 
 RealSSD::RealSSD(const std::string& ssdExecutable,
                  const std::string& outputFile)
-    : ssdExe(ssdExecutable), outputFile(outputFile) {}
+    : ssdExe(ssdExecutable), outputFile(outputFile) {
+  InterfaceName = "Real SSD Driver";
+}
 
 void RealSSD::Write(int lba, const std::string& value) {
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
