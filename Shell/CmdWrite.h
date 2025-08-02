@@ -3,11 +3,12 @@
 #include <vector>
 
 #include "SSDInterface.h"
+#include "ICommand.h"
 
-class CommandWrite {
+class CommandWrite : public IShellCommand {
  public:
   CommandWrite(SSDInterface* ssdInterface);
-  bool Call(std::vector<std::string> program);
+  bool Call(IParam& param);
 
  private:
   bool IsInvalidLBA(int lba);

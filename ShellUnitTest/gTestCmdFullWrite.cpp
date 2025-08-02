@@ -1,10 +1,12 @@
 #include "../Shell/CmdFullWrite.h"
-#include "../Shell/MockSSD.h"  // ¿Ã∏ß¿∫ FakeSSD∑Œ πŸ≤Ÿ¥¬ ∞… √ﬂ√µ!
+#include "../Shell/MockSSD.h"  // Ïù¥Î¶ÑÏùÄ FakeSSDÎ°ú Î∞îÍæ∏Îäî Í±∏ Ï∂îÏ≤ú!
+#include "../Shell/Parser.h"
+#include "gTestCommandCallCommon.h"
 #include "gtest/gtest.h"
 
-class FullWriteTest : public ::testing::Test {
- protected:
-  MockSSD ssd;  // Ω«¡¶¥¬ FakeSSD
+class FullWriteTest : public CommandCallCommon {
+protected:
+  MockSSD ssd;  // Ïã§Ï†úÎäî FakeSSD
   CommandFullWrite* cmd;
 
   void SetUp() override { cmd = new CommandFullWrite(&ssd); }
@@ -13,8 +15,8 @@ class FullWriteTest : public ::testing::Test {
 };
 
 TEST_F(FullWriteTest, FullWriteSuccess) {
-  std::vector<std::string> program = {"fullwrite", "0xABCDEF12"};
-  EXPECT_TRUE(cmd->Call(program));
+  std::string program = "fullwrite 0xABCDEF12";
+  EXPECT_TRUE(cmd->Call(GenParam(program)));
 
   for (unsigned i = 0; i < 100; ++i) {
     EXPECT_EQ("0xABCDEF12", ssd.Read(i));
@@ -22,31 +24,31 @@ TEST_F(FullWriteTest, FullWriteSuccess) {
 }
 
 TEST_F(FullWriteTest, InvalidCommand_MissingArgs) {
-  std::vector<std::string> program = {"fullwrite"};
-  EXPECT_FALSE(cmd->Call(program));
+  std::string program = "fullwrite";
+  EXPECT_FALSE(cmd->Call(GenParam(program)));
 }
 
 TEST_F(FullWriteTest, InvalidCommand_TooManyArgs) {
-  std::vector<std::string> program = {"fullwrite", "0xABCDEF12", "extra"};
-  EXPECT_FALSE(cmd->Call(program));
+  std::string program = "fullwrite 0xABCDEF12 extra";
+  EXPECT_FALSE(cmd->Call(GenParam(program)));
 }
 
 TEST_F(FullWriteTest, InvalidCommand_ValueTooShort) {
-  std::vector<std::string> program = {"fullwrite", "0xABC"};
-  EXPECT_FALSE(cmd->Call(program));
+  std::string program = "fullwrite 0xABC";
+  EXPECT_FALSE(cmd->Call(GenParam(program)));
 }
 
 TEST_F(FullWriteTest, InvalidCommand_ValueNotPrefixed) {
-  std::vector<std::string> program = {"fullwrite", "ABCDEF1234"};
-  EXPECT_FALSE(cmd->Call(program));
+  std::string program = "fullwrite ABCDEF1234";
+  EXPECT_FALSE(cmd->Call(GenParam(program)));
 }
 
 TEST_F(FullWriteTest, InvalidCommand_ValueContainsInvalidChar) {
-  std::vector<std::string> program = {"fullwrite", "0xABCDZZ12"};
-  EXPECT_FALSE(cmd->Call(program));
+  std::string program = "fullwrite 0xABCDZZ12";
+  EXPECT_FALSE(cmd->Call(GenParam(program)));
 }
 
 TEST_F(FullWriteTest, InvalidCommand_ValueTooLong) {
-  std::vector<std::string> program = {"fullwrite", "0x1234567890"};
-  EXPECT_FALSE(cmd->Call(program));
+  std::string program = "fullwrite 0x1234567890";
+  EXPECT_FALSE(cmd->Call(GenParam(program)));
 }

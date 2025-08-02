@@ -60,9 +60,10 @@ class Parser {
           return IsNumber(tokens[1]);
         }}},
       {"fullwrite",
-       {2, TestShellCMD::eFullwrite,
+       {2, TestShellCMD::eFullwriteCmd,
         [&](const std::vector<std::string>& tokens) {
-          return new FullWriteParam(TestShellCMD::eFullwrite, tokens[1]);},
+          return new FullWriteParam(TestShellCMD::eFullwriteCmd, tokens[1]);
+        },
         [&](const std::vector<std::string>& tokens) {
           return IsNumber(tokens[1]);
         }}},
@@ -78,9 +79,9 @@ class Parser {
         },
         [](const std::vector<std::string>&) { return true; }}},
       {"fullread",
-       {1, TestShellCMD::eFullread,
+       {1, TestShellCMD::eFullreadCmd,
         [](const std::vector<std::string>& tokens) {
-          return new IParam(TestShellCMD::eFullread);
+          return new IParam(TestShellCMD::eFullreadCmd);
         },
         [](const std::vector<std::string>&) { return true; }}},
       {"flush",

@@ -6,9 +6,18 @@
 #include <string>
 #include <vector>
 
+#include "CmdTestScript.h"
+#include "ICommand.h"
+#include "ICommandFactory.h"
+#include "ILogger.h"
+
+TestShell::TestShell(SSDInterface* ssdDriver) : ssdDriver(ssdDriver) {
+  ILogger::GetInstance()->LogPrint("TestShell::TestShell",
+                                   ssdDriver->GetName() + "is loaded", false);
+}
 int TestShell::Exec(void) {
   std::string command;
-
+  ILogger::GetInstance()->LogPrint("TestShell::Exec", "Shell is starting", false);
   while (true) {
     std::cout << "Shell> ";
     std::getline(std::cin, command);
@@ -20,73 +29,41 @@ int TestShell::Exec(void) {
 }
 
 int TestShell::parseAndExecCommand(std::string command) {
-  IParam* parsedCommand = parser.Parse(command);
-  int eCmd = parsedCommand->eCmd;
+  bool ret = true;
+  std::string result;
 
-  switch (eCmd) {
-    case eWriteCmd: {
-      WriteParam* writeCmd = dynamic_cast<WriteParam*>(parsedCommand);
-      std::vector<std::string> program = {"write", writeCmd->lba,
-                                          writeCmd->data};
-      commandWrite.Call(program);
-      break;
-    }
-    case eReadCmd: {
-      ReadParam* readCmd = dynamic_cast<ReadParam*>(parsedCommand);
-      std::vector<std::string> program = {"read", readCmd->lba};
-      commandRead.Call(program);
-      break;
-    }
-    case eHelpCmd: {
-      std::vector<std::string> program = {"help"};
-      commandHelp.Call(program);
-      break;
-    }
-    case eExitCmd: {
-      std::vector<std::string> program = {"exit"};
-      commandExit.Call(program);
-      break;
-    }
-    case eFullwrite: {
-      FullWriteParam* fwCmd = dynamic_cast<FullWriteParam*>(parsedCommand);
-      std::vector<std::string> program = {"fullwrite", fwCmd->data};
-      commandFullWrite.Call(program);
-      break;
-    }
-    case eFullread: {
-      std::vector<std::string> program = {"fullread"};
-      commandFullRead.Call(program);
-      break;
-    }
-    case eEraseCmd: {
-      EraseParam* eraseCmd = dynamic_cast<EraseParam*>(parsedCommand);
-      std::vector<std::string> program = {"erase", eraseCmd->lba, eraseCmd->size};
-      commandErase.Call(program);
-      break;
-    }
-    case eEraseRangeCmd: {
-      EraseRangeParam* eraseRangeCmd =
-          dynamic_cast<EraseRangeParam*>(parsedCommand);
-      std::vector<std::string> program = {"erase_range", eraseRangeCmd->lbaStart, eraseRangeCmd->lbaEnd};
-      commandEraseRange.Call(program);
-      break;
-    }
-    case eFlushCmd: {
-      std::vector<std::string> program = {"flush"};
-      commandFlush.Call(program);
-      break;
-    }
-    case eScriptCmd: {
-      ScriptParam* scriptCmd = dynamic_cast<ScriptParam*>(parsedCommand);
-      std::string result = commandTestScript.CallSciprt(*parsedCommand);
-      std::cout << result << std::endl;
-      break;
-    }
-    case eInvalidCmd:
-    default: {
-      std::cout << "INVALID COMMAND" << std::endl;
-      break;
-    }
+  IParam& param = ParseCommand(command);
+
+  // execute the command
+  if (param.eCmd == eScriptCmd) {
+    result = GetScriptCommand(param)->Call(param);
+    std::cout << result << std::endl;
+  } else if (param.eCmd == eInvalidCmd) {
+    ret = false;
+  } else {
+    IShellCommand* cmd = GetCommand(param);
+    ret = cmd->Call(param);
   }
-  return eCmd;
+
+  if (ret == false) {
+    std::cout << "INVALID COMMAND" << std::endl;
+  }
+
+  return param.eCmd;
+}
+
+IShellCommand* TestShell::GetCommand(IParam& param) {
+  if (param.eCmd == eInvalidCmd) return nullptr;
+  return ICommandFactory::GetInstance()->CreateCommand(param, ssdDriver);
+}
+
+IScriptCommand* TestShell::GetScriptCommand(IParam& param) {
+  if (param.eCmd == eScriptCmd) {
+    return new CommandTestScript{ssdDriver};
+  }
+  return nullptr;
+}
+
+IParam& TestShell::ParseCommand(std::string& command) {
+  return *parser.Parse(command);
 }

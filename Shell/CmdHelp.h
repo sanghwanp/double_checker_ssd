@@ -1,8 +1,9 @@
 #pragma once
 #include<vector>
 #include<string>
+#include "ICommand.h"
 
-class CommandHelp {
+class CommandHelp : public IShellCommand {
  public:
-  bool Call(const std::vector<std::string>& program);
+  bool Call(IParam& param) override;
 };

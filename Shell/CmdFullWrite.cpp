@@ -10,15 +10,13 @@
 CommandFullWrite::CommandFullWrite(SSDInterface* ssdInterface)
     : ssd(ssdInterface) {}
 
-bool CommandFullWrite::Call(const std::vector<std::string> program) {
-  if (program.size() != 2) {
-    printInvalidCommandMessage();
-    return false;
-  }
+bool CommandFullWrite::Call(IParam& param) {
+  if (param.eCmd == eInvalidCmd) return false;
 
-  const std::string& value = program[VALUE_INDEX];
+  FullWriteParam* writeFullParam = dynamic_cast<FullWriteParam*>(&param);
+
+  const std::string& value = writeFullParam->data;
   if (IsInvalidValue(value)) {
-    printInvalidCommandMessage();
     return false;
   }
 

@@ -4,11 +4,12 @@
 #include <vector>
 
 #include "SSDInterface.h"
+#include "ICommand.h"
 
-class CommandRead {
+class CommandRead :public IShellCommand{
  public:
   CommandRead(SSDInterface* ssdInterface);
-  bool Call(const std::vector<std::string>& program);
+  bool Call(IParam& param);
 
  private:
   bool IsInvalidLBA(unsigned int lba);

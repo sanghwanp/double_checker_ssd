@@ -7,11 +7,12 @@
 #include "SSDInterface.h"
 #include "IParam.h"
 #include "ITestScriptCase.h"
+#include "ICommand.h"
 
-class CommandTestScript {
+class CommandTestScript : public IScriptCommand {
  public:
   CommandTestScript(SSDInterface* ssdInterface);
-  std::string CallSciprt(const IParam& param);
+  std::string Call(IParam& param) override;
 
  private:
   SSDInterface* ssd;

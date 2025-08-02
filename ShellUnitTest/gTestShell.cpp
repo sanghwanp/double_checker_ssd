@@ -7,6 +7,8 @@
 
 #include "../Shell/TestShell.h"
 #include "../Shell/ITestScriptCase.h"
+#include "../Shell/MockSSD.h"
+#include "../Shell/RealSSD.h"
 #include "gmock/gmock.h"
 
 #define SHELL_PREFIX_OUTPUT "Shell> "
@@ -17,6 +19,7 @@ using namespace testing;
 
 class TestShellExecuter {
  public:
+  TestShellExecuter(SSDInterface* ssd) : shell(new TestShell(ssd)) {}
   virtual std::string Exec(const std::vector<std::string>& commands) {
     std::string ret;
 
@@ -33,18 +36,19 @@ class TestShellExecuter {
     auto backupInBuf = std::cin.rdbuf();
     std::cin.rdbuf(iss.rdbuf());
 
-    shell.Exec();
+    shell->Exec();
 
     std::cin.rdbuf(backupInBuf);
     std::cout.rdbuf(backupOutBuf);
     return oss.str();
   }
 
-  TestShell shell;
+  TestShell* shell;
 };
 
 class MockTestShellExecuter : public TestShellExecuter {
  public:
+  MockTestShellExecuter(SSDInterface* ssd) : TestShellExecuter(ssd) {}
   MOCK_METHOD(std::string, Exec, (const std::vector<std::string>&), (override));
 };
 
@@ -76,9 +80,9 @@ class TestShellFixture : public Test {
     EXPECT_THAT(result, AllOf(HasSubstr(ITestScriptCase::TEST_SCRIPT_PASS_OUTPUT),
                       Not(HasSubstr(ITestScriptCase::TEST_SCRIPT_FAIL_OUTPUT))));
   }
-
-  MockTestShellExecuter mockShellExecuter;
-  TestShellExecuter shellExecuter;
+  MockSSD mockSsd;
+  MockTestShellExecuter mockShellExecuter{&mockSsd};
+  TestShellExecuter shellExecuter{&mockSsd};
   const int LBA_COUNT = 100;
 
   // 1

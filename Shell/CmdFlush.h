@@ -3,11 +3,12 @@
 #include <vector>
 
 #include "SSDInterface.h"
+#include "ICommand.h"
 
-class CommandFlush {
+class CommandFlush : public IShellCommand {
  public:
   CommandFlush(SSDInterface* ssdInterface);
-  bool Call(const std::vector<std::string>& tokens);
+  bool Call(IParam& param);
 
  private:
   SSDInterface* ssd;
