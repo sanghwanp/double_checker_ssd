@@ -28,3 +28,23 @@ class SSD {
   FileDriver* filedriver;
   Parser parser;
 };
+
+
+#if 0
+class SSD {
+public:
+    SSD()
+        : fileDriver(),
+          bufferHandler(),
+          factory(&fileDriver, &bufferHandler)
+    {}
+
+    bool ExecuteCommand(CommandType type, IParam* param);
+
+private:
+    FileDriver fileDriver;
+    CommandBufferHandler bufferHandler;
+    CommandFactory factory;
+};
+
+#endif

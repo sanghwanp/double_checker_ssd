@@ -45,3 +45,33 @@ void SSD::ExecuteCommand(IParam *param) {
 unsigned int SSD::GetCachedData(unsigned int lba) {
   return filedriver->GetBufferData(lba);
 }
+
+#if 0
+
+bool SSD::ExecuteCommand(CommandType type, IParam* param) {
+    std::unique_ptr<ICommand> command;
+
+    switch (type) {
+        case CommandType::WRITE:
+            command = factory.CreateWriteCommand();
+            break;
+        case CommandType::FLUSH:
+            command = factory.CreateFlushCommand();
+            break;
+        case CommandType::ERASE:
+            command = factory.CreateEraseCommand();
+            break;
+        case CommandType::READ:
+            command = factory.CreateReadCommand();
+            break;
+        default:
+            return false;
+    }
+
+    if (!command->CheckPrecondition())
+        return false;
+
+    return command->Execute(param);
+}
+
+#endif

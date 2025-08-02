@@ -34,3 +34,20 @@ std::string ReadCommand::ToString(unsigned int val) {
   ss << std::hex << val;  // 16진수로 변환
   return "0x" + ss.str();
 }
+
+
+#if 0
+#include "ReadCommand.h"
+
+ReadCommand::ReadCommand(FileDriver* fileDriver)
+    : fileDriver(fileDriver) {}
+
+bool ReadCommand::CheckPrecondition() {
+    return fileDriver != nullptr;
+}
+
+bool ReadCommand::Execute(IParam* param) {
+    // 예시: 파일 읽기
+    return fileDriver->Read(param);
+}
+#endif

@@ -3,6 +3,9 @@
 #include "FileDriver.h"
 #include "FlushCommand.h"
 
+WriteCommand::WriteCommand(CommandBufferHandler* buf, FileDriver* file, CommandFactory* factory)
+    : bufferHandler(buf), fileDriver(file), factory(factory) {}
+
 bool WriteCommand::Execute(IParam* param) {
   writeParam = dynamic_cast<WriteParam*>(param);
 
@@ -38,3 +41,33 @@ void WriteCommand::SaveCommandBuffer() {
     FC->Flush(entry);
   }
 }
+
+#if 0
+#include "WriteCommand.h"
+
+WriteCommand::WriteCommand(FileDriver* fileDriver,
+                           CommandBufferHandler* bufferHandler,
+                           CommandFactory* factory)
+    : fileDriver(fileDriver), bufferHandler(bufferHandler), factory(factory) {}
+
+bool WriteCommand::CheckPrecondition() {
+    // 예시: 버퍼 존재 여부
+    return bufferHandler != nullptr && fileDriver != nullptr;
+}
+
+bool WriteCommand::Execute(IParam* param) {
+    // 실제 쓰기 로직 + 조건에 따라 factory 사용
+    if (param == nullptr) return false;
+
+    // 예시 로직
+    bufferHandler->BufferWrite(param);
+
+    if (/* flush 필요 */) {
+        auto flushCmd = factory->CreateFlushCommand();
+        return flushCmd->Execute(nullptr);
+    }
+
+    return true;
+}
+
+#endif

@@ -44,3 +44,21 @@ void EraseCommand::SaveCommandBuffer() {
     FC->Flush(entry);
   }
 }
+
+
+#if 0
+#include "EraseCommand.h"
+
+EraseCommand::EraseCommand(FileDriver* fileDriver)
+    : fileDriver(fileDriver) {}
+
+bool EraseCommand::CheckPrecondition() {
+    return fileDriver != nullptr;
+}
+
+bool EraseCommand::Execute(IParam* param) {
+    // 예시: 특정 섹터 지우기
+    return fileDriver->Erase(param);
+}
+
+#endif

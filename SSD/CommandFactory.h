@@ -28,3 +28,29 @@ class CommandFactory {
  private:
   std::unordered_map<CMD_TYPE, std::function<ICommand*()>> registry;
 };
+
+
+#if 0
+#pragma once
+
+#include <memory>
+
+#include "CommandBufferHandler.h"
+#include "FileDriver.h"
+#include "ICommand.h"
+
+class CommandFactory {
+public:
+    CommandFactory(FileDriver* fileDriver, CommandBufferHandler* bufferHandler);
+
+    std::unique_ptr<ICommand> CreateWriteCommand();
+    std::unique_ptr<ICommand> CreateFlushCommand();
+    std::unique_ptr<ICommand> CreateEraseCommand();
+    std::unique_ptr<ICommand> CreateReadCommand();
+
+private:
+    FileDriver* fileDriver;
+    CommandBufferHandler* bufferHandler;
+};
+
+#endif
