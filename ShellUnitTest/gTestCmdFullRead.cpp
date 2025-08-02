@@ -4,11 +4,13 @@
 
 #include "../Shell/CmdFullRead.h"
 #include "../Shell/MockSSD.h"
+#include "../Shell/Parser.h"
+#include "gTestCommandCallCommon.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
 
-class FullReadTestFixture : public Test {
+class FullReadTestFixture : public CommandCallCommon {
  public:
   void SetUp() override {
     oldCoutStreamBuf = std::cout.rdbuf();
@@ -52,7 +54,7 @@ class FullReadTestFixture : public Test {
 };
 
 TEST_F(FullReadTestFixture, FullReadDefault) {
-  EXPECT_TRUE(cmd.Call({"fullread"}));
+  EXPECT_TRUE(cmd.Call(GenParam("fullread")));
 
   std::string outputStr = GetCoutStr();
   EXPECT_EQ(GetExpectedStr(), outputStr);
@@ -62,12 +64,12 @@ TEST_F(FullReadTestFixture, FullReadValue) {
   ssd.Write(1, "0x12345678");
   ssd.Write(5, "0x3456789A");
 
-  EXPECT_TRUE(cmd.Call({"fullread"}));
+  EXPECT_TRUE(cmd.Call(GenParam("fullread")));
 
   std::string outputStr = GetCoutStr();
   EXPECT_EQ(GetExpectedStr({{1, "0x12345678"}, {5, "0x3456789A"}}), outputStr);
 }
 
 TEST_F(FullReadTestFixture, FullReadInvalid) {
-  EXPECT_FALSE(cmd.Call({"read"}));
+  EXPECT_FALSE(cmd.Call(GenParam("read")));
 }

@@ -4,11 +4,12 @@
 #include <vector>
 
 #include "SSDInterface.h"
+#include "ICommand.h"
 
-class CommandFullRead {
+class CommandFullRead : public IShellCommand{
  public:
   CommandFullRead(SSDInterface* ssdInterface);
-  bool Call(const std::vector<std::string>& program);
+  bool Call(IParam& param);
 
  private:
   std::string static GenerateOutputStr(unsigned int lba, std::string value);

@@ -7,23 +7,13 @@
 CommandEraseRange::CommandEraseRange(SSDInterface* ssdInterface)
     : CommandErase(ssdInterface) {}
 
-bool CommandEraseRange::Call(const std::vector<std::string>& program) {
-  // program example:
-  // {"erase_range", "5", "20"}
-  // {"erase_range", "60", "40"}
-  // {"erase_range", "0", "99"}
-
-  // precondition check
-  if (program.size() != PROGRAM_SIZE) {
-    // ERROR
-    return false;
-  }
-
-  unsigned int lbaStart;
-  unsigned int lbaEnd;
+bool CommandEraseRange::Call(IParam& param) {
+  EraseRangeParam* eraseRangeParam = dynamic_cast<EraseRangeParam*>(&param);
+  unsigned int lbaStart = 0;
+  unsigned int lbaEnd = 0;
   try {
-    lbaStart = std::stoi(program[LBA_START_INDEX]);
-    lbaEnd = std::stoi(program[LBA_END_INDEX]);
+    lbaStart = std::stoi(eraseRangeParam->lbaStart);
+    lbaEnd = std::stoi(eraseRangeParam->lbaEnd);
   } catch (...) {
     // ERROR
     return false;
@@ -38,9 +28,8 @@ bool CommandEraseRange::Call(const std::vector<std::string>& program) {
       (lbaStart <= lbaEnd) ? lbaEnd - lbaStart + 1 : lbaEnd - lbaStart - 1;
 
 
-  std::vector<std::string> eraseProgram = {"erase",
-                                           std::to_string(lbaStart),
-                                           std::to_string(size)};
+  EraseParam eraseParam(eEraseCmd, std::to_string(lbaStart),
+                        std::to_string(size));
 
-  return CommandErase::Call(eraseProgram);
+  return CommandErase::Call(eraseParam);
 }

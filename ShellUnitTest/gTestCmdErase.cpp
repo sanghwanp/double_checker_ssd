@@ -4,6 +4,7 @@
 
 #include "../Shell/CmdErase.h"
 #include "../Shell/MockSSD.h"
+#include "../Shell/Parser.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
@@ -51,6 +52,11 @@ class EraseTestFixture : public Test {
     EXPECT_EQ(ssd.Read(lba), DEFAULT_VALUE);
   }
 
+  IParam& GenEraseParam(const std::vector<std::string>& args) {
+    return *parser.GenCommandParam(args);
+  }
+  Parser parser;
+
   std::ostringstream oss;
   std::streambuf* oldCoutStreamBuf;
 
@@ -60,7 +66,7 @@ class EraseTestFixture : public Test {
 };
 
 TEST_F(EraseTestFixture, EraseInvalidLBA) {
-  EXPECT_FALSE(cmd.Call({"erase", "-1", "20"}));
+  EXPECT_FALSE(cmd.Call(GenEraseParam({"erase", "-1", "20"})));
   EXPECT_FALSE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -69,13 +75,13 @@ TEST_F(EraseTestFixture, EraseInvalidLBA) {
 }
 
 TEST_F(EraseTestFixture, EraseZero) {
-  EXPECT_TRUE(cmd.Call({"erase", "0", "0"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "0", "0"})));
   EXPECT_TRUE(CheckSuccess());
   ClearCoutStr();
-  EXPECT_TRUE(cmd.Call({"erase", "50", "0"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "50", "0"})));
   EXPECT_TRUE(CheckSuccess());
   ClearCoutStr();
-  EXPECT_TRUE(cmd.Call({"erase", "99", "0"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "99", "0"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -84,7 +90,7 @@ TEST_F(EraseTestFixture, EraseZero) {
 }
 
 TEST_F(EraseTestFixture, EraseSingleCmd) {
-  EXPECT_TRUE(cmd.Call({"erase", "0", "5"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "0", "5"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 5; lba++) {
@@ -96,7 +102,7 @@ TEST_F(EraseTestFixture, EraseSingleCmd) {
 }
 
 TEST_F(EraseTestFixture, EraseSingleCmdBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase", "4", "-5"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "4", "-5"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 5; lba++) {
@@ -108,7 +114,7 @@ TEST_F(EraseTestFixture, EraseSingleCmdBackwards) {
 }
 
 TEST_F(EraseTestFixture, EraseMultiCmd) {
-  EXPECT_TRUE(cmd.Call({"erase", "0", "11"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "0", "11"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 11; lba++) {
@@ -120,7 +126,7 @@ TEST_F(EraseTestFixture, EraseMultiCmd) {
 }
 
 TEST_F(EraseTestFixture, EraseMultiCmdBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase", "20", "-15"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "20", "-15"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 6; lba++) {
@@ -135,7 +141,7 @@ TEST_F(EraseTestFixture, EraseMultiCmdBackwards) {
 }
 
 TEST_F(EraseTestFixture, EraseFull) {
-  EXPECT_TRUE(cmd.Call({"erase", "0", "100"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "0", "100"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -144,7 +150,7 @@ TEST_F(EraseTestFixture, EraseFull) {
 }
 
 TEST_F(EraseTestFixture, EraseFullBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase", "99", "-100"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "99", "-100"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -153,7 +159,7 @@ TEST_F(EraseTestFixture, EraseFullBackwards) {
 }
 
 TEST_F(EraseTestFixture, EraseFullOverRange) {
-  EXPECT_TRUE(cmd.Call({"erase", "0", "300"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "0", "300"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -162,7 +168,7 @@ TEST_F(EraseTestFixture, EraseFullOverRange) {
 }
 
 TEST_F(EraseTestFixture, EraseFullOverRangeBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase", "99", "-300"}));
+  EXPECT_TRUE(cmd.Call(GenEraseParam({"erase", "99", "-300"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {

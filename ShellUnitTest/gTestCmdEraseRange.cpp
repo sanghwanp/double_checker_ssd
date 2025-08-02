@@ -4,6 +4,7 @@
 
 #include "../Shell/CmdEraseRange.h"
 #include "../Shell/MockSSD.h"
+#include "../Shell/Parser.h"
 #include "gmock/gmock.h"
 
 using namespace testing;
@@ -51,6 +52,10 @@ class EraseRangeTestFixture : public Test {
     EXPECT_EQ(ssd.Read(lba), DEFAULT_VALUE);
   }
 
+  IParam& GenParam(const std::vector<std::string>& args) {
+    return *parser.GenCommandParam(args);
+  }
+  Parser parser;
   std::ostringstream oss;
   std::streambuf* oldCoutStreamBuf;
 
@@ -60,12 +65,12 @@ class EraseRangeTestFixture : public Test {
 };
 
 TEST_F(EraseRangeTestFixture, InvalidLBA) {
-  EXPECT_FALSE(cmd.Call({"erase_range", "-1", "0"}));
-  EXPECT_FALSE(cmd.Call({"erase_range", "0", "-1"}));
-  EXPECT_FALSE(cmd.Call({"erase_range", "-1", "100"}));
-  EXPECT_FALSE(cmd.Call({"erase_range", "100", "-1"}));
-  EXPECT_FALSE(cmd.Call({"erase_range", "99", "100"}));
-  EXPECT_FALSE(cmd.Call({"erase_range", "100", "99"}));
+  EXPECT_FALSE(cmd.Call(GenParam({"erase_range", "-1", "0"})));
+  EXPECT_FALSE(cmd.Call(GenParam({"erase_range", "0", "-1"})));
+  EXPECT_FALSE(cmd.Call(GenParam({"erase_range", "-1", "100"})));
+  EXPECT_FALSE(cmd.Call(GenParam({"erase_range", "100", "-1"})));
+  EXPECT_FALSE(cmd.Call(GenParam({"erase_range", "99", "100"})));
+  EXPECT_FALSE(cmd.Call(GenParam({"erase_range", "100", "99"})));
 
   for (unsigned int lba = 0; lba < 100; lba++) {
     CheckPreset(lba);
@@ -73,7 +78,7 @@ TEST_F(EraseRangeTestFixture, InvalidLBA) {
 }
 
 TEST_F(EraseRangeTestFixture, SingleCmd) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "50", "54"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "50", "54"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 50; lba++) {
@@ -88,7 +93,7 @@ TEST_F(EraseRangeTestFixture, SingleCmd) {
 }
 
 TEST_F(EraseRangeTestFixture, SingleCmdBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "54", "50"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "54", "50"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 50; lba++) {
@@ -103,7 +108,7 @@ TEST_F(EraseRangeTestFixture, SingleCmdBackwards) {
 }
 
 TEST_F(EraseRangeTestFixture, MultiCmd) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "45", "70"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "45", "70"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 45; lba++) {
@@ -118,7 +123,7 @@ TEST_F(EraseRangeTestFixture, MultiCmd) {
 }
 
 TEST_F(EraseRangeTestFixture, MultiCmdBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "70", "45"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "70", "45"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 45; lba++) {
@@ -133,7 +138,7 @@ TEST_F(EraseRangeTestFixture, MultiCmdBackwards) {
 }
 
 TEST_F(EraseRangeTestFixture, FullErase) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "0", "99"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "0", "99"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -142,7 +147,7 @@ TEST_F(EraseRangeTestFixture, FullErase) {
 }
 
 TEST_F(EraseRangeTestFixture, FullEraseBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "99", "0"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "99", "0"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 100; lba++) {
@@ -151,7 +156,7 @@ TEST_F(EraseRangeTestFixture, FullEraseBackwards) {
 }
 
 TEST_F(EraseRangeTestFixture, EdgeCase) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "70", "99"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "70", "99"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 70; lba++) {
@@ -163,7 +168,7 @@ TEST_F(EraseRangeTestFixture, EdgeCase) {
 }
 
 TEST_F(EraseRangeTestFixture, EdgeCaseBackwards) {
-  EXPECT_TRUE(cmd.Call({"erase_range", "99", "70"}));
+  EXPECT_TRUE(cmd.Call(GenParam({"erase_range", "99", "70"})));
   EXPECT_TRUE(CheckSuccess());
 
   for (unsigned int lba = 0; lba < 70; lba++) {

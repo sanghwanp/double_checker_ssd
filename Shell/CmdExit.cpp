@@ -2,13 +2,10 @@
 
 #include <iostream>
 
-bool CommandExit::Call(const std::vector<std::string>& tokens) {
-  if (tokens.size() != 1) {
-    std::cout << "INVALID COMMAND\n";
-    return false;
-  }
+bool CommandExit::Call(IParam& param) {
 
-  // Á¾·á ÀÇ»ç¸¸ ¹ÝÈ¯. ½ÇÁ¦ Á¾·á´Â main ÇÔ¼ö¿¡¼­ ÁøÇà
+  if (param.eCmd == eInvalidCmd) return false;
+  // ì¢…ë£Œ ì˜ì‚¬ë§Œ ë°˜í™˜. ì‹¤ì œ ì¢…ë£ŒëŠ” main í•¨ìˆ˜ì—ì„œ ì§„í–‰
   std::cout << "Shutting down\n";
   return true;
 }

@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "../Shell/CmdExit.h"
+#include "gTestCommandCallCommon.h"
 #include "gtest/gtest.h"
 
 using namespace testing;
@@ -9,8 +10,8 @@ using namespace testing;
 const std::string SHUTDOWN_MESSAGE = "Shutting down\n";
 const std::string INVALID_MESSAGE = "INVALID COMMAND\n";
 
-class CommandExitTest : public Test {
- protected:
+class CommandExitTest : public CommandCallCommon {
+  protected:
   std::ostringstream oss;
   std::streambuf* oldCout;
 
@@ -23,8 +24,7 @@ class CommandExitTest : public Test {
 };
 
 TEST_F(CommandExitTest, ValidExitCommand) {
-  CommandExit cmd;
-  bool result = cmd.Call({"exit"});
+  bool result = CallCommand("exit");
   std::string output = oss.str();
 
   EXPECT_TRUE(result);
@@ -32,8 +32,7 @@ TEST_F(CommandExitTest, ValidExitCommand) {
 }
 
 TEST_F(CommandExitTest, InvalidExitWithExtraArg) {
-  CommandExit cmd;
-  bool result = cmd.Call({"exit", "now"});
+  bool result = CallCommand("exit now");
   std::string output = oss.str();
 
   EXPECT_FALSE(result);
@@ -42,7 +41,7 @@ TEST_F(CommandExitTest, InvalidExitWithExtraArg) {
 
 TEST_F(CommandExitTest, InvalidExitWithNoArg) {
   CommandExit cmd;
-  bool result = cmd.Call({});
+  bool result = CallCommand("");
   std::string output = oss.str();
 
   EXPECT_FALSE(result);

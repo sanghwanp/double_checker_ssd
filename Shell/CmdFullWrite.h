@@ -3,11 +3,12 @@
 #include <vector>
 
 #include "SSDInterface.h"
+#include "ICommand.h"
 
-class CommandFullWrite {
+class CommandFullWrite : public IShellCommand {
  public:
   CommandFullWrite(SSDInterface* ssdInterface);
-  bool Call(const std::vector<std::string> program);
+  bool Call(IParam& param) override;
 
  private:
   bool IsInvalidValue(const string& value);

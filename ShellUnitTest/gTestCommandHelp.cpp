@@ -1,13 +1,14 @@
 #include "../Shell/CmdHelp.h"
+#include "../Shell/Parser.h"
 #include "gtest/gtest.h"
-
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "gTestCommandCallCommon.h"
 
 using namespace testing;
 
-class CommandHelpTest : public Test {
+class CommandHelpTest : public CommandCallCommon {
  protected:
   std::ostringstream oss;
   std::streambuf* originalCout;
@@ -24,7 +25,8 @@ class CommandHelpTest : public Test {
 
 TEST_F(CommandHelpTest, HelpOutputContainsTeamInfoAndAllCommands) {
   CommandHelp helpCommand;
-  bool result = helpCommand.Call({});
+
+  bool result = helpCommand.Call(GenParam({""}));
 
   EXPECT_TRUE(result);
 

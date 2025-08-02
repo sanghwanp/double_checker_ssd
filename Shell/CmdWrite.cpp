@@ -1,24 +1,17 @@
 #include "CmdWrite.h"
 
 #include <iostream>
+#include <string>
 
 CommandWrite::CommandWrite(SSDInterface* ssdInterface) : ssd(ssdInterface) {}
 
-bool CommandWrite::Call(std::vector<std::string> program) {
-  if (program.size() != 3) {
-    printInvalidCommandMessage();
-    return false;
-  }
+bool CommandWrite::Call(IParam& param) {
+  if (param.eCmd == eInvalidCmd) return false;
+  WriteParam& writeParam = dynamic_cast<WriteParam&>(param);
 
-  int lba;
-  try {
-    lba = std::stoi(program[LBA_INDEX]);
-  } catch (...) {
-    printInvalidCommandMessage();
-    return false;
-  }
+  int lba = std::stoi(writeParam.lba);
 
-  const std::string& value = program[VALUE_INDEX];
+  const std::string& value = writeParam.data;
 
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
     printInvalidCommandMessage();

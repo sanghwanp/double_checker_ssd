@@ -4,11 +4,12 @@
 #include <vector>
 
 #include "SSDInterface.h"
+#include "ICommand.h"
 
-class CommandErase {
+class CommandErase : public IShellCommand {
  public:
   CommandErase(SSDInterface* ssdInterface);
-  bool Call(const std::vector<std::string>& program);
+  bool Call(IParam& param) override;
 
  private:
   unsigned int GetForwardLBA(unsigned int lba, int size);

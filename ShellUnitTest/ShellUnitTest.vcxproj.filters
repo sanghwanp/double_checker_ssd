@@ -39,8 +39,6 @@
     <ClCompile Include="gTestCmdFullWrite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="gTestLogger.cpp">
-    </ClCompile>
     <ClCompile Include="gTestRealSSD.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -69,6 +67,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="gTestScriptRunner.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gTestLogger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -154,6 +155,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Shell\TestShell.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="gTestCommandCallCommon.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
