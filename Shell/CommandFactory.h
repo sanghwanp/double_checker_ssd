@@ -1,7 +1,8 @@
 #pragma once
-#include "ICommand.h"
 #include "IParam.h"
 #include "SSDInterface.h"
+#include "ICommandFactory.h"
+#include <map>
 
 class CommandFactory : public ICommandFactory {
  public:
@@ -10,13 +11,15 @@ class CommandFactory : public ICommandFactory {
     return &instance;
   }
   IShellCommand* CreateCommand(IParam& Param, SSDInterface* ssd) override;
+  void Register(TestShellCMD cmd, ICommandFactory* factory);
 
  private:
-  CommandFactory();
+  CommandFactory() = default;
   ~CommandFactory() = default;
 
   CommandFactory(const CommandFactory&) = delete;
   CommandFactory& operator=(const CommandFactory&) = delete;
 
-  SSDInterface* ssdInterface;
+  std::map<TestShellCMD, ICommandFactory*> factories;
+
 };

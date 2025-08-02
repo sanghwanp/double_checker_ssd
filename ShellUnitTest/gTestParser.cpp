@@ -89,7 +89,7 @@ TEST_F(FixtureParser, fullwrite_command_parse) {
   cmd = parser.Parse(testStr);
   FullWriteParam* fwCmd = dynamic_cast<FullWriteParam*>(cmd);
 
-  EXPECT_EQ(fwCmd->eCmd, eFullwrite);
+  EXPECT_EQ(fwCmd->eCmd, eFullwriteCmd);
   EXPECT_EQ(fwCmd->data, "0x12341234");
 }
 
@@ -114,7 +114,7 @@ TEST_F(FixtureParser, fullwrite_command_struct_first_number_hex_check) {
 TEST_F(FixtureParser, fullread_command_parse) {
   SetupInputString("fullread");
   cmd = parser.Parse(testStr);
-  EXPECT_EQ(cmd->eCmd, eFullread);
+  EXPECT_EQ(cmd->eCmd, eFullreadCmd);
 }
 
 

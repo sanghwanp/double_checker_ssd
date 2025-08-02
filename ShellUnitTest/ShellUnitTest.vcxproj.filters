@@ -9,9 +9,6 @@
     <ClCompile Include="..\Shell\SSDInterface.h">
       <Filter>헤더 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shell\CmdWrite.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="gTestCmdRead.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -45,9 +42,6 @@
     <ClCompile Include="gTestShell.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="..\Shell\MockSSD.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="gTestCmdExit.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -72,6 +66,36 @@
     <ClCompile Include="gTestLogger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="..\Shell\CommandFactory.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryEraseCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryExitCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryFlushCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryFullReadCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryFullWriteCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryHelpCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryReadCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryWriteCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Shell\FactoryEraseRangeCommand.cpp">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -85,6 +109,9 @@
     </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{e91069e7-bc1c-4533-a221-6c524342f626}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\CommandFactory">
+      <UniqueIdentifier>{0bab6e3d-cb08-419b-b3ae-e710931178b0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

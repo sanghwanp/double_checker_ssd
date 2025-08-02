@@ -7,9 +7,7 @@ class IShellCommand {
   virtual bool Call(IParam& param) = 0;
 };
 
-class ICommandFactory {
+class IScriptCommand {
  public:
-  virtual IShellCommand* CreateCommand(IParam& Param, SSDInterface* ssd) = 0;
-  virtual ~ICommandFactory() = default;
-  static ICommandFactory* GetInstance();
+  virtual std::string Call(IParam& param) = 0;
 };

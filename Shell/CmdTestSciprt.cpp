@@ -12,7 +12,7 @@ CommandTestScript::CommandTestScript(SSDInterface* ssdInterface)
   cases.push_back(std::make_unique<TestScriptCase4>(ssdInterface));
 }
 
-std::string CommandTestScript::CallSciprt(const IParam& param) {
+std::string CommandTestScript::Call(IParam& param) {
   const ScriptParam& scriptParam = dynamic_cast<const ScriptParam&>(param);
   const int requestedNumber = scriptParam.nScriptNumber;
 

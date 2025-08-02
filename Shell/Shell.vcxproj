@@ -249,6 +249,15 @@
     <ClCompile Include="CmdWrite.cpp" />
     <ClCompile Include="CmdRead.cpp" />
     <ClCompile Include="CommandFactory.cpp" />
+    <ClCompile Include="CommandFactoryRegisterer.h" />
+    <ClCompile Include="FactoryEraseCommand.cpp" />
+    <ClCompile Include="FactoryEraseRangeCommand.cpp" />
+    <ClCompile Include="FactoryExitCommand.cpp" />
+    <ClCompile Include="FactoryFlushCommand.cpp" />
+    <ClCompile Include="FactoryFullReadCommand.cpp" />
+    <ClCompile Include="FactoryFullWriteCommand.cpp" />
+    <ClCompile Include="FactoryHelpCommand.cpp" />
+    <ClCompile Include="FactoryReadCommand.cpp" />
     <ClCompile Include="LogFileSystem.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="ITestSciprtCase.cpp" />
@@ -264,9 +273,13 @@
     <ClCompile Include="TestScriptCase3.cpp" />
     <ClCompile Include="TestScriptCase4.cpp" />
     <ClCompile Include="TestShell.cpp" />
+    <ClCompile Include="FactoryWriteCommand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdEraseRange.h" />
+    <ClInclude Include="CommandFactory.h" />
+    <ClInclude Include="ICommand.h" />
+    <ClInclude Include="ICommandFactory.h" />
     <ClInclude Include="ILogFileSystem.h" />
     <ClInclude Include="ILogger.h" />
     <ClInclude Include="CmdExit.h" />
@@ -290,6 +303,7 @@
     <ClInclude Include="TestScriptCase3.h" />
     <ClInclude Include="TestScriptCase4.h" />
     <ClInclude Include="TestShell.h" />
+    <ClInclude Include="FactoryWriteCommand.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
