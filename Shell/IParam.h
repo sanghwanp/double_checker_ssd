@@ -12,7 +12,8 @@ enum TestShellCMD {
   eEraseCmd,
   eEraseRangeCmd,
   eScriptCmd,
-  eInvalidCmd
+  eInvalidCmd,
+  eDoubleChecker
 };
 
 class IParam {

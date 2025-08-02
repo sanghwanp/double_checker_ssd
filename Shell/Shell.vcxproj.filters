@@ -84,9 +84,6 @@
     <ClCompile Include="FactoryFlushCommand.cpp">
       <Filter>소스 파일\CommandFactory</Filter>
     </ClCompile>
-    <ClCompile Include="CommandFactoryRegisterer.h">
-      <Filter>헤더 파일</Filter>
-    </ClCompile>
     <ClCompile Include="FactoryEraseRangeCommand.cpp">
       <Filter>소스 파일\CommandFactory</Filter>
     </ClCompile>
@@ -104,6 +101,12 @@
     </ClCompile>
     <ClCompile Include="TestShell.cpp">
       <Filter>소스 파일\Executor</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandFactoryRegisterer.h">
+      <Filter>소스 파일\CommandFactory</Filter>
+    </ClCompile>
+    <ClCompile Include="SnowEffect.cpp">
+      <Filter>소스 파일\Command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +192,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="FactoryWriteCommand.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SnowEffect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

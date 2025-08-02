@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
 RealSSD::RealSSD(const std::string& ssdExecutable,
                  const std::string& outputFile)
@@ -72,5 +73,11 @@ int RealSSD::execCommand(const std::string& cmd) {
 
 void RealSSD::RunExternalSSD(std::ostringstream& cmd) {
   ILogger::GetInstance()->LogPrint("RealSSD::RunExternalSSD", cmd.str(), false);
-    execCommand(cmd.str());
+    int ret = execCommand(cmd.str());
+    if (ret != 0)
+    {
+        ILogger::GetInstance()->LogPrint("RealSSD::RunExternalSSD", "Failed to execute command: " + cmd.str() + ", return code: " + std::to_string(ret), true);
+
+        std::cout << "program is not executing correctly\n";
+    }
 }
