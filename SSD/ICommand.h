@@ -10,7 +10,7 @@ class ICommand {
  public:
   virtual ~ICommand() {}
 
-  virtual bool Execute(IParam* param) { return false; }
+  virtual bool Execute(IParam* param, bool isBufferEnabled) { return false; }
   virtual bool CheckPrecondition() { return false; }
 
 #if (USING_COMMAND_BUFFER == 1)

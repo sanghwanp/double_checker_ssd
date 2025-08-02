@@ -3,6 +3,7 @@
 #include <string>
 
 #include "CommandBufferConfig.h"
+#include "IParam.h"
 
 class CommandBufferEntry {
  public:
@@ -14,6 +15,8 @@ class CommandBufferEntry {
   CommandBufferEntry(CMD_TYPE cmdType, unsigned int startLba,
                      unsigned int endLba, unsigned long long data);
 
+  IParam *TransformToIParam() const;
+
   int Length() const;
 
   std::string ToString() const;
@@ -22,6 +25,7 @@ class CommandBufferEntry {
 
   CommandBufferEntry(unsigned int startLba, unsigned int endLba,
                      unsigned long long data);
+
 
  private:
   void Validator();

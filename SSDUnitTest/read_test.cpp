@@ -21,7 +21,7 @@ TEST_F(FixtureReadCommand, Execute_ValidLBA) {
 
   // Execute the read command
   ReadCommand readCommand;
-  bool ret = readCommand.Execute(&readParam);
+  bool ret = readCommand.Execute(&readParam, false);
 
   EXPECT_EQ(ret, true);
 }
@@ -33,7 +33,7 @@ TEST_F(FixtureReadCommand, Execute_InvalidLBA) {
 
   // Execute the read command
   ReadCommand readCommand;
-  bool ret = readCommand.Execute(&readParam);
+  bool ret = readCommand.Execute(&readParam, false);
 
   EXPECT_EQ(ret, false);
 }

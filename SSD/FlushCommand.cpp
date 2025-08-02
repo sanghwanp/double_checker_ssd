@@ -1,7 +1,7 @@
 #include "FlushCommand.h"
 #include "CommandBufferEntry.h"
 
-bool FlushCommand::Execute(IParam* param) {
+bool FlushCommand::Execute(IParam* param, bool isEnabledBuffer) {
 
   std::vector<CommandBufferEntry> entry = cmdBufHandler.Flush();
 

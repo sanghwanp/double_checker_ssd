@@ -4,17 +4,28 @@
 #include "FileDriver.h"
 #include "WriteCommand.h"
 
-bool EraseCommand::Execute(IParam* param) {
-  eraseParam = dynamic_cast<EraseParam*>(param);
+bool EraseCommand::Execute(IParam* param, bool isBufferEnabled) {
+    if(isBufferEnabled) {
+        return ExecuteWithCommandBuffer(param);
+    }
+    else {
+        return ExecuteWithoutCommandBuffer(param);
+    }
+}
 
+bool EraseCommand::ExecuteWithCommandBuffer(IParam* param) {
+  eraseParam = dynamic_cast<EraseParam*>(param);
   if (!CheckPrecondition()) return false;
 
-#if (USING_COMMAND_BUFFER == 1)
   SaveCommandBuffer();
-#else
+  return true;
+}
+
+bool EraseCommand::ExecuteWithoutCommandBuffer(IParam* param) {
+  eraseParam = dynamic_cast<EraseParam*>(param);
+  if (!CheckPrecondition()) return false;
   UpdateDataBuffer();
   SaveFile();
-#endif
   return true;
 }
 
@@ -39,5 +50,20 @@ void EraseCommand::SaveFile() {
 }
 
 void EraseCommand::SaveCommandBuffer() {
-  cmdBufHandler.AddErase(eraseParam->lba.val, eraseParam->size.val);
+  vector<CommandBufferEntry> cmds =
+      cmdBufHandler.AddErase(eraseParam->lba.val, eraseParam->size.val);
+
+  for(const CommandBufferEntry &cmd: cmds) {
+      IParam *param = cmd.TransformToIParam();
+      if(cmd.cmdType == CMD_TYPE::eEraseCmd) {
+          Execute(param, false);
+      }
+      else if(cmd.cmdType == CMD_TYPE::eWriteCmd) {
+          WriteCommand wCommand;
+          wCommand.Execute(param, false);
+      }
+      else {
+          throw std::exception("Invalid COmmand was returned at CommandBuffer");
+      }
+  }
 }

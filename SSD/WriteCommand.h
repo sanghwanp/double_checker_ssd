@@ -8,7 +8,7 @@ using namespace std;
 
 class WriteCommand : public ICommand {
  public:
-  bool Execute(IParam* param) override;
+  bool Execute(IParam* param, bool isBufferEnabled) override;
   bool CheckPrecondition() override;
 
   void UpdateDataBuffer();
@@ -18,4 +18,6 @@ class WriteCommand : public ICommand {
  private:
   WriteParam* writeParam;
   vector<string> cmds;
+  bool ExecuteWithCommandBuffer(IParam *param);
+  bool ExecuteWithoutCommandBuffer(IParam *param);
 };

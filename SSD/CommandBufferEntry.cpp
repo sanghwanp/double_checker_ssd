@@ -54,6 +54,20 @@ CommandBufferEntry::CommandBufferEntry(unsigned int startLba,
   Validator();
 }
 
+IParam *CommandBufferEntry::TransformToIParam() const {
+    IParam *result = nullptr;
+    if(cmdType == eWriteCmd) {
+        result = new WriteParam(cmdType, startLba, data);
+    }
+    else if(cmdType == eEraseCmd){
+        result = new EraseParam(cmdType, startLba, endLba-startLba+1);
+    }
+    else {
+        throw std::runtime_error("This cmdType is invalid");
+    }
+    return result;
+}
+
 void CommandBufferEntry::Validator() {
   if (cmdType == eWriteCmd) {
     if (startLba != endLba) {

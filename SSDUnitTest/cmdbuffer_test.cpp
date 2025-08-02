@@ -5,7 +5,7 @@
 #include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/CommandBufferHandler.h"
 #include "gmock/gmock.h"
-#include "Types.h"
+#include "../SSD/Types.h"
 using namespace testing;
 using std::vector;
 

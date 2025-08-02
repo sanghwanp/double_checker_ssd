@@ -3,7 +3,7 @@
 
 class EraseCommand : public ICommand {
  public:
-  bool Execute(IParam* param) override;
+  bool Execute(IParam* param, bool isBufferEnabled) override;
   bool CheckPrecondition() override;
 
   void UpdateDataBuffer();
@@ -12,4 +12,6 @@ class EraseCommand : public ICommand {
 
  private:
   EraseParam* eraseParam;
+  bool ExecuteWithCommandBuffer(IParam* param);
+  bool ExecuteWithoutCommandBuffer(IParam* param);
 };
