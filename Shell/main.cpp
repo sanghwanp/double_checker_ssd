@@ -5,10 +5,11 @@
 #include <string>
 #include <vector>
 
-#include "ScriptRunner.h"
-#include "TestShell.h"
+#include "ILogger.h"
 #include "MockSSD.h"
 #include "RealSSD.h"
+#include "ScriptRunner.h"
+#include "TestShell.h"
 
 int main(int argc, char* argv[]) {
 #ifdef UNIT_TEST
@@ -18,6 +19,7 @@ int main(int argc, char* argv[]) {
 #endif
 
   if (argc == 2) {
+    ILogger::GetInstance()->SetConsoleOutput(false);
     ScriptRunner runner(&realSsd, argv[1]);
     runner.Run();
 

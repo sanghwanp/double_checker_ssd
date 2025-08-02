@@ -27,6 +27,7 @@ class LoggerTestFixture : public ::testing::Test {
     logger.SetLoggerFileSystem(&mockFS);
     logger.SetConsoleOutput(true);
   }
+  
   void TearDown() override {
 
     logger.RestoreLoggerFileSystem();
@@ -76,7 +77,7 @@ TEST_F(LoggerTestFixture, EndsWithFunction_WorksCorrectly) {
 TEST_F(LoggerTestFixture, Call_ILogger) {
   testing::internal::CaptureStdout();
 
-  ILogger::GetInstance().LogPrint("TestFunc()", "ILogger::GetInstance().LogPrint");
+  ILogger::GetInstance()->LogPrint("TestFunc()", "ILogger::GetInstance().LogPrint");
   std::string output = testing::internal::GetCapturedStdout();
   EXPECT_TRUE(output.size() > 30);
 }

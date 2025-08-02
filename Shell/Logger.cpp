@@ -13,12 +13,13 @@ namespace {
 constexpr std::uintmax_t MAX_FILE_SIZE = 10 * 1024;  // 10KB
 }
 
-ILogger& ILogger::GetInstance() { return Logger::GetInstance(); }
+ILogger* ILogger::GetInstance() { return &Logger::GetInstance(); }
 Logger::Logger()
     : consoleOutput(true),
       logFileName("latest.log"),
-      fileSystem(new LogFileSystem()),
-      ownsFileSystem(true) {
+      ownFilesystem(new LogFileSystem()),
+      internalFsFlag(true) {
+  fileSystem = ownFilesystem;
   OpenLogFile();
 }
 
@@ -28,34 +29,30 @@ Logger::~Logger() {
   if (logFile.is_open()) {
     logFile.close();
   }
-  if (ownsFileSystem) {
-    delete ownsfileSystem;
-  }
-}
-void Logger::MyPrint(const std::string& message) {
-  if (consoleOutput == true) {
-    std::cout << message;
-  }
 }
 
 void Logger::SetLoggerFileSystem(ILogFileSystem* fs) {
   fileSystem = fs;
-  ownsFileSystem = false;
+  internalFsFlag = false;
 }
 void Logger::RestoreLoggerFileSystem(void) {
-  fileSystem = ownsfileSystem;
-  ownsFileSystem = true;
+  fileSystem = ownFilesystem;
+  internalFsFlag = true;
+  if (fileSystem == nullptr)
+  {
+    std::cout << "fileSystem is nullptr !!\n";
+  }
 }
 
 void Logger::SetConsoleOutput(bool on) { consoleOutput = on; }
 
 void Logger::LogPrint(const std::string& functionName,
-                   const std::string& message) {
+                      const std::string& message, bool bConsole) {
   std::string timestamp = GetCurrentTimestamp();
   std::ostringstream formatted;
   std::ostringstream funcOss;
 
-  // 항상 파일 정리를 먼저해서 latest log는 항상 기록 될 수 있도록 한다.
+  // 항상 파일 정리를 먼저해서 현재 log는 항상 latest.log 파일에 기록 될 수 있도록 한다.
   CheckAndRotateLogFile();
 
   funcOss << std::left << std::setw(30) << functionName;
@@ -63,7 +60,7 @@ void Logger::LogPrint(const std::string& functionName,
   formatted << "[" << timestamp << "] " << funcOss.str() << ": " << message;
   std::string logLine = formatted.str();
 
-  if (consoleOutput) {
+  if ((consoleOutput == true && bConsole == true)) {
     std::cout << logLine << std::endl;
   }
 

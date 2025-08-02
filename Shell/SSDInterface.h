@@ -40,4 +40,8 @@ class SSDInterface {
     int lbaEnd = lba + size - 1;
     return lbaEnd >= 100;
   }
+  inline string GetName() { return InterfaceName; }
+
+ protected:
+  string InterfaceName;
 };

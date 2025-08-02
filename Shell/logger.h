@@ -11,9 +11,9 @@ class Logger : public ILogger {
  public:
   ~Logger();
 
-  void LogPrint(const std::string& functionName, const std::string& message) override;
-  void MyPrint(const std::string& message) override;
-  void SetConsoleOutput(bool on);
+  void LogPrint(const std::string& functionName, const std::string& message,
+                bool bConsole = true) override;
+  void SetConsoleOutput(bool on) override;
   static Logger& GetInstance() {
     static Logger instance;
     return instance;
@@ -25,9 +25,9 @@ class Logger : public ILogger {
   std::string logFileName;
   std::ofstream logFile;
   ILogFileSystem* fileSystem;
-  ILogFileSystem* ownsfileSystem;
+  ILogFileSystem* ownFilesystem;
 
-  bool ownsFileSystem = false;
+  bool internalFsFlag = false;
   bool consoleOutput;
 
   Logger();

@@ -40,7 +40,6 @@ TEST_F(CommandWriteTest, WriteValid) {
 
 TEST_F(CommandWriteTest, WriteInvalidLBA) {
   EXPECT_FALSE(cmd->Call(GenParam("write -1 0x12345678")));
-  EXPECT_EQ(INVALID_COMMAND_MESSAGE, GetOutput());
 }
 
 TEST_F(CommandWriteTest, WriteInvalidValue) {

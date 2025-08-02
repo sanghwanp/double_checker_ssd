@@ -14,7 +14,7 @@ bool CommandWrite::Call(IParam& param) {
   const std::string& value = writeParam.data;
 
   if (IsInvalidLBA(lba) || IsInvalidValue(value)) {
-    printInvalidCommandMessage();
+
     return false;
   }
 

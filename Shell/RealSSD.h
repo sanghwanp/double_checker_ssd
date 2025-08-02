@@ -17,4 +17,6 @@ class RealSSD : public SSDInterface {
  private:
   std::string ssdExe;
   std::string outputFile;
+
+  void RunExternalSSD(std::ostringstream& cmd);
 };

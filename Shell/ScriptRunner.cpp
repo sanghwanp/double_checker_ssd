@@ -7,9 +7,13 @@
 #include "TestScriptCase2.h"
 #include "TestScriptCase3.h"
 #include "TestScriptCase4.h"
+#include "ILogger.h"
 
 ScriptRunner::ScriptRunner(SSDInterface* ssd, const std::string& scriptPath)
-    : ssd(ssd), scriptPath(scriptPath) {}
+    : ssd(ssd), scriptPath(scriptPath) {
+  ILogger::GetInstance()->LogPrint("ScriptRunner::ScriptRunner",
+                                   ssd->GetName() + "is loaded.",false);
+}
 
 void ScriptRunner::Run() {
   std::ifstream file(scriptPath.c_str());
