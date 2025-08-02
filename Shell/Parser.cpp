@@ -2,6 +2,7 @@
 #include <cctype>
 #include <regex>
 #include "Parser.h"
+#include "ILogger.h"
 
 string Parser::ExtractScriptNumberIfValidFormat(const std::string& str) {
   static const std::regex cmdBufFileRegexPattern(R"(^(\d+)_.*$)");
@@ -49,15 +50,20 @@ IParam* Parser::Parse(const std::string& input) {
   tokens = SplitArgs(input);
 
   if (true == IsValidScriptCommandStructure(tokens)) {
+    ILogger::GetInstance()->LogPrint(
+        "Parser::Parse", "Valid script command structure detected.", false);
     return GenScriptParam(tokens);
   }
 
   if (false == IsValidCommandStructure(tokens)) {
-    return GetInvalidCommand();
+      ILogger::GetInstance()->LogPrint(
+        "Parser::Parse", "Invalid command structure detected.", false);
+      return GetInvalidCommand();
   }
 
   cmdParam = GenCommandParam(tokens);
-
+  ILogger::GetInstance()->LogPrint("Parser::Parse",
+                                   "Command parsed successfully. ", false);
   return cmdParam;
 }
 
