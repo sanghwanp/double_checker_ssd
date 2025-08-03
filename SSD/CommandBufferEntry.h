@@ -22,7 +22,16 @@ class CommandBufferEntry {
 
   CommandBufferEntry(unsigned int startLba, unsigned int endLba,
                      unsigned long long data);
-
+public:
+    bool operator==(const CommandBufferEntry& other) const {
+        return cmdType == other.cmdType &&
+            startLba == other.startLba &&
+            endLba == other.endLba &&
+            data == other.data;
+    }
+    bool operator!=(const CommandBufferEntry& other) const {
+        return !(*this == other);
+    }
  private:
   void Validator();
 };

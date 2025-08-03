@@ -159,3 +159,5 @@ std::vector<CommandBufferEntry> CommandBufferOptimizer::Optimize(
   } while (std::next_permutation(data_list.begin(), data_list.end()));
   return ansResult;
 }
+
+

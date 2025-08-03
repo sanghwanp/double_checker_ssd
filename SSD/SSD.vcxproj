@@ -267,6 +267,7 @@
     <ClCompile Include="CommandBufferHandler.cpp" />
     <ClCompile Include="CommandBufferOptimizer.cpp" />
     <ClCompile Include="CommandBufferEntry.cpp" />
+    <ClCompile Include="CommandBufferOptimizer2.h" />
     <ClCompile Include="CommandFactory.cpp" />
     <ClCompile Include="EraseCommand.cpp" />
     <ClCompile Include="FileDriver.cpp" />
