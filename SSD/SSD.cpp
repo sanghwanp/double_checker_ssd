@@ -8,7 +8,9 @@
 SSD::SSD()
     : fileDriver(FileDriver::GetInstance()),
       bufferHandler(CommandBufferHandler::GetInstance()),
-      commandFactory(CommandFactory::GetInstance()) {}
+      commandFactory(CommandFactory::GetInstance()) {
+    bufferHandler->InitCommandBufferEntry();
+}
 
 void SSD::Run(vector<string> args) {
   IParam *cmd;

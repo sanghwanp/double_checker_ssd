@@ -11,8 +11,8 @@ class CommandBufferEntry {
   unsigned long long data;
 
   CommandBufferEntry();
-  CommandBufferEntry(CMD_TYPE cmdType, unsigned int startLba,
-                     unsigned int endLba, unsigned long long data);
+  CommandBufferEntry(CMD_TYPE cmdType, unsigned int startLba = 0,
+                     unsigned int endLba = 0, unsigned long long data = 0);
 
   int Length() const;
 
