@@ -1,5 +1,6 @@
 #include "SSD.h"
-
+#include <iostream>
+using namespace std;
 SSD::SSD(FileDriver* fileDriver, CommandBufferHandler* bufferHandler,
          CommandFactory* commandFactory)
     : fileDriver(fileDriver),
@@ -7,6 +8,7 @@ SSD::SSD(FileDriver* fileDriver, CommandBufferHandler* bufferHandler,
       commandFactory(commandFactory) {}
 
 void SSD::Run(IParam* cmd) {
+  cout << "RUN " << cmd->eCmd << endl;
   if (!ExecuteCommand(cmd)) fileDriver->StoreError();
 }
 

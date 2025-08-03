@@ -1,5 +1,6 @@
 #include "WriteCommand.h"
-
+#include <iostream>
+using namespace std;
 WriteCommand::WriteCommand(FileDriver* fileDriver,
                            CommandBufferHandler* bufferHandler,
                            CommandFactory* factory)
@@ -9,10 +10,11 @@ WriteCommand::WriteCommand(FileDriver* fileDriver,
       writeParam(nullptr) {}
 
 bool WriteCommand::Execute(IParam* param) {
+  cout << "WriteCommand::Execute" << param->eCmd << endl;
   writeParam = dynamic_cast<WriteParam*>(param);
-
+  cout << writeParam->data.val << endl;
   if (!CheckPrecondition()) return false;
-
+  cout << "CheckPrecondition pass"  << endl;
   Write();
   return true;
 }

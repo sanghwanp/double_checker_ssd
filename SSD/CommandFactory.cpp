@@ -4,14 +4,19 @@
 #include "ReadCommand.h"
 #include "WriteCommand.h"
 
+#include <iostream>
+using namespace std;
 CommandFactory::CommandFactory(FileDriver* fileDriver,
                                CommandBufferHandler* bufferHandler)
     : fileDriver(fileDriver), bufferHandler(bufferHandler) {}
 
 std::unique_ptr<ICommand> CommandFactory::GetCommand(CMD_TYPE cmdType) {
   std::unique_ptr<ICommand> command;
+  cout << "CommandFactory::GetCommand : " << cmdType << endl;
+  cout << &fileDriver << " " << &bufferHandler << endl;
   switch (cmdType) {
     case eWriteCmd:
+      std::cout << "Creating WriteCommand" << std::endl;
       command = CreateWriteCommand();
       break;
     case eReadCmd:
@@ -24,8 +29,10 @@ std::unique_ptr<ICommand> CommandFactory::GetCommand(CMD_TYPE cmdType) {
       command = CreateFlushCommand();
       break;
     default:
+      std::cerr << "Unknown command type: " << cmdType << std::endl;
       break;
   }
+  cout << command << endl;
   return command;
 }
 
@@ -34,6 +41,8 @@ std::unique_ptr<ICommand> CommandFactory::CreateReadCommand() {
 }
 
 std::unique_ptr<ICommand> CommandFactory::CreateWriteCommand() {
+  cout << "CommandFactory::CreateWriteCommand " << &fileDriver << "  "
+       << bufferHandler << " " << this << endl;
   return std::make_unique<WriteCommand>(fileDriver, bufferHandler, this);
 }
 

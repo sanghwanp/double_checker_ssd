@@ -17,7 +17,7 @@ struct CommandParamSpec {
 
 class Parser {
  public:
-  IParam* GetCommand(int argc, char* argv[]);
+  IParam* GetParam(int argc, char* argv[]);
   vector<string>& Parse(int argc, char* argv[]);
 
  private:
@@ -59,5 +59,11 @@ class Parser {
         [](const vector<string>& tokens) {
           return true;
         }}},
+      {" ",
+       {1, CMD_TYPE::eInvalidCmd,
+        [](const vector<string>& tokens) {
+          return new IParam(CMD_TYPE::eInvalidCmd);
+        },
+        [](const vector<string>& tokens) { return true; }}},
   };
 };

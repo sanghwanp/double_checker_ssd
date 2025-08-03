@@ -4,6 +4,8 @@
 #include "FileDriver.h"
 #include "Parser.h"
 #include "SSD.h"
+#include <iostream>
+using namespace std;
 
 int main(int argc, char* argv[]) {
 
@@ -12,9 +14,13 @@ int main(int argc, char* argv[]) {
   CommandBufferHandler* bufferHandler = CommandBufferHandler::GetInstance();
 
   SSD& ssd = SSD::GetInstance(fileDriver, bufferHandler, commandFactory);
+
   Parser parser;
 
-  ssd.Run(parser.GetCommand(argc, argv));
+  cout << &parser << endl;
+  cout << argc << endl;
+  cout << argv << endl;
+  ssd.Run(parser.GetParam(argc, argv));
 
   return 0;
 }
