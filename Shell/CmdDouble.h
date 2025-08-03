@@ -1,9 +1,9 @@
 #pragma once
 #include <vector>
 #include "ICommand.h"
-class SnowEffect : public IShellCommand {
+class CommandDouble : public IShellCommand {
 public:
-    SnowEffect(int snowCount = 100);  // width/height 제거
+    CommandDouble(int snowCount = 100);  // width/height 제거
     bool Call(IParam& param) override;
 
 

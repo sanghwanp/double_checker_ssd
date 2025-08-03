@@ -1,20 +1,14 @@
-#include <memory>
 
-#include "CommandFactory.h"
-#include "FileDriver.h"
-#include "Parser.h"
+
 #include "SSD.h"
 
 int main(int argc, char* argv[]) {
+  std::vector<std::string> args;
 
-  FileDriver* fileDriver = FileDriver::GetInstance();
-  CommandFactory* commandFactory = CommandFactory::GetInstance();
-  CommandBufferHandler* bufferHandler = CommandBufferHandler::GetInstance();
+  for (int i = 1; i < argc; i++) {
+    args.emplace_back(argv[i]);
+  }
 
-  SSD& ssd = SSD::GetInstance(fileDriver, bufferHandler, commandFactory);
-  Parser parser;
-
-  ssd.Run(parser.GetCommand(argc, argv));
-
+  SSD::GetInstance().Run(args);
   return 0;
 }

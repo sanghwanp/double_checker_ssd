@@ -24,7 +24,7 @@ class MockCommandFactory : public CommandFactory {
 class MockCommandBufferHandler : public CommandBufferHandler {
  public:
   MOCK_METHOD(bool, CheckBufferFull, (), ());
-  MOCK_METHOD(std::vector<CommandBufferEntry>, AddErase, (unsigned int lba, unsigned int size), ());
+  MOCK_METHOD(std::vector<CommandBufferEntry>, AddErase, (unsigned int lba, unsigned int data), ());
 };
 
 class FixtureEraseCommand : public ::testing::Test {

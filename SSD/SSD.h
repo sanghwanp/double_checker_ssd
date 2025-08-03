@@ -11,17 +11,14 @@ using std::string;
 
 class SSD {
  public:
-  SSD(FileDriver* fileDriver, CommandBufferHandler* bufferHandler,
-      CommandFactory* commandFactory);
+  SSD();
 
-  static SSD& GetInstance(FileDriver* fileDriver,
-                          CommandBufferHandler* bufferHandler,
-                          CommandFactory* commandFactory) {
-    static SSD instance(fileDriver, bufferHandler, commandFactory);
+  static SSD& GetInstance() {
+    static SSD instance;
     return instance;
   }
 
-  void Run(IParam* cmd);
+  void Run(vector<string> argv);
   bool ExecuteCommand(IParam* param);
 
   unsigned int GetCachedData(unsigned int lba);
