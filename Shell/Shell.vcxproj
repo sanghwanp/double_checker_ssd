@@ -239,7 +239,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CmdEraseRange.cpp" />
-    <ClCompile Include="CmdDouble.cpp" />
+    <ClCompile Include="SnowEffect.cpp" />
     <ClCompile Include="CmdExit.cpp" />
     <ClCompile Include="CmdFlush.cpp" />
     <ClCompile Include="CmdErase.cpp" />
@@ -278,7 +278,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CmdEraseRange.h" />
-    <ClInclude Include="CmdDouble.h" />
+    <ClInclude Include="SnowEffect.h" />
     <ClInclude Include="CommandFactory.h" />
     <ClInclude Include="ICommand.h" />
     <ClInclude Include="ICommandFactory.h" />

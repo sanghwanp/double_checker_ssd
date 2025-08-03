@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>CommandBuffer.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include "CommandBuffer.h"
+
+#include &lt;map&gt;
+#include &lt;string&gt;
+#include &lt;string_view&gt;
+#include &lt;iostream&gt;
+
+<span style = "background-color:#dfd">std::vector&lt;CommandBufferEntry&gt; CommandBuffer::LoadCmdsFromBuffer() const {
+  static std::map&lt;int, CommandBufferEntry&gt; result_map;
+  result_map.clear();</span>
+
+<span style = "background-color:#dfd">  std::filesystem::path curDirPath(GetAndMakeCmdBufferDirPath());
+  std::vector&lt;std::filesystem::path&gt; cmdBufFiles = GetCmdbufFiles(curDirPath);
+  for (const std::filesystem::path &amp; cmdBufFile : cmdBufFiles) {
+    std::string filename = cmdBufFile.filename().string();
+    if (!MatchCmdBufFilename(filename)) continue;
+    int order = GetOrderFromCmdBufFilename(filename);
+    result_map[order] = MakeCmdBufEntry(filename);
+  }</span>
+
+<span style = "background-color:#dfd">  std::vector&lt;CommandBufferEntry&gt; result;
+  for (const auto&amp; it : result_map) {
+    result.emplace_back(it.second);
+  }
+  return result;
+}</span>
+
+void CommandBuffer::WriteCmdsToBuffer(
+<span style = "background-color:#dfd">    const std::vector&lt;CommandBufferEntry&gt;&amp; cmds) {
+  FlushBuffer();
+  std::string filename, filepath, order;
+  for (int i = 0; i &lt; cmds.size(); i++) {
+    const CommandBufferEntry&amp; cmd = cmds[i];
+    order = std::to_string(i);
+    filename = order + "_" + cmd.ToString() +</span>
+               CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
+<span style = "background-color:#dfd">    filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
+    ofs.open(filepath);
+    ofs.close();
+  }
+}</span>
+
+<span style = "background-color:#dfd">void CommandBuffer::FlushBuffer() {
+  std::string_view cmdBufDirPath = GetAndMakeCmdBufferDirPath();
+  auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(cmdBufDirPath));
+  for (auto cmdBufFile : cmdBufFiles) {
+    std::string filename = cmdBufFile.filename().u8string();
+    if (!MatchCmdBufFilename(filename)) continue;
+    std::filesystem::remove(cmdBufFile);
+  }
+}</span>
+
+std::vector&lt;std::filesystem::path&gt; CommandBuffer::GetCmdbufFiles(
+<span style = "background-color:#dfd">    const std::filesystem::path&amp; dirPath) const {
+  std::vector&lt;std::filesystem::path&gt; cmdbufFiles;</span>
+
+<span style = "background-color:#dfd">  if (!std::filesystem::exists(dirPath) ||</span>
+      !std::filesystem::is_directory(dirPath)) {
+<span style = "background-color:#fdd">    throw std::invalid_argument(std::string("Invalid directory: ") +</span>
+                                dirPath.u8string());
+  }
+
+<span style = "background-color:#dfd">  for (const auto&amp; entry : std::filesystem::directory_iterator(dirPath)) {</span>
+    // std::cout &lt;&lt; "plzrun: " &lt;&lt; std::filesystem::absolute(entry.path()) &lt;&lt;
+    // '\n'; std::cout &lt;&lt; entry.path().extension().string() &lt;&lt; "\n";
+<span style = "background-color:#dfd">    if (entry.path().extension().string() ==</span>
+        CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION) {
+<span style = "background-color:#dfd">      cmdbufFiles.push_back(entry.path());
+    }
+  }</span>
+
+<span style = "background-color:#dfd">  return cmdbufFiles;
+}</span>
+
+<span style = "background-color:#dfd">bool CommandBuffer::MatchCmdBufFilename(const std::string&amp; filename) const {
+  return std::regex_match(filename, cmdBufFileRegexPattern);
+}</span>
+
+unsigned int CommandBuffer::GetOrderFromCmdBufFilename(
+<span style = "background-color:#dfd">    const std::string&amp; filename) const {
+  std::smatch match;
+  std::regex_match(filename, match, cmdBufFileRegexPattern);</span>
+
+<span style = "background-color:#dfd">  unsigned int order = static_cast&lt;unsigned int&gt;(std::stoul(match[1].str()));
+  return order;
+}</span>
+
+CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
+<span style = "background-color:#dfd">    const std::string&amp; filename) const {
+  std::smatch match;
+  std::regex_match(filename, match, cmdBufFileRegexPattern);</span>
+
+<span style = "background-color:#dfd">  std::string cmdTypeStr = match[2].str();</span>
+  CMD_TYPE cmdType;
+
+<span style = "background-color:#dfd">  if (cmdTypeStr == "W")
+    cmdType = eWriteCmd;
+  else if (cmdTypeStr == "E")
+    cmdType = eEraseCmd;</span>
+  else
+<span style = "background-color:#fdd">    throw std::runtime_error("Invalid CMD_TYPE: " + cmdTypeStr);</span>
+
+<span style = "background-color:#dfd">  unsigned int startLba = static_cast&lt;unsigned int&gt;(std::stoul(match[3].str()));
+  unsigned int endLba = static_cast&lt;unsigned int&gt;(std::stoul(match[4].str()));
+  unsigned int data = static_cast&lt;unsigned int&gt;(std::stoul(match[5].str()));</span>
+
+<span style = "background-color:#dfd">  return CommandBufferEntry(cmdType, startLba, endLba, data);
+}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

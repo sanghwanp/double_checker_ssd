@@ -33,7 +33,7 @@ bool WriteCommand::CheckPrecondition() {
 }
 
 void WriteCommand::SaveCommandBuffer() {
-  if (bufferHandler->CheckBufferFull()) {
+  if (bufferHandler->IsBufferFull()) {
     auto flushCmd = factory->CreateFlushCommand();
     flushCmd->Execute((IParam*)writeParam);
   }

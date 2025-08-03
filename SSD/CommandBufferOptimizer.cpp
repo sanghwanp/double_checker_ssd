@@ -104,7 +104,7 @@ std::vector<CommandBufferEntry> CommandBufferOptimizer::Optimize(
       }
     }
 
-    // 1번째 후처리: 구간 값 줄이기
+    // 1번째 후처리: 구간 줄이기
     int mnTotalIntvLength = INF;
     int totalIntvLength = 0;
     for (int i = 0; i < result.size(); i++) {

@@ -1,20 +1,12 @@
 #include "SSD.h"
 
-#include "EraseCommand.h"
-#include "FlushCommand.h"
-#include "ReadCommand.h"
-#include "WriteCommand.h"
+SSD::SSD(FileDriver* fileDriver, CommandBufferHandler* bufferHandler,
+         CommandFactory* commandFactory)
+    : fileDriver(fileDriver),
+      bufferHandler(bufferHandler),
+      commandFactory(commandFactory) {}
 
-SSD::SSD()
-    : fileDriver(FileDriver::GetInstance()),
-      bufferHandler(CommandBufferHandler::GetInstance()),
-      commandFactory(CommandFactory::GetInstance()) {
-    bufferHandler->InitCommandBufferEntry();
-}
-
-void SSD::Run(vector<string> args) {
-  IParam *cmd;
-  cmd = parser.Parse(args);
+void SSD::Run(IParam* cmd) {
   if (!ExecuteCommand(cmd)) fileDriver->StoreError();
 }
 

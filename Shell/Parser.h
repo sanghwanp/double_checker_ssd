@@ -107,9 +107,9 @@ class Parser {
           return IsNumber(tokens[1]) && IsNumber(tokens[2]);
         }}},
                {"doublechecker",
-         {1, TestShellCMD::eDoubleCmd,
+         {1, TestShellCMD::eDoubleChecker,
           [](const std::vector<std::string>& tokens) {
-            return new IParam(TestShellCMD::eDoubleCmd);
+            return new IParam(TestShellCMD::eDoubleChecker);
           },
           [](const std::vector<std::string>& tokens) { return true; }}},
       {"script",

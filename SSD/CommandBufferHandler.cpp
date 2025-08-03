@@ -1,61 +1,50 @@
 #include "CommandBufferHandler.h"
+
 #include "Types.h"
 
 using std::vector;
 
-void CommandBufferHandler::InitCommandBufferEntry()
-{
-    vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-    commandBuffer.DeleteAllFilesInBufferDir();
-    commandBuffer.WriteCmdsToBufferFiles(savedCmds);
-}
-
 vector<CommandBufferEntry> CommandBufferHandler::AddWrite(unsigned int lba,
                                                           unsigned int data) {
   CommandBufferEntry newCmd(eWriteCmd, lba, lba,
-                                    static_cast<unsigned long long>(data));
+                            static_cast<unsigned long long>(data));
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.DeleteAllFilesInBufferDir();
+  commandBuffer.FlushBuffer();
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
-    commandBuffer.WriteCmdsToBufferFiles({ newCmd });
+    commandBuffer.WriteCmdsToBuffer({newCmd});
     return savedCmds;
-  } else {  // 일반적인 Case
-    savedCmds.push_back(newCmd);
-    vector<CommandBufferEntry> optimizedCmds =
-        commandBufferOptimizer.Optimize(savedCmds);
-    commandBuffer.WriteCmdsToBufferFiles(optimizedCmds);
-    return {};
   }
-}
 
-bool CommandBufferHandler::CheckBufferFull() {
-  vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  return savedCmds.size() >= CommandBufferConfig::MAX_BUFFER;
-}
-
-bool CommandBufferHandler::IsFullCmds(std::vector<CommandBufferEntry> &savedCmds) {
-  return savedCmds.size() >= CommandBufferConfig::MAX_BUFFER;
+  // 일반적인 Case
+  savedCmds.push_back(newCmd);
+  vector<CommandBufferEntry> optimizedCmds =
+      commandBufferOptimizer.Optimize(savedCmds);
+  commandBuffer.WriteCmdsToBuffer(optimizedCmds);
+  return {};
 }
 
 vector<CommandBufferEntry> CommandBufferHandler::AddErase(unsigned int lba,
                                                           int delta) {
+  validateEraseDelta(delta);
   const int startLba = GetStartLba(lba, delta);
   const int endLba = GetEndLba(lba, delta);
+  validateEraseLba(startLba, endLba);
   CommandBufferEntry newCmd(eEraseCmd, startLba, endLba, 0ULL);
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.DeleteAllFilesInBufferDir();
+  commandBuffer.FlushBuffer();
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
-    commandBuffer.WriteCmdsToBufferFiles({newCmd});
+    commandBuffer.WriteCmdsToBuffer({newCmd});
     return savedCmds;
-  } else {  // 일반적인 Case
-    savedCmds.push_back(newCmd);
-    vector<CommandBufferEntry> optimizedCmds =
-        commandBufferOptimizer.Optimize(savedCmds);
-    commandBuffer.WriteCmdsToBufferFiles(optimizedCmds);
-    return {};
   }
+
+  // 일반적인 Case
+  savedCmds.push_back(newCmd);
+  vector<CommandBufferEntry> optimizedCmds =
+      commandBufferOptimizer.Optimize(savedCmds);
+  commandBuffer.WriteCmdsToBuffer(optimizedCmds);
+  return {};
 }
 
 bool CommandBufferHandler::TryFastRead(unsigned int lba,
@@ -74,19 +63,60 @@ bool CommandBufferHandler::TryFastRead(unsigned int lba,
 
 std::vector<CommandBufferEntry> CommandBufferHandler::Flush() {
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.DeleteAllFilesInBufferDir();
+  commandBuffer.FlushBuffer();
   return savedCmds;
 }
 
+bool CommandBufferHandler::IsBufferFull() {
+  vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
+  return IsFullCmds(savedCmds);
+}
+
+bool CommandBufferHandler::IsFullCmds(
+    std::vector<CommandBufferEntry> &savedCmds) const {
+  return savedCmds.size() >= CommandBufferConfig::MAX_BUFFER;
+}
+
 int CommandBufferHandler::GetStartLba(int lba, int delta) const {
-  if (delta < 0)
+  if (delta < 0) {
     return lba + delta + 1;
-  else
-    return lba;
+  }
+
+  return lba;
 }
 int CommandBufferHandler::GetEndLba(int lba, int delta) const {
-  if (delta < 0)
+  if (delta < 0) {
     return lba;
-  else
-    return lba + delta - 1;
+  }
+
+  return lba + delta - 1;
+}
+
+void CommandBufferHandler::validateEraseDelta(int delta) {
+  if (delta == 0) {
+    throw std::invalid_argument(
+        "At AddErase(lba, delta), 'delta' must not be 0.");
+  }
+  if (abs(delta) > CommandBufferConfig::LBA_ERASE_RANGE_LIMIT) {
+    throw std::invalid_argument(
+        "Erase range must be less than or equal to " +
+        std::to_string(CommandBufferConfig::LBA_ERASE_RANGE_LIMIT));
+  }
+}
+
+void CommandBufferHandler::validateEraseLba(int startLba, int endLba) {
+  if (startLba < CommandBufferConfig::MIN_LBA ||
+      startLba > CommandBufferConfig::MAX_LBA) {
+    throw std::invalid_argument("invalid startLba: " +
+                                std::to_string(startLba));
+  }
+  if (endLba < CommandBufferConfig::MIN_LBA ||
+      endLba > CommandBufferConfig::MAX_LBA) {
+    throw std::invalid_argument("invalid endLba: " + std::to_string(endLba));
+  }
+  const int LBA_RANGE_SIZE = endLba - startLba + 1;
+  if (LBA_RANGE_SIZE > CommandBufferConfig::LBA_ERASE_RANGE_LIMIT) {
+    throw std::invalid_argument("invalid lbaRangeSize: " +
+                                std::to_string(LBA_RANGE_SIZE));
+  }
 }

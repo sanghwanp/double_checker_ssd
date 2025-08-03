@@ -105,7 +105,7 @@
     <ClCompile Include="CommandFactoryRegisterer.h">
       <Filter>소스 파일\CommandFactory</Filter>
     </ClCompile>
-    <ClCompile Include="CmdDouble.cpp">
+    <ClCompile Include="SnowEffect.cpp">
       <Filter>소스 파일\Command</Filter>
     </ClCompile>
   </ItemGroup>
@@ -194,7 +194,7 @@
     <ClInclude Include="FactoryWriteCommand.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="CmdDouble.h">
+    <ClInclude Include="SnowEffect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

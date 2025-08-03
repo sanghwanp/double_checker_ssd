@@ -2,7 +2,7 @@
 #include "FactoryWriteCommand.h"
 #include "CommandFactoryRegisterer.h"
 #include "IParam.h"
-#include "CmdDouble.h"
+#include "SnowEffect.h"
 
 IShellCommand* FactoryWriteCommand::CreateCommand(IParam& param, SSDInterface* ssd) {
     return new CommandWrite(ssd);
@@ -11,9 +11,9 @@ IShellCommand* FactoryWriteCommand::CreateCommand(IParam& param, SSDInterface* s
 static CommandFactoryRegisterer register_Write{ eWriteCmd, new FactoryWriteCommand() };
 
 
-IShellCommand* FactoryDoubleCommand::CreateCommand(IParam& param, SSDInterface* ssd) {
-    return new CommandDouble();
+IShellCommand* FactorySnowflake::CreateCommand(IParam& param, SSDInterface* ssd) {
+    return new SnowEffect();
 }
 
-static CommandFactoryRegisterer register_DoubleChecker{ eDoubleCmd, new FactoryDoubleCommand() };
+static CommandFactoryRegisterer register_DoubleChecker{ eDoubleChecker, new FactorySnowflake() };
 

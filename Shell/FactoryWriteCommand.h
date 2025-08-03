@@ -7,8 +7,8 @@ public:
     IShellCommand* CreateCommand(IParam& param, SSDInterface* ssd) override;
 };
 
-class FactoryDoubleCommand : public ICommandFactory {
+class FactorySnowflake : public ICommandFactory {
 public:
-    FactoryDoubleCommand() = default;
+    FactorySnowflake() = default;
     IShellCommand* CreateCommand(IParam& param, SSDInterface* ssd) override;
 };

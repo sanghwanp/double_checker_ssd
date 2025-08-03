@@ -15,12 +15,7 @@ std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
     std::string filename = cmdBufFile.filename().string();
     if (!MatchCmdBufFilename(filename)) continue;
     int order = GetOrderFromCmdBufFilename(filename);
-    CommandBufferEntry& objCmdEntry = MakeCmdBufEntry(filename);
-
-    // empty file handling
-    if (objCmdEntry.cmdType == eInvalidCmd) continue;
-
-    result_map[order] = objCmdEntry;
+    result_map[order] = MakeCmdBufEntry(filename);
   }
 
   std::vector<CommandBufferEntry> result;
@@ -30,45 +25,27 @@ std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
   return result;
 }
 
-void CommandBuffer::WriteCmdsToBufferFiles(
+void CommandBuffer::WriteCmdsToBuffer(
     const std::vector<CommandBufferEntry>& cmds) {
-  DeleteAllFilesInBufferDir();
-
-  // make 5 buffer files
-  for (int i = 0; i < CommandBufferConfig::MAX_BUFFER; i++) {
-      if (cmds.size() > i)
-      {
-          const CommandBufferEntry& cmd = cmds[i];
-          SaveCmdBufferfile(i, cmd);
-      }
-      else
-      {
-          CommandBufferEntry emptyCmd(eInvalidCmd);
-          // make empty files
-          SaveCmdBufferfile(i, emptyCmd);
-      }
-  }
-}
-
-void CommandBuffer::SaveCmdBufferfile(int fileNumber, const CommandBufferEntry& cmd)
-{
-    std::string filepath;
-    std::string filename;
-    std::string order;
-    order = std::to_string(fileNumber + 1);
-    filename = order + "_" + cmd.ToString();
+  FlushBuffer();
+  std::string filename, filepath, order;
+  for (int i = 0; i < cmds.size(); i++) {
+    const CommandBufferEntry& cmd = cmds[i];
+    order = std::to_string(i);
+    filename = order + "_" + cmd.ToString() +
+               CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
     filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
     ofs.open(filepath);
     ofs.close();
+  }
 }
 
-void CommandBuffer::DeleteAllFilesInBufferDir() {
+void CommandBuffer::FlushBuffer() {
   std::string_view cmdBufDirPath = GetAndMakeCmdBufferDirPath();
   auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(cmdBufDirPath));
   for (auto cmdBufFile : cmdBufFiles) {
-    // 모든 파일 그냥 다 지워
-    //std::string filename = cmdBufFile.filename().u8string();
-    //if (!MatchCmdBufFilename(filename)) continue;
+    std::string filename = cmdBufFile.filename().u8string();
+    if (!MatchCmdBufFilename(filename)) continue;
     std::filesystem::remove(cmdBufFile);
   }
 }
@@ -86,7 +63,10 @@ std::vector<std::filesystem::path> CommandBuffer::GetCmdbufFiles(
   for (const auto& entry : std::filesystem::directory_iterator(dirPath)) {
     // std::cout << "plzrun: " << std::filesystem::absolute(entry.path()) <<
     // '\n'; std::cout << entry.path().extension().string() << "\n";
+    if (entry.path().extension().string() ==
+        CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION) {
       cmdbufFiles.push_back(entry.path());
+    }
   }
 
   return cmdbufFiles;
@@ -108,10 +88,9 @@ unsigned int CommandBuffer::GetOrderFromCmdBufFilename(
 CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
     const std::string& filename) const {
   std::smatch match;
+  std::regex_match(filename, match, cmdBufFileRegexPattern);
 
-  std::regex_match(filename, match, cmdRegexPattern);
-
-  std::string cmdTypeStr = match[1].str();
+  std::string cmdTypeStr = match[2].str();
   CMD_TYPE cmdType;
 
   if (cmdTypeStr == "W")
@@ -119,15 +98,11 @@ CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
   else if (cmdTypeStr == "E")
     cmdType = eEraseCmd;
   else
-  {
-      cmdType = eInvalidCmd;
-      return CommandBufferEntry(cmdType, 0, 0, 0);
-  }
+    throw std::runtime_error("Invalid CMD_TYPE: " + cmdTypeStr);
 
-  unsigned int startLba = static_cast<unsigned int>(std::stoul(match[2].str()));
-  unsigned int endLba = static_cast<unsigned int>(std::stoul(match[3].str()));
-  unsigned int data = 0;
-  if (cmdType == eWriteCmd)  data = static_cast<unsigned int>(std::stoul(match[4].str()));
+  unsigned int startLba = static_cast<unsigned int>(std::stoul(match[3].str()));
+  unsigned int endLba = static_cast<unsigned int>(std::stoul(match[4].str()));
+  unsigned int data = static_cast<unsigned int>(std::stoul(match[5].str()));
 
   return CommandBufferEntry(cmdType, startLba, endLba, data);
 }

@@ -11,14 +11,12 @@ class CommandBufferEntry {
   unsigned long long data;
 
   CommandBufferEntry();
-  CommandBufferEntry(CMD_TYPE cmdType, unsigned int startLba = 0,
-                     unsigned int endLba = 0, unsigned long long data = 0);
+  CommandBufferEntry(CMD_TYPE cmdType, unsigned int startLba,
+                     unsigned int endLba, unsigned long long data);
 
   int Length() const;
 
   std::string ToString() const;
-  std::string ToString(CMD_TYPE cmdType) const;
-  void Print() const;
 
   CommandBufferEntry(unsigned int startLba, unsigned int endLba,
                      unsigned long long data);
