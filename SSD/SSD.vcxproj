@@ -194,6 +194,7 @@
     <ClCompile>
       <PreprocessorDefinitions>MAIN_SELECT=2;%(PreprocessorDefinitions)；</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -230,6 +231,7 @@
     <ClCompile>
       <PreprocessorDefinitions>；</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <Optimization>Disabled</Optimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

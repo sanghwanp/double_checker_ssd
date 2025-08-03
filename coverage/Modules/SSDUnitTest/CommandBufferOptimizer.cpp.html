@@ -38,15 +38,15 @@ std::vector&lt;CommandBufferEntry&gt; CommandBufferOptimizer::Optimize(
       cmds[i].data |= orderMask;
       orderMask = (orderMask &lt;&lt; 1) | orderMask;</span>
     }
-  }
-<span style = "background-color:#dfd">  std::unordered_map&lt;uint, ull&gt; lba_data_udic;</span>
+<span style = "background-color:#dfd">  }
+  std::unordered_map&lt;uint, ull&gt; lba_data_udic;</span>
 
   // 1. ìµì¢ ë©ëª¨ë¦¬ ìí ë§ë¤ê¸°
 <span style = "background-color:#dfd">  for (int i = 0; i &lt; cmds.size(); i++) {
     for (int lba = cmds[i].startLba; lba &lt;= cmds[i].endLba; lba++) {
-      lba_data_udic[lba] = cmds[i].data;</span>
+      lba_data_udic[lba] = cmds[i].data;
     }
-  }
+  }</span>
 
   // 2. ullë³ uint ì¶ì¶ (ìµì¢ ìí ê¸°ì¤)
 <span style = "background-color:#dfd">  std::unordered_map&lt;ull, std::vector&lt;bool&gt;&gt; data_lbaChk_udic;
@@ -58,15 +58,15 @@ std::vector&lt;CommandBufferEntry&gt; CommandBufferOptimizer::Optimize(
       data_lbaChk_udic[data].resize(CommandBufferConfig::MAX_LBA_CNT, false);</span>
     }
 
-<span style = "background-color:#dfd">    data_lbaChk_udic[data][lba] = true;</span>
-  }
+<span style = "background-color:#dfd">    data_lbaChk_udic[data][lba] = true;
+  }</span>
 
   // 3. CommandBufferì ì¡´ì¬íë dataë¤ì ì¤ë³µ ì ê±°íì¬ listë¡ ë§ë¦.
 <span style = "background-color:#dfd">  std::vector&lt;ull&gt; data_list;
   for (int i = 0; i &lt; cmds.size(); i++) {
-    data_list.push_back(cmds[i].data);</span>
+    data_list.push_back(cmds[i].data);
   }
-<span style = "background-color:#dfd">  std::sort(data_list.begin(), data_list.end());
+  std::sort(data_list.begin(), data_list.end());
   data_list.erase(std::unique(data_list.begin(), data_list.end()),</span>
                   data_list.end());
 
@@ -91,13 +91,13 @@ std::vector&lt;CommandBufferEntry&gt; CommandBufferOptimizer::Optimize(
           mnLba = std::min(mnLba, lba);
           mxLba = std::max(mxLba, lba);</span>
         }
-      }
+<span style = "background-color:#dfd">      }</span>
 
 <span style = "background-color:#dfd">      uint startLba = CommandBufferConfig::NOT_AVAILABLE, endLba = mnLba;
       for (uint lba = mnLba; lba &lt;= mxLba; lba++) {
-        if (lbaChk[lba]) {</span>
+        if (lbaChk[lba]) {
           if (startLba == CommandBufferConfig::NOT_AVAILABLE) startLba = lba;
-<span style = "background-color:#dfd">          endLba = lba;
+          endLba = lba;
           covered[lba] = data;
         } else {</span>
           // ë¤ë¥¸ ê°(val)ì´ í´ë¹ lbaë¥¼ coveríì ì´ ìë¤ë©´,
@@ -109,15 +109,15 @@ std::vector&lt;CommandBufferEntry&gt; CommandBufferOptimizer::Optimize(
             startLba = CommandBufferConfig::NOT_AVAILABLE;  // startì§ì  ì´ê¸°í</span>
           }
         }
-      }
-<span style = "background-color:#dfd">      if (startLba != CommandBufferConfig::NOT_AVAILABLE) {
+<span style = "background-color:#dfd">      }
+      if (startLba != CommandBufferConfig::NOT_AVAILABLE) {
         result.push_back(CommandBufferEntry(startLba, endLba, data));</span>
       }
-    }
+<span style = "background-color:#dfd">    }</span>
 
-    // 1ë²ì§¸ íì²ë¦¬: êµ¬ê° ê° ì¤ì´ê¸°
-    int mnTotalIntvLength = INF;
-<span style = "background-color:#dfd">    int totalIntvLength = 0;
+    // 1ë²ì§¸ íì²ë¦¬: êµ¬ê° ì¤ì´ê¸°
+<span style = "background-color:#dfd">    int mnTotalIntvLength = INF;
+    int totalIntvLength = 0;
     for (int i = 0; i &lt; result.size(); i++) {
       int sLba = result[i].startLba;
       for (int j = sLba; j &lt;= result[i].endLba; j++) {
@@ -125,26 +125,26 @@ std::vector&lt;CommandBufferEntry&gt; CommandBufferOptimizer::Optimize(
             lba_data_udic.at(j) != result[i].data)
 <span style = "background-color:#fdd">          sLba++;</span>
         else
-          break;
-      }
-      int eLba = result[i].endLba;
-<span style = "background-color:#dfd">      for (int j = eLba; j &gt;= sLba; j--) {
+<span style = "background-color:#dfd">          break;</span>
+<span style = "background-color:#fdd">      }</span>
+<span style = "background-color:#dfd">      int eLba = result[i].endLba;
+      for (int j = eLba; j &gt;= sLba; j--) {
         if (lba_data_udic.count(j) == 0 ||</span>
             lba_data_udic.at(j) != result[i].data)
 <span style = "background-color:#dfd">          eLba--;</span>
         else
-          break;
+<span style = "background-color:#dfd">          break;
       }
-<span style = "background-color:#dfd">      result[i].startLba = sLba;
+      result[i].startLba = sLba;
       result[i].endLba = eLba;
-      totalIntvLength += result[i].Length();</span>
-    }
+      totalIntvLength += result[i].Length();
+    }</span>
 
     // 2ë²ì§¸ íì²ë¦¬: ì²ìì ë¶ìë Mask bitë¥¼ dataìì ë¼ì´ì¤ë¤.
 <span style = "background-color:#dfd">    for (int i = 0; i &lt; result.size(); i++) {
       result[i].data &amp;= REAL_DATA_MASK;
-      if (result[i].data == 0) result[i].cmdType = eEraseCmd;</span>
-    }
+      if (result[i].data == 0) result[i].cmdType = eEraseCmd;
+    }</span>
 
     // 3ë²ì§¸ íì²ë¦¬: ERASEê° 10ê° ëì´ê°ë©´ ëì´ì¤ë¤.
 <span style = "background-color:#dfd">    std::vector&lt;CommandBufferEntry&gt; newResult;
@@ -156,10 +156,10 @@ std::vector&lt;CommandBufferEntry&gt; CommandBufferOptimizer::Optimize(
         CommandBufferEntry newInterval(result[i].cmdType, result[i].startLba,</span>
                                        ne, result[i].data);
 <span style = "background-color:#dfd">        newResult.push_back(newInterval);
-        result[i].startLba = ne + 1;</span>
-      }
+        result[i].startLba = ne + 1;
+      }</span>
       //}
-    }
+<span style = "background-color:#dfd">    }</span>
 
 <span style = "background-color:#dfd">    if (mnResultCnt &gt; newResult.size()) {
       mnResultCnt = newResult.size();

@@ -26,14 +26,14 @@
     std::string filename = cmdBufFile.filename().string();
     if (!MatchCmdBufFilename(filename)) continue;
     int order = GetOrderFromCmdBufFilename(filename);
-    result_map[order] = MakeCmdBufEntry(filename);</span>
-<span style = "background-color:#fdd">  }</span>
+    result_map[order] = MakeCmdBufEntry(filename);
+  }</span>
 
 <span style = "background-color:#dfd">  std::vector&lt;CommandBufferEntry&gt; result;
   for (const auto&amp; it : result_map) {
-    result.emplace_back(it.second);</span>
+    result.emplace_back(it.second);
   }
-<span style = "background-color:#dfd">  return result;
+  return result;
 }</span>
 
 void CommandBuffer::WriteCmdsToBuffer(
@@ -47,9 +47,9 @@ void CommandBuffer::WriteCmdsToBuffer(
                CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
 <span style = "background-color:#dfd">    filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
     ofs.open(filepath);
-    ofs.close();</span>
+    ofs.close();
   }
-<span style = "background-color:#dfd">}</span>
+}</span>
 
 <span style = "background-color:#dfd">void CommandBuffer::FlushBuffer() {
   std::string_view cmdBufDirPath = GetAndMakeCmdBufferDirPath();
@@ -76,14 +76,14 @@ std::vector&lt;std::filesystem::path&gt; CommandBuffer::GetCmdbufFiles(
     // '\n'; std::cout &lt;&lt; entry.path().extension().string() &lt;&lt; "\n";
 <span style = "background-color:#dfd">    if (entry.path().extension().string() ==</span>
         CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION) {
-<span style = "background-color:#dfd">      cmdbufFiles.push_back(entry.path());</span>
+<span style = "background-color:#dfd">      cmdbufFiles.push_back(entry.path());
     }
-<span style = "background-color:#dfd">  }</span>
+  }</span>
 
 <span style = "background-color:#dfd">  return cmdbufFiles;
 }</span>
 
-<span style = "background-color:#fdd">bool CommandBuffer::MatchCmdBufFilename(const std::string&amp; filename) const {
+<span style = "background-color:#dfd">bool CommandBuffer::MatchCmdBufFilename(const std::string&amp; filename) const {
   return std::regex_match(filename, cmdBufFileRegexPattern);
 }</span>
 

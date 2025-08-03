@@ -17,8 +17,6 @@ class CommandBufferEntry {
   int Length() const;
 
   std::string ToString() const;
-  std::string ToString(CMD_TYPE cmdType) const;
-  void Print() const;
 
   CommandBufferEntry(unsigned int startLba, unsigned int endLba,
                      unsigned long long data);

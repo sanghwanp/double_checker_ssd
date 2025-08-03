@@ -10,6 +10,7 @@
         <h4></h4>
         <pre class="prettyprint lang-cpp linenums">
 #include "CommandBufferHandler.h"
+
 #include "Types.h"
 
 using std::vector;
@@ -17,63 +18,58 @@ using std::vector;
 vector&lt;CommandBufferEntry&gt; CommandBufferHandler::AddWrite(unsigned int lba,
 <span style = "background-color:#dfd">                                                          unsigned int data) {
   CommandBufferEntry newCmd(eWriteCmd, lba, lba,</span>
-                                    static_cast&lt;unsigned long long&gt;(data));
+                            static_cast&lt;unsigned long long&gt;(data));
 
 <span style = "background-color:#dfd">  vector&lt;CommandBufferEntry&gt; savedCmds = commandBuffer.LoadCmdsFromBuffer();
   commandBuffer.FlushBuffer();
   if (IsFullCmds(savedCmds)) {  // Bufferê° ê½ ì°¬ ê²½ì°
-    commandBuffer.WriteCmdsToBuffer({ newCmd });
-    return savedCmds;
-  } else {  // ì¼ë°ì ì¸ Case
-    savedCmds.push_back(newCmd);
-    vector&lt;CommandBufferEntry&gt; optimizedCmds =</span>
-        commandBufferOptimizer.Optimize(savedCmds);
-<span style = "background-color:#dfd">    commandBuffer.WriteCmdsToBuffer(optimizedCmds);
-    return {};</span>
+    commandBuffer.WriteCmdsToBuffer({newCmd});
+    return savedCmds;</span>
   }
-<span style = "background-color:#dfd">}</span>
 
-<span style = "background-color:#dfd">bool CommandBufferHandler::CheckBufferFull() {
-  vector&lt;CommandBufferEntry&gt; savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  return savedCmds.size() &gt;= CommandBufferConfig::MAX_BUFFER;
-}</span>
-
-<span style = "background-color:#fdd">bool CommandBufferHandler::IsFullCmds(std::vector&lt;CommandBufferEntry&gt; &amp;savedCmds) {
-  return savedCmds.size() &gt;= CommandBufferConfig::MAX_BUFFER;
+  // ì¼ë°ì ì¸ Case
+<span style = "background-color:#dfd">  savedCmds.push_back(newCmd);
+  vector&lt;CommandBufferEntry&gt; optimizedCmds =</span>
+      commandBufferOptimizer.Optimize(savedCmds);
+<span style = "background-color:#dfd">  commandBuffer.WriteCmdsToBuffer(optimizedCmds);
+  return {};
 }</span>
 
 vector&lt;CommandBufferEntry&gt; CommandBufferHandler::AddErase(unsigned int lba,
 <span style = "background-color:#dfd">                                                          int delta) {
+  validateEraseDelta(delta);
   const int startLba = GetStartLba(lba, delta);
   const int endLba = GetEndLba(lba, delta);
+  validateEraseLba(startLba, endLba);
   CommandBufferEntry newCmd(eEraseCmd, startLba, endLba, 0ULL);</span>
 
 <span style = "background-color:#dfd">  vector&lt;CommandBufferEntry&gt; savedCmds = commandBuffer.LoadCmdsFromBuffer();
   commandBuffer.FlushBuffer();
-  if (IsFullCmds(savedCmds)) {  // Bufferê° ê½ ì°¬ ê²½ì°</span>
-<span style = "background-color:#fdd">    commandBuffer.WriteCmdsToBuffer({newCmd});
+  if (IsFullCmds(savedCmds)) {  // Bufferê° ê½ ì°¬ ê²½ì°
+    commandBuffer.WriteCmdsToBuffer({newCmd});
     return savedCmds;</span>
-<span style = "background-color:#dfd">  } else {  // ì¼ë°ì ì¸ Case
-    savedCmds.push_back(newCmd);
-    vector&lt;CommandBufferEntry&gt; optimizedCmds =</span>
-        commandBufferOptimizer.Optimize(savedCmds);
-<span style = "background-color:#dfd">    commandBuffer.WriteCmdsToBuffer(optimizedCmds);
-    return {};</span>
   }
-<span style = "background-color:#dfd">}</span>
+
+  // ì¼ë°ì ì¸ Case
+<span style = "background-color:#dfd">  savedCmds.push_back(newCmd);
+  vector&lt;CommandBufferEntry&gt; optimizedCmds =</span>
+      commandBufferOptimizer.Optimize(savedCmds);
+<span style = "background-color:#dfd">  commandBuffer.WriteCmdsToBuffer(optimizedCmds);
+  return {};
+}</span>
 
 bool CommandBufferHandler::TryFastRead(unsigned int lba,
 <span style = "background-color:#dfd">                                       unsigned int &amp;out_value) const {
   vector&lt;CommandBufferEntry&gt; savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  for (int i = savedCmds.size() - 1; i &gt;= 0; i--) {</span>
+  for (int i = savedCmds.size() - 1; i &gt;= 0; i--) {
     const CommandBufferEntry &amp;cmdEntry = savedCmds[i];
-<span style = "background-color:#dfd">    if (cmdEntry.startLba &lt;= lba &amp;&amp; lba &lt;= cmdEntry.endLba) {
-      out_value = static_cast&lt;unsigned int&gt;(cmdEntry.data);</span>
-      return true;
+    if (cmdEntry.startLba &lt;= lba &amp;&amp; lba &lt;= cmdEntry.endLba) {
+      out_value = static_cast&lt;unsigned int&gt;(cmdEntry.data);
+      return true;</span>
     }
-  }
+<span style = "background-color:#dfd">  }
   out_value = static_cast&lt;unsigned int&gt;(CommandBufferConfig::NOT_AVAILABLE);
-<span style = "background-color:#dfd">  return false;
+  return false;
 }</span>
 
 <span style = "background-color:#dfd">std::vector&lt;CommandBufferEntry&gt; CommandBufferHandler::Flush() {
@@ -82,18 +78,59 @@ bool CommandBufferHandler::TryFastRead(unsigned int lba,
   return savedCmds;
 }</span>
 
-<span style = "background-color:#fdd">int CommandBufferHandler::GetStartLba(int lba, int delta) const {
-  if (delta &lt; 0)
+<span style = "background-color:#dfd">bool CommandBufferHandler::IsBufferFull() {
+  vector&lt;CommandBufferEntry&gt; savedCmds = commandBuffer.LoadCmdsFromBuffer();
+  return IsFullCmds(savedCmds);
+}</span>
+
+bool CommandBufferHandler::IsFullCmds(
+<span style = "background-color:#dfd">    std::vector&lt;CommandBufferEntry&gt; &amp;savedCmds) const {
+  return savedCmds.size() &gt;= CommandBufferConfig::MAX_BUFFER;
+}</span>
+
+<span style = "background-color:#dfd">int CommandBufferHandler::GetStartLba(int lba, int delta) const {
+  if (delta &lt; 0) {
     return lba + delta + 1;</span>
-  else
-<span style = "background-color:#fdd">    return lba;
+  }
+
+<span style = "background-color:#dfd">  return lba;
 }
 int CommandBufferHandler::GetEndLba(int lba, int delta) const {
-  if (delta &lt; 0)
+  if (delta &lt; 0) {
     return lba;</span>
-  else
-<span style = "background-color:#fdd">    return lba + delta - 1;
-}</span></pre>
+  }
+
+<span style = "background-color:#dfd">  return lba + delta - 1;
+}</span>
+
+<span style = "background-color:#dfd">void CommandBufferHandler::validateEraseDelta(int delta) {
+  if (delta == 0) {
+    throw std::invalid_argument(</span>
+        "At AddErase(lba, delta), 'delta' must not be 0.");
+  }
+<span style = "background-color:#dfd">  if (abs(delta) &gt; CommandBufferConfig::LBA_ERASE_RANGE_LIMIT) {
+    throw std::invalid_argument(</span>
+        "Erase range must be less than or equal to " +
+        std::to_string(CommandBufferConfig::LBA_ERASE_RANGE_LIMIT));
+  }
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">void CommandBufferHandler::validateEraseLba(int startLba, int endLba) {
+  if (startLba &lt; CommandBufferConfig::MIN_LBA ||</span>
+      startLba &gt; CommandBufferConfig::MAX_LBA) {
+<span style = "background-color:#dfd">    throw std::invalid_argument("invalid startLba: " +</span>
+                                std::to_string(startLba));
+  }
+<span style = "background-color:#dfd">  if (endLba &lt; CommandBufferConfig::MIN_LBA ||</span>
+      endLba &gt; CommandBufferConfig::MAX_LBA) {
+<span style = "background-color:#dfd">    throw std::invalid_argument("invalid endLba: " + std::to_string(endLba));</span>
+  }
+<span style = "background-color:#dfd">  const int LBA_RANGE_SIZE = endLba - startLba + 1;
+  if (LBA_RANGE_SIZE &gt; CommandBufferConfig::LBA_ERASE_RANGE_LIMIT) {</span>
+<span style = "background-color:#fdd">    throw std::invalid_argument("invalid lbaRangeSize: " +</span>
+                                std::to_string(LBA_RANGE_SIZE));
+  }
+<span style = "background-color:#dfd">}</span></pre>
         <hr />
         <table width="100%">
             <thead>

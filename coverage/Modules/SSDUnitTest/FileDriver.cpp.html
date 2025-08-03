@@ -13,12 +13,12 @@
 
 <span style = "background-color:#dfd">FileDriver::FileDriver() { Init(); }</span>
 
-<span style = "background-color:#fdd">void FileDriver::Init() {
+<span style = "background-color:#dfd">void FileDriver::Init() {
   if (CheckFileExist(STORAGE_FILE_NAME))
     LoadData();</span>
   else
-<span style = "background-color:#fdd">    StoreData();
-}
+<span style = "background-color:#fdd">    StoreData();</span>
+<span style = "background-color:#dfd">}
 bool FileDriver::CheckFileExist(const char* filename) {
   std::ifstream ifs(filename);
   return ifs.is_open();
@@ -32,8 +32,8 @@ bool FileDriver::CheckFileExist(const char* filename) {
 
 <span style = "background-color:#dfd">  while (std::getline(ifs, line) &amp;&amp; idx &lt; MAX_STORAGE_IDX) {
     storageCache[idx] = std::stoul(line, nullptr, 16);
-    ++idx;</span>
-  }
+    ++idx;
+  }</span>
 
 <span style = "background-color:#dfd">  ifs.close();
 }</span>
@@ -44,7 +44,7 @@ bool FileDriver::CheckFileExist(const char* filename) {
 <span style = "background-color:#dfd">  for (size_t i = 0; i &lt; MAX_STORAGE_IDX; ++i) {
     ofs &lt;&lt; "0x" &lt;&lt; std::hex &lt;&lt; std::uppercase &lt;&lt; std::setw(8)</span>
         &lt;&lt; std::setfill('0') &lt;&lt; storageCache[i] &lt;&lt; "\n";
-  }
+<span style = "background-color:#dfd">  }</span>
 
 <span style = "background-color:#dfd">  ofs.close();
 }</span>

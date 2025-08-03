@@ -14,10 +14,10 @@
 WriteCommand::WriteCommand(FileDriver* fileDriver,
                            CommandBufferHandler* bufferHandler,
                            CommandFactory* factory)
-<span style = "background-color:#dfd">    : fileDriver(fileDriver),</span>
+<span style = "background-color:#dfd">    : fileDriver(fileDriver),
       bufferHandler(bufferHandler),
       factory(factory),
-<span style = "background-color:#dfd">      writeParam(nullptr) {}</span>
+      writeParam(nullptr) {}</span>
 
 <span style = "background-color:#dfd">bool WriteCommand::Execute(IParam* param) {
   writeParam = dynamic_cast&lt;WriteParam*&gt;(param);</span>
@@ -28,13 +28,13 @@ WriteCommand::WriteCommand(FileDriver* fileDriver,
   return true;
 }</span>
 
-<span style = "background-color:#fdd">void WriteCommand::Write() {</span>
+<span style = "background-color:#dfd">void WriteCommand::Write() {</span>
 #if (USING_COMMAND_BUFFER == 1)
-<span style = "background-color:#fdd">  SaveCommandBuffer();</span>
+<span style = "background-color:#dfd">  SaveCommandBuffer();</span>
 #else
   SaveDataBuffer();
 #endif
-<span style = "background-color:#fdd">}</span>
+<span style = "background-color:#dfd">}</span>
 
 <span style = "background-color:#dfd">bool WriteCommand::CheckPrecondition() {
   if (!fileDriver || !bufferHandler || !factory) return false;
@@ -43,13 +43,13 @@ WriteCommand::WriteCommand(FileDriver* fileDriver,
   return true;
 }</span>
 
-<span style = "background-color:#fdd">void WriteCommand::SaveCommandBuffer() {
-  if (bufferHandler-&gt;CheckBufferFull()) {
+<span style = "background-color:#dfd">void WriteCommand::SaveCommandBuffer() {
+  if (bufferHandler-&gt;IsBufferFull()) {
     auto flushCmd = factory-&gt;CreateFlushCommand();
     flushCmd-&gt;Execute((IParam*)writeParam);
   }</span>
 
-<span style = "background-color:#fdd">  bufferHandler-&gt;AddWrite(writeParam-&gt;lba.val, writeParam-&gt;data.val);
+<span style = "background-color:#dfd">  bufferHandler-&gt;AddWrite(writeParam-&gt;lba.val, writeParam-&gt;data.val);
 }</span>
 
 <span style = "background-color:#fdd">void WriteCommand::SaveDataBuffer() {

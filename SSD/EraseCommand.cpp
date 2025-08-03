@@ -37,7 +37,7 @@ bool EraseCommand::CheckPrecondition() {
   return true;
 }
 void EraseCommand::SaveCommandBuffer() {
-  if (bufferHandler->CheckBufferFull()) {
+  if (bufferHandler->IsBufferFull()) {
     std::unique_ptr<ICommand> flushCmd = factory->CreateFlushCommand();
     flushCmd->Execute((IParam*)eraseParam);
   }

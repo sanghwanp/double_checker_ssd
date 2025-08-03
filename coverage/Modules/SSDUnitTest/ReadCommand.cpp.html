@@ -15,10 +15,10 @@
 ReadCommand::ReadCommand(FileDriver* fileDriver,
                          CommandBufferHandler* bufferHandler,
                          CommandFactory* factory)
-<span style = "background-color:#dfd">    : fileDriver(fileDriver),</span>
+<span style = "background-color:#dfd">    : fileDriver(fileDriver),
       bufferHandler(bufferHandler),
       factory(factory),
-<span style = "background-color:#dfd">      readParam(nullptr) {}</span>
+      readParam(nullptr) {}</span>
 
 <span style = "background-color:#dfd">bool ReadCommand::Execute(IParam* param) {
   readParam = dynamic_cast&lt;ReadParam*&gt;(param);</span>
@@ -27,8 +27,8 @@ ReadCommand::ReadCommand(FileDriver* fileDriver,
 
 <span style = "background-color:#dfd">  Read();</span>
 
-  return true;
-<span style = "background-color:#dfd">}</span>
+<span style = "background-color:#dfd">  return true;
+}</span>
 
 <span style = "background-color:#dfd">bool ReadCommand::CheckPrecondition() {
   if (!fileDriver || !bufferHandler || !factory) return false;
@@ -37,19 +37,19 @@ ReadCommand::ReadCommand(FileDriver* fileDriver,
   return true;
 }</span>
 
-<span style = "background-color:#fdd">void ReadCommand::Read() {
+<span style = "background-color:#dfd">void ReadCommand::Read() {
   unsigned int data = 0;</span>
 
 #if (USING_COMMAND_BUFFER == 1)
-<span style = "background-color:#fdd">  ReadCommandBuffer(data);</span>
+<span style = "background-color:#dfd">  ReadCommandBuffer(data);</span>
 #else
   ReadDataBuffer(data);
 #endif
 
-<span style = "background-color:#fdd">  fileDriver-&gt;StoreOutput(data);
+<span style = "background-color:#dfd">  fileDriver-&gt;StoreOutput(data);
 }</span>
 
-<span style = "background-color:#fdd">void ReadCommand::ReadCommandBuffer(unsigned int&amp; data) {
+<span style = "background-color:#dfd">void ReadCommand::ReadCommandBuffer(unsigned int&amp; data) {
   if (!bufferHandler-&gt;TryFastRead(readParam-&gt;lba.val, data)) data = 0;
   fileDriver-&gt;SetBufferData(readParam-&gt;lba.val, data);
 }</span>

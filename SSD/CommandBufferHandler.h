@@ -12,18 +12,21 @@ class CommandBufferHandler {
     return &instance;
   }
 
-  bool CheckBufferFull();
   std::vector<CommandBufferEntry> AddWrite(unsigned int lba, unsigned int data);
   std::vector<CommandBufferEntry> AddErase(unsigned int lba, int delta);
   bool TryFastRead(unsigned int lba, unsigned int &out_value) const;
-
   std::vector<CommandBufferEntry> Flush();
+
+  bool IsBufferFull();
 
  private:
   CommandBuffer commandBuffer;
   CommandBufferOptimizer commandBufferOptimizer;
 
-  bool IsFullCmds(std::vector<CommandBufferEntry> &cmds);
+  bool IsFullCmds(std::vector<CommandBufferEntry> &cmds) const;
   int GetStartLba(int lba, int delta) const;
   int GetEndLba(int lba, int delta) const;
+
+  void validateEraseDelta(int delta);
+  void validateEraseLba(int startLba, int endLba);
 };

@@ -9,6 +9,7 @@
     <body onload="prettyPrint()">
         <h4></h4>
         <pre class="prettyprint lang-cpp linenums">
+#include &lt;iostream&gt;
 #include &lt;vector&gt;
 
 #include "../SSD/CommandBufferConfig.h"
@@ -17,131 +18,346 @@
 #include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/Types.h"
 #include "gmock/gmock.h"
+
+#define DEBUG_PRINT
+
 using namespace testing;
 using std::vector;
 
-struct OptimizeTestCase {
-  vector&lt;CommandBufferEntry&gt; input;
-  size_t expected_size;
+class CmdBufferHandlerTestFixture : public Test {
+ protected:
+  CommandBufferHandler handler;
+
+<span style = "background-color:#dfd">  void SetUp() override { handler.Flush(); }</span>
+
+<span style = "background-color:#dfd">  void ExpectTryFastReadFail(unsigned int lba) {</span>
+    unsigned int value;
+<span style = "background-color:#dfd">    bool isSucc = handler.TryFastRead(lba, value);
+    EXPECT_EQ(isSucc, false);
+    EXPECT_EQ(value, NOT_AVAILABLE);
+  }</span>
+
+<span style = "background-color:#dfd">  void ExpectTryFastReadSucc(unsigned int lba, unsigned int expectedValue) {</span>
+    unsigned int value;
+<span style = "background-color:#dfd">    bool isSucc = handler.TryFastRead(lba, value);
+    EXPECT_EQ(isSucc, true);
+    EXPECT_EQ(value, expectedValue);
+  }</span>
+
+  static const int NOT_AVAILABLE = CommandBufferConfig::NOT_AVAILABLE;
+  static const int MIN_LBA = CommandBufferConfig::MIN_LBA;
+  static const int MAX_LBA = CommandBufferConfig::MAX_LBA;
+  static const int MAX_LBA_CNT = CommandBufferConfig::MAX_LBA_CNT;
+  static const int LBA_ERASE_RANGE_LIMIT =
+      CommandBufferConfig::LBA_ERASE_RANGE_LIMIT;
+  static const int MAX_BUFFER = CommandBufferConfig::MAX_BUFFER;
+
+  bool IsBufferFlushed(int addOperationCount) const {
+    return addOperationCount &gt; MAX_BUFFER &amp;&amp; (addOperationCount % 5) == 1;
+  }
 };
 
-class CmdBufferParamTestFixture : public TestWithParam&lt;OptimizeTestCase&gt; {
- public:
-  CommandBufferOptimizer cmdBufferOptimizer;
-};
+#if 1  // Write
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC08_Write_BasicOperation) {
+  int addOperationCount = 0;
+  for (int lba = MIN_LBA, data = 1; lba &lt;= MAX_LBA; lba++, data++) {
+    auto cmds = handler.AddWrite(lba, data);
+    ++addOperationCount;</span>
 
-// ê³µíµ ê²ì¦: data != 0ì´ë©´ WRITEì¬ì¼ í¨
-<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, CMD_TYPEIsWriteWhenDataIsNotZero) {
-  const auto&amp; tc = GetParam();
-  for (const auto&amp; cmd : tc.input) {
-    if (cmd.data != 0) {
-      EXPECT_EQ(cmd.cmdType, eWriteCmd);</span>
+<span style = "background-color:#dfd">    if (!IsBufferFlushed(addOperationCount)) {
+      EXPECT_EQ(cmds.size(), 0);
+      continue;</span>
     }
+
+<span style = "background-color:#dfd">    EXPECT_EQ(cmds.size(), 5);</span>
+
+<span style = "background-color:#dfd">    sort(cmds.begin(), cmds.end(),</span>
+         [&amp;](const CommandBufferEntry &amp;lhs, const CommandBufferEntry &amp;rhs)
+             -&gt; bool { return lhs.startLba &lt; rhs.startLba; });
+
+<span style = "background-color:#dfd">    const int EXPECTED_LBA[] = {lba - 5, lba - 4, lba - 3, lba - 2, lba - 1};
+    const int EXPECTED_DATA[] = {data - 5, data - 4, data - 3, data - 2,
+                                 data - 1};
+    for (int i = 0; i &lt; cmds.size(); i++) {
+      EXPECT_EQ(cmds[i].startLba, EXPECTED_LBA[i]);
+      EXPECT_EQ(cmds[i].endLba, EXPECTED_LBA[i]);
+      EXPECT_EQ(cmds[i].data, EXPECTED_DATA[i]);</span>
+    }
+<span style = "background-color:#dfd">  }
+}</span>
+#endif
+
+#if 1  // Erase
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC06_ExceedLbaWhenErase_ThrowException) {
+  EXPECT_NO_THROW({ handler.AddErase(MIN_LBA, -1); });
+  EXPECT_THROW({ handler.AddErase(MIN_LBA, -2); }, std::invalid_argument);</span>
+
+<span style = "background-color:#dfd">  EXPECT_NO_THROW({ handler.AddErase(MAX_LBA, 1); });
+  EXPECT_THROW({ handler.AddErase(MAX_LBA, 2); }, std::invalid_argument);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture,
+       TC07_ExceedLbaEraseRangeLimit_ThrowException) {
+  EXPECT_NO_THROW({ handler.AddErase(MIN_LBA, LBA_ERASE_RANGE_LIMIT); });
+  EXPECT_THROW(</span>
+      { handler.AddErase(MIN_LBA, LBA_ERASE_RANGE_LIMIT + 1); },
+      std::invalid_argument);
+
+<span style = "background-color:#dfd">  EXPECT_NO_THROW(</span>
+      { handler.AddErase(LBA_ERASE_RANGE_LIMIT, -LBA_ERASE_RANGE_LIMIT); });
+<span style = "background-color:#dfd">  EXPECT_THROW(</span>
+      { handler.AddErase(LBA_ERASE_RANGE_LIMIT, -LBA_ERASE_RANGE_LIMIT - 1); },
+      std::invalid_argument);
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC08_EraseInvalidDelta_ThrowException) {
+    EXPECT_THROW({ handler.AddErase(1, 0); }, std::invalid_argument);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC08_Erase_BasicOperation) {
+  int addOperationCount = 0;</span>
+  int addOperationCountLimit = 42;
+<span style = "background-color:#dfd">  for (int lba = MIN_LBA, data = 1; addOperationCount&lt;addOperationCountLimit; lba++, data++) {
+    auto cmds = handler.AddErase(lba, 1);
+    ++addOperationCount;</span>
+
+<span style = "background-color:#dfd">    if (addOperationCount != addOperationCountLimit) {
+      EXPECT_EQ(cmds.size(), 0);
+      continue;</span>
+    }
+
+<span style = "background-color:#dfd">    EXPECT_EQ(cmds.size(), 5);</span>
+
+<span style = "background-color:#dfd">    sort(cmds.begin(), cmds.end(),</span>
+         [&amp;](const CommandBufferEntry &amp;lhs, const CommandBufferEntry &amp;rhs)
+             -&gt; bool { return lhs.startLba &lt; rhs.startLba; });
+
+<span style = "background-color:#dfd">    const int EXPECTED_START_LBA[] = {MIN_LBA,</span>
+                                      MIN_LBA + 1 * LBA_ERASE_RANGE_LIMIT,
+                                      MIN_LBA + 2 * LBA_ERASE_RANGE_LIMIT,
+                                      MIN_LBA + 3 * LBA_ERASE_RANGE_LIMIT,
+<span style = "background-color:#dfd">                                      MIN_LBA + 4 * LBA_ERASE_RANGE_LIMIT};
+    const int EXPECTED_END_LBA[] = {MIN_LBA + 1 * LBA_ERASE_RANGE_LIMIT - 1,</span>
+                                    MIN_LBA + 2 * LBA_ERASE_RANGE_LIMIT - 1,
+                                    MIN_LBA + 3 * LBA_ERASE_RANGE_LIMIT - 1,
+                                    MIN_LBA + 4 * LBA_ERASE_RANGE_LIMIT - 1,
+<span style = "background-color:#dfd">                                    MIN_LBA + 4 * LBA_ERASE_RANGE_LIMIT};
+    for (int i = 0; i &lt; cmds.size(); i++) {
+      EXPECT_EQ(cmds[i].startLba, EXPECTED_START_LBA[i]);
+      EXPECT_EQ(cmds[i].endLba, EXPECTED_END_LBA[i]);
+      EXPECT_EQ(cmds[i].data, 0);</span>
+    }
+<span style = "background-color:#fdd">  }</span>
+<span style = "background-color:#dfd">}</span>
+#endif
+
+#if 1  // Flush
+// TC03: Write ë²í¼ê° ê°ë ì°¨ë©´ flush ë°ì ë° ìµì ê° ê°±ì ë¨
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC03_WriteBufferOverflow_FlushTriggered) {
+  const int SIZE = 5;
+  const int LBAS[SIZE] = {1, 2, 3, 4, 5};
+  const int DATA[SIZE] = {11, 12, 13, 14, 15};</span>
+
+<span style = "background-color:#dfd">  for (int i = 0; i &lt; SIZE; i++) {
+    handler.AddWrite(LBAS[i], DATA[i]);</span>
+  }
+
+  const int FIRST_LBA = LBAS[0];
+  const int LAST_LBA = LBAS[SIZE - 1];
+
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(FIRST_LBA - 1);
+  for (int i = 0; i &lt; SIZE; i++) {
+    ExpectTryFastReadSucc(LBAS[i], DATA[i]);</span>
+  }
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(LAST_LBA + 1);</span>
+
+  const int OLD_LBA = FIRST_LBA;
+  const int NEW_DATA = DATA[SIZE - 1] + 0x12345;  // 11~15ê° ìë ìë¬´ ê°
+<span style = "background-color:#dfd">  auto flushed_cmds = handler.AddWrite(OLD_LBA, NEW_DATA);</span>
+#ifdef DEBUG_PRINT
+<span style = "background-color:#dfd">  for (const auto &amp;cmd : flushed_cmds) {
+    std::cout &lt;&lt; cmd.ToString() &lt;&lt; "\n";</span>
+  }
+#endif
+
+<span style = "background-color:#dfd">  EXPECT_EQ(flushed_cmds.size(), SIZE);</span>
+
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(0);
+  ExpectTryFastReadSucc(OLD_LBA, NEW_DATA);
+  for (int i = 1; i &lt; SIZE; i++) {
+    ExpectTryFastReadFail(LBAS[i]);</span>
+  }
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(6);
+}</span>
+#endif
+
+#if 1  // TryFastRead
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC00_NeverUsedBuffer_ReadReturnsZero) {
+  for (int lba = 0; lba &lt; MAX_LBA_CNT; lba++) {
+    ExpectTryFastReadFail(lba);</span>
   }
 <span style = "background-color:#dfd">}</span>
 
-// ê³µíµ ê²ì¦: WRITEì´ë©´ s == e ì´ì´ì¼ í¨
-<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCMD_TYPEIsWrite) {
-  const auto&amp; tc = GetParam();
-  for (const auto&amp; cmd : tc.input) {
-    if (cmd.cmdType == eWriteCmd) {
-      EXPECT_EQ(cmd.startLba, cmd.endLba);</span>
-    }
+// TC01: Eraseë ìì­ì 0ì¼ë¡ ì½íì¼ í¨
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC01_EraseRange_ReadReturnsZero) {</span>
+  const int START_LBA = 1, END_LBA = 10;
+<span style = "background-color:#dfd">  handler.AddErase(START_LBA, END_LBA);</span>
+
+  const int erasedValue = 0;
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(START_LBA - 1);</span>
+  for (int lba = START_LBA; lba &lt;= END_LBA; lba++) {
+<span style = "background-color:#dfd">    ExpectTryFastReadSucc(lba, erasedValue);</span>
   }
-<span style = "background-color:#dfd">}</span>
-
-// ê³µíµ ê²ì¦: ERASEì´ë©´ data == 0 ì´ì´ì¼ í¨
-<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCMD_TYPEIsErase) {
-  const auto&amp; tc = GetParam();
-  for (const auto&amp; cmd : tc.input) {
-    if (cmd.cmdType == eEraseCmd) {
-      EXPECT_EQ(cmd.data, 0);</span>
-    }
-  }
-<span style = "background-color:#dfd">}</span>
-
-// ê³µíµ ê²ì¦: cmds ê¸¸ì´ë 5 ì´í
-<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, CmdsVectorSizeLessThanEqual5) {
-  const auto&amp; tc = GetParam();
-  EXPECT_LE(tc.input.size(), 5);
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(END_LBA + 1);
 }</span>
 
-// ìµì í ê²°ê³¼ íì¸(ìì)
-<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
-  const auto&amp; tc = GetParam();</span>
+// TC02: Write íìë í´ë¹ LBAë¥¼ ì íí ì½ì ì ìì´ì¼ í¨
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC02_WriteThenRead_ReturnsValue) {</span>
+  const int LBA = 1, DATA = 10;
+<span style = "background-color:#dfd">  handler.AddWrite(LBA, DATA);</span>
 
-<span style = "background-color:#dfd">  puts("Input:");
-  for (const auto&amp; cmd : tc.input) cmd.Print();</span>
+<span style = "background-color:#dfd">  ExpectTryFastReadFail(LBA - 1);
+  ExpectTryFastReadSucc(LBA, DATA);
+  ExpectTryFastReadFail(LBA + 1);
+}</span>
+#endif
 
-<span style = "background-color:#dfd">  puts("Output:");
-  vector&lt;CommandBufferEntry&gt; result = cmdBufferOptimizer.Optimize(tc.input);
-  for (const auto&amp; intv : result) intv.Print();</span>
+#if 1  // Optimize
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC04_Optimize_ReducesCommandCount) {
+  handler.AddErase(1, 10);
+  handler.AddWrite(9, 2);
+  handler.AddWrite(7, 2);
+  handler.AddWrite(8, 1);
+  handler.AddErase(4, 2);</span>
 
-<span style = "background-color:#dfd">  EXPECT_EQ(result.size(), tc.expected_size);
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 4);
 }</span>
 
-<span style = "background-color:#dfd">INSTANTIATE_TEST_SUITE_P(</span>
-    CmdTestCases, CmdBufferParamTestFixture,
-    Values(OptimizeTestCase{{{eEraseCmd, 1, 10, 0},
-                             {eWriteCmd, 9, 9, 2},
-                             {eWriteCmd, 7, 7, 2},
-                             {eWriteCmd, 8, 8, 1},
-                             {eEraseCmd, 4, 6, 0}},
-                            4},
-           OptimizeTestCase{{{eWriteCmd, 20, 20, 1},
-                             {eWriteCmd, 21, 21, 2},
-                             {eWriteCmd, 20, 20, 3}},
-                            2},
-<span style = "background-color:#dfd">           OptimizeTestCase{{{eWriteCmd, 1, 1, 1}, {eWriteCmd, 1, 1, 1}}, 1}));</span>
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC05_Optimize_OverwriteSameData) {
+  handler.AddWrite(1, 0x10);
+  handler.AddWrite(1, 0x10);
+  handler.AddWrite(1, 0x10);
+  handler.AddWrite(1, 0x10);
+  handler.AddWrite(1, 0x10);</span>
 
-class CmdBufferHandlerFixture : public Test {
- public:
-  CommandBufferHandler cmdBufferHandler;
-
-<span style = "background-color:#dfd">  void SetUp() { cmdBufferHandler.Flush(); }</span>
-};
-
-<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerFixture, TC06_E1_10_FR0FR1) {
-  cmdBufferHandler.AddErase(1, 10);
-  unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
-  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);</span>
-
-<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 0);
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 1);
+  EXPECT_EQ(cmds[0].data, 0x10);
 }</span>
 
-<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerFixture, TC07_W1_10_FR0FR1) {
-  cmdBufferHandler.AddWrite(1, 10);
-  unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
-  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);</span>
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC05_Optimize_OverwriteDiffData) {
+  handler.AddWrite(1, 1);
+  handler.AddWrite(1, 2);
+  handler.AddWrite(1, 3);
+  handler.AddWrite(1, 4);
+  handler.AddWrite(1, 5);</span>
 
-<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 10);
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 1);
+  EXPECT_EQ(cmds[0].data, 5);
 }</span>
 
-<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerFixture, TC08_Write5More_FR0FR1) {
-  cmdBufferHandler.Flush();
-  cmdBufferHandler.AddWrite(1, 10);
-  cmdBufferHandler.AddWrite(2, 11);
-  cmdBufferHandler.AddWrite(3, 12);
-  cmdBufferHandler.AddWrite(4, 13);
-  cmdBufferHandler.AddWrite(5, 14);
-  unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
-  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);</span>
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC06_Optimize_Overwrite2) {
+  handler.AddWrite(20, 1);
+  handler.AddWrite(21, 2);
+  handler.AddWrite(20, 3);</span>
 
-<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 10);</span>
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 2);
+}</span>
 
-<span style = "background-color:#dfd">  std::vector&lt;CommandBufferEntry&gt; cmds = cmdBufferHandler.AddWrite(1, 20);
-  for (int i = 0; i &lt; cmds.size(); i++) {
-    std::cout &lt;&lt; cmds[i].ToString() &lt;&lt; "\n";</span>
-  }
-<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 20);
-}</span></pre>
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC10_Optimize_Case1) {
+  handler.AddWrite(5, 1);
+  handler.AddWrite(4, 1);
+  handler.AddWrite(7, 1);
+  handler.AddErase(5, 3);
+  handler.AddWrite(6, 1);</span>
+
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 3);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC11_Optimize_Case2) {
+  handler.AddErase(0, 10);
+  handler.AddErase(3, 5);
+  handler.AddErase(15, 10);
+  handler.AddErase(6, 8);
+  handler.AddErase(13, 5);</span>
+
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 3);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC12_NotOptimize_Case3) {
+  handler.AddWrite(50, 50);
+  handler.AddErase(51, 1);</span>
+
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 2);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC13_Optimize_Case4) {
+  handler.AddWrite(50, 50);
+  handler.AddErase(51, 1);
+  handler.AddWrite(52, 50);
+  handler.AddErase(53, 1);
+  handler.AddErase(49, 1);</span>
+
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 3);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC14_Optimize_Case5) {
+  handler.AddWrite(50, 50);
+  handler.AddErase(51, 1);
+  handler.AddWrite(50, 52);
+  handler.AddErase(52, 1);
+  handler.AddErase(49, 1);</span>
+
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 2);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerTestFixture, TC15_Optimize_Case6) {
+  handler.AddWrite(50, 50);
+  handler.AddErase(51, 1);
+  handler.AddWrite(50, 52);
+  handler.AddWrite(51, 2);
+  handler.AddErase(51, 1);</span>
+
+<span style = "background-color:#dfd">  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 2);
+}</span>
+#endif
+
+#if 1 //Etc. - code coverageë¥¼ ì±ì°ê¸° ìí Test
+<span style = "background-color:#dfd">TEST(CmdBufferEntry, TC16_ForCodeCoverage) {
+  EXPECT_THROW(</span>
+      { CommandBufferEntry cmd(CMD_TYPE::eWriteCmd, 1, 2, 1); },
+      std::invalid_argument);
+
+<span style = "background-color:#dfd">  EXPECT_THROW(</span>
+      { CommandBufferEntry cmd(CMD_TYPE::eEraseCmd, 1, 2, 1); },
+      std::invalid_argument);
+
+<span style = "background-color:#dfd">  EXPECT_THROW(</span>
+      { CommandBufferEntry cmd(CMD_TYPE::eFlushCmd, 1, 2, 1); },
+      std::invalid_argument);
+
+<span style = "background-color:#dfd">  EXPECT_THROW(</span>
+      { CommandBufferEntry cmd(CMD_TYPE::eReadCmd, 1, 2, 1); },
+      std::invalid_argument);
+
+<span style = "background-color:#dfd">  EXPECT_THROW(</span>
+      { CommandBufferEntry cmd(CMD_TYPE::eInvalidCmd, 1, 2, 1); },
+      std::invalid_argument);
+
+<span style = "background-color:#dfd">    CommandBufferEntry cmd(CMD_TYPE::eWriteCmd, 1, 1, 1);
+    cmd.cmdType = eInvalidCmd;
+    EXPECT_THROW({ cmd.ToString(); }, std::invalid_argument);
+}</span>
+#endif</pre>
         <hr />
         <table width="100%">
             <thead>

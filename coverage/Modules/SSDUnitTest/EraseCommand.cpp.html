@@ -16,10 +16,10 @@
 EraseCommand::EraseCommand(FileDriver* fileDriver,
                            CommandBufferHandler* bufferHandler,
                            CommandFactory* factory)
-<span style = "background-color:#dfd">    : fileDriver(fileDriver),</span>
+<span style = "background-color:#dfd">    : fileDriver(fileDriver),
       bufferHandler(bufferHandler),
       factory(factory),
-<span style = "background-color:#dfd">      eraseParam(nullptr) {}</span>
+      eraseParam(nullptr) {}</span>
 
 <span style = "background-color:#dfd">bool EraseCommand::Execute(IParam* param) {
   eraseParam = dynamic_cast&lt;EraseParam*&gt;(param);</span>
@@ -30,38 +30,38 @@ EraseCommand::EraseCommand(FileDriver* fileDriver,
   return true;
 }</span>
 
-<span style = "background-color:#fdd">void EraseCommand::Erase() {</span>
+<span style = "background-color:#dfd">void EraseCommand::Erase() {</span>
 #if (USING_COMMAND_BUFFER == 1)
-<span style = "background-color:#fdd">  SaveCommandBuffer();</span>
+<span style = "background-color:#dfd">  SaveCommandBuffer();</span>
 #else
   SaveDataBuffer();
 #endif
-<span style = "background-color:#fdd">}</span>
+<span style = "background-color:#dfd">}</span>
 
 <span style = "background-color:#dfd">bool EraseCommand::CheckPrecondition() {
   if (!fileDriver || !bufferHandler || !factory) return false;
   if (!eraseParam) return false;
   if (eraseParam-&gt;lba.val &gt;= MAX_STORAGE_IDX) return false;
   if (eraseParam-&gt;size.val &gt; MAX_ERASE_SIZE) return false;
-  if (eraseParam-&gt;lba.val + eraseParam-&gt;size.val &gt; MAX_STORAGE_IDX)</span>
+  if (eraseParam-&gt;lba.val + eraseParam-&gt;size.val &gt; MAX_STORAGE_IDX)
     return false;
-<span style = "background-color:#dfd">  return true;
-}</span>
-<span style = "background-color:#fdd">void EraseCommand::SaveCommandBuffer() {
-  if (bufferHandler-&gt;CheckBufferFull()) {
-    std::unique_ptr&lt;ICommand&gt; flushCmd = factory-&gt;CreateFlushCommand();
+  return true;
+}
+void EraseCommand::SaveCommandBuffer() {
+  if (bufferHandler-&gt;IsBufferFull()) {</span>
+<span style = "background-color:#fdd">    std::unique_ptr&lt;ICommand&gt; flushCmd = factory-&gt;CreateFlushCommand();
     flushCmd-&gt;Execute((IParam*)eraseParam);
   }</span>
 
-<span style = "background-color:#fdd">  bufferHandler-&gt;AddErase(eraseParam-&gt;lba.val, eraseParam-&gt;size.val);
+<span style = "background-color:#dfd">  bufferHandler-&gt;AddErase(eraseParam-&gt;lba.val, eraseParam-&gt;size.val);
 }</span>
 
 <span style = "background-color:#fdd">void EraseCommand::SaveDataBuffer() {
   for (size_t size = 0; size &lt; eraseParam-&gt;size.val; size++) {
     int lba = eraseParam-&gt;lba.val + size;
-    fileDriver-&gt;SetBufferData(lba, 0);</span>
+    fileDriver-&gt;SetBufferData(lba, 0);
   }
-<span style = "background-color:#fdd">  fileDriver-&gt;StoreData();
+  fileDriver-&gt;StoreData();
 }</span></pre>
         <hr />
         <table width="100%">

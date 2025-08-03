@@ -23,8 +23,8 @@ CommandFactory::CommandFactory(FileDriver* fileDriver,
   std::unique_ptr&lt;ICommand&gt; command;
   switch (cmdType) {</span>
     case eWriteCmd:
-<span style = "background-color:#dfd">      command = CreateWriteCommand();</span>
-      break;
+<span style = "background-color:#dfd">      command = CreateWriteCommand();
+      break;</span>
     case eReadCmd:
 <span style = "background-color:#dfd">      command = CreateReadCommand();
       break;</span>
@@ -32,23 +32,23 @@ CommandFactory::CommandFactory(FileDriver* fileDriver,
 <span style = "background-color:#dfd">      command = CreateEraseCommand();
       break;</span>
     case eFlushCmd:
-<span style = "background-color:#dfd">      command = CreateFlushCommand();
-      break;</span>
+<span style = "background-color:#dfd">      command = CreateFlushCommand();</span>
+      break;
     default:
       break;
   }
 <span style = "background-color:#dfd">  return command;
 }</span>
 
-<span style = "background-color:#fdd">std::unique_ptr&lt;ICommand&gt; CommandFactory::CreateReadCommand() {
+<span style = "background-color:#dfd">std::unique_ptr&lt;ICommand&gt; CommandFactory::CreateReadCommand() {
   return std::make_unique&lt;ReadCommand&gt;(fileDriver, bufferHandler, this);
 }</span>
 
-<span style = "background-color:#fdd">std::unique_ptr&lt;ICommand&gt; CommandFactory::CreateWriteCommand() {
+<span style = "background-color:#dfd">std::unique_ptr&lt;ICommand&gt; CommandFactory::CreateWriteCommand() {
   return std::make_unique&lt;WriteCommand&gt;(fileDriver, bufferHandler, this);
 }</span>
 
-<span style = "background-color:#fdd">std::unique_ptr&lt;ICommand&gt; CommandFactory::CreateEraseCommand() {
+<span style = "background-color:#dfd">std::unique_ptr&lt;ICommand&gt; CommandFactory::CreateEraseCommand() {
   return std::make_unique&lt;EraseCommand&gt;(fileDriver, bufferHandler, this);
 }</span>
 

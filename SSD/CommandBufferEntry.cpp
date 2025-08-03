@@ -1,4 +1,5 @@
 #include "CommandBufferEntry.h"
+
 #include "Types.h"
 
 CommandBufferEntry::CommandBufferEntry()
@@ -22,25 +23,11 @@ std::string CommandBufferEntry::ToString() const {
   } else if (cmdType == eEraseCmd) {
     result = "E_";
   } else {
-    throw std::invalid_argument("Invalid CMD_TYPE: " + ToString(cmdType));
+    throw std::invalid_argument("Invalid CMD_TYPE: " + CommandBufferConfig::GetCmdTypeString(cmdType));
   }
   result += std::to_string(startLba) + "_" + std::to_string(endLba) + "_" +
             std::to_string(data);
   return result;
-}
-
-std::string CommandBufferEntry::ToString(CMD_TYPE cmdType) const {
-  if (cmdType == eWriteCmd)
-    return "WRITE";
-  else if (cmdType == eEraseCmd)
-    return "ERASE";
-  else
-    return "NOTHING";
-}
-
-void CommandBufferEntry::Print() const {
-  printf("[%d,%d]->val:%llu, cmdType:%s\n", startLba, endLba, data,
-         ToString(cmdType).c_str());
 }
 
 CommandBufferEntry::CommandBufferEntry(unsigned int startLba,
@@ -67,9 +54,7 @@ void CommandBufferEntry::Validator() {
     }
   }
 
-  if (data != 0) {
-    if (cmdType != eWriteCmd) {
-      throw std::invalid_argument("If data != 0 -> cmdType must be WRITE");
-    }
-  }
+  if(cmdType == eEraseCmd || cmdType == eWriteCmd) return;
+
+  throw std::invalid_argument("The cmdType filed of CommandBuffer must be either eEraseCmd or eWriteCmd.");
 }
