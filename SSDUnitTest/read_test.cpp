@@ -12,8 +12,9 @@
 
 class MockFileDriver : public FileDriver {
  public:
-  MOCK_METHOD(void, SetBufferData, (), ());
-  MOCK_METHOD(void, StoreData, (), ());
+  MOCK_METHOD(void, SetBufferData, (unsigned int lba, unsigned int data), ());
+  MOCK_METHOD(void, GetBufferData, (unsigned int& data), ());
+  MOCK_METHOD(void, StoreOutput, (unsigned int val), ());
 };
 
 class MockCommandFactory : public CommandFactory {

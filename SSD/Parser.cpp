@@ -1,15 +1,28 @@
-#include <iostream>
-
 #include "Parser.h"
 
-IParam* Parser::Parse(const vector<string>& tokens) {
-  if (!IsValidCommandStructure(tokens)) {
-    return GetInvalidCommand();
+#include <iostream>
+
+IParam* Parser::GetCommand(int argc, char* argv[]) {
+  std::vector<std::string> tokens = Parse(argc, argv);
+
+  if (!CheckParamValid(tokens)) {
+    return GenInvalidCommand();
   }
+
   return GenCommandParam(tokens);
 }
 
-bool Parser::IsValidCommandStructure(const vector<string>& tokens) {
+std::vector<std::string>& Parser::Parse(int argc, char* argv[]) {
+  std::vector<std::string> args;
+
+  for (int i = 1; i < argc; i++) {
+    args.emplace_back(argv[i]);
+  }
+
+  return args;
+}
+
+bool Parser::CheckParamValid(const vector<string>& tokens) {
   if (tokens.empty()) return false;
   auto it = commandParamSpecs.find(tokens[0]);
   if (it == commandParamSpecs.end()) return false;
@@ -18,6 +31,6 @@ bool Parser::IsValidCommandStructure(const vector<string>& tokens) {
 
 IParam* Parser::GenCommandParam(const vector<string>& tokens) {
   auto it = commandParamSpecs.find(tokens[0]);
-  if (it == commandParamSpecs.end()) return GetInvalidCommand();
+  if (it == commandParamSpecs.end()) return GenInvalidCommand();
   return it->second.paramObj(tokens);
 }
