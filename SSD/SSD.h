@@ -11,20 +11,24 @@ using std::string;
 
 class SSD {
  public:
-  SSD();
+  SSD(FileDriver* fileDriver, CommandBufferHandler* bufferHandler,
+      CommandFactory* commandFactory);
 
-  static SSD& GetInstance() {
-    static SSD instance;
+  static SSD& GetInstance(FileDriver* fileDriver,
+                          CommandBufferHandler* bufferHandler,
+                          CommandFactory* commandFactory) {
+    static SSD instance(fileDriver, bufferHandler, commandFactory);
     return instance;
   }
 
-  void Run(vector<string> argv);
-  void ExecuteCommand(IParam* param);
+  void Run(IParam* cmd);
+  bool ExecuteCommand(IParam* param);
 
   unsigned int GetCachedData(unsigned int lba);
 
  private:
+  FileDriver* fileDriver;
+  CommandBufferHandler* bufferHandler;
   CommandFactory* commandFactory;
-  FileDriver* filedriver;
   Parser parser;
 };

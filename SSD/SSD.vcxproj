@@ -271,7 +271,7 @@
     <ClCompile Include="EraseCommand.cpp" />
     <ClCompile Include="FileDriver.cpp" />
     <ClCompile Include="FlushCommand.cpp" />
-    <ClCompile Include="Paser.cpp" />
+    <ClCompile Include="Parser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ReadCommand.cpp" />
     <ClCompile Include="SSD.cpp" />

@@ -1,47 +1,20 @@
 #include "SSD.h"
 
-#include "EraseCommand.h"
-#include "FlushCommand.h"
-#include "ReadCommand.h"
-#include "WriteCommand.h"
+SSD::SSD(FileDriver* fileDriver, CommandBufferHandler* bufferHandler,
+         CommandFactory* commandFactory)
+    : fileDriver(fileDriver),
+      bufferHandler(bufferHandler),
+      commandFactory(commandFactory) {}
 
-SSD::SSD() {
-  commandFactory = CommandFactory::GetInstance();
-  filedriver = FileDriver::GetInstance();
+void SSD::Run(IParam* cmd) {
+  if (!ExecuteCommand(cmd)) fileDriver->StoreError();
 }
 
-void SSD::Run(vector<string> args) {
-  IParam *cmd;
-  cmd = parser.Parse(args);
-  ExecuteCommand(cmd);
-}
-
-void SSD::ExecuteCommand(IParam *param) {
-  std::unique_ptr<ICommand> command;
-
-  switch (param->eCmd) {
-    case eWriteCmd:
-      command = std::make_unique<WriteCommand>();
-      break;
-    case eReadCmd:
-      command = std::make_unique<ReadCommand>();
-      break;
-    case eEraseCmd:
-      command = std::make_unique<EraseCommand>();
-      break;
-    case eFlushCmd:
-      command = std::make_unique<FlushCommand>();
-      break;
-    default:
-      command = std::make_unique<ICommand>();
-      break;
-  }
-
-  if (false == command->Execute(param)) {
-    filedriver->SaveFile(OUTPUT_FILE_NAME, "ERROR");
-  }
+bool SSD::ExecuteCommand(IParam* param) {
+  std::unique_ptr<ICommand> command = commandFactory->GetCommand(param->eCmd);
+  return (command && command->Execute(param));
 }
 
 unsigned int SSD::GetCachedData(unsigned int lba) {
-  return filedriver->GetBufferData(lba);
+  return fileDriver->GetBufferData(lba);
 }

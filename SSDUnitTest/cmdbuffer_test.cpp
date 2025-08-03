@@ -2,10 +2,10 @@
 
 #include "../SSD/CommandBufferConfig.h"
 #include "../SSD/CommandBufferEntry.h"
-#include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/CommandBufferHandler.h"
-#include "gmock/gmock.h"
+#include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/Types.h"
+#include "gmock/gmock.h"
 using namespace testing;
 using std::vector;
 
@@ -69,28 +69,25 @@ TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
   EXPECT_EQ(result.size(), tc.expected_size);
 }
 
-INSTANTIATE_TEST_SUITE_P(CmdTestCases, CmdBufferParamTestFixture,
-                         Values(OptimizeTestCase{{{eEraseCmd, 1, 10, 0},
-                                                  {eWriteCmd, 9, 9, 2},
-                                                  {eWriteCmd, 7, 7, 2},
-                                                  {eWriteCmd, 8, 8, 1},
-                                                  {eEraseCmd, 4, 6, 0}},
-                                                 4},
-                                OptimizeTestCase{{{eWriteCmd, 20, 20, 1},
-                                                  {eWriteCmd, 21, 21, 2},
-                                                  {eWriteCmd, 20, 20, 3}},
-                                                 2},
-                                OptimizeTestCase{{{eWriteCmd, 1, 1, 1},
-                                                  {eWriteCmd, 1, 1, 1}},
-                                                 1}));
+INSTANTIATE_TEST_SUITE_P(
+    CmdTestCases, CmdBufferParamTestFixture,
+    Values(OptimizeTestCase{{{eEraseCmd, 1, 10, 0},
+                             {eWriteCmd, 9, 9, 2},
+                             {eWriteCmd, 7, 7, 2},
+                             {eWriteCmd, 8, 8, 1},
+                             {eEraseCmd, 4, 6, 0}},
+                            4},
+           OptimizeTestCase{{{eWriteCmd, 20, 20, 1},
+                             {eWriteCmd, 21, 21, 2},
+                             {eWriteCmd, 20, 20, 3}},
+                            2},
+           OptimizeTestCase{{{eWriteCmd, 1, 1, 1}, {eWriteCmd, 1, 1, 1}}, 1}));
 
-class CmdBufferHandlerFixture : public Test{
-public:
+class CmdBufferHandlerFixture : public Test {
+ public:
   CommandBufferHandler cmdBufferHandler;
 
-  void SetUp() {
-      cmdBufferHandler.Flush();
-  }
+  void SetUp() { cmdBufferHandler.Flush(); }
 };
 
 TEST_F(CmdBufferHandlerFixture, TC06_E1_10_FR0FR1) {
@@ -128,10 +125,9 @@ TEST_F(CmdBufferHandlerFixture, TC08_Write5More_FR0FR1) {
   EXPECT_EQ(value, 10);
 
   std::vector<CommandBufferEntry> cmds = cmdBufferHandler.AddWrite(1, 20);
-  for(int i=0; i<cmds.size(); i++) {
-      std::cout << cmds[i].ToString() << "\n";
+  for (int i = 0; i < cmds.size(); i++) {
+    std::cout << cmds[i].ToString() << "\n";
   }
   EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
   EXPECT_EQ(value, 20);
 }
-

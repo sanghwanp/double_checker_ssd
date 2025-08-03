@@ -36,7 +36,7 @@
     <ClCompile Include="FileDriver.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Paser.cpp">
+    <ClCompile Include="Parser.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="CommandFactory.cpp">

@@ -1,30 +1,30 @@
 #include "FlushCommand.h"
 
-#include "CommandBufferEntry.h"
+FlushCommand::FlushCommand(FileDriver* fileDriver,
+                           CommandBufferHandler* bufferHandler)
+    : fileDriver(fileDriver), bufferHandler(bufferHandler) {}
 
 bool FlushCommand::Execute(IParam* param) {
-  std::vector<CommandBufferEntry> entry = cmdBufHandler.Flush();
-
-  for (auto item : entry) {
-    for (unsigned int lba = item.startLba; lba <= item.endLba; lba++) {
-      fileDriver->SetBufferData(lba, item.data);
-    }
-  }
-
-  SaveFile();
+  if (!CheckPrecondition()) return false;
+  Flush();
   return true;
 }
 
-void FlushCommand::Flush(std::vector<CommandBufferEntry> entry) {
+bool FlushCommand::CheckPrecondition() {
+  if (!fileDriver || !bufferHandler) return false;
+  return true;
+}
+
+void FlushCommand::Flush() {
+
+#if (USING_COMMAND_BUFFER == 1)
+  std::vector<CommandBufferEntry> entry = bufferHandler->Flush();
   for (auto item : entry) {
     for (unsigned int lba = item.startLba; lba <= item.endLba; lba++) {
       fileDriver->SetBufferData(lba, item.data);
     }
   }
+#endif
 
-  SaveFile();
-}
-
-void FlushCommand::SaveFile() {
-  fileDriver->SaveFile(STORAGE_FILE_NAME, fileDriver->GetBufferAddr(), MAX_STORAGE_IDX);
+  fileDriver->StoreData();
 }
