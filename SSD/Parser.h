@@ -17,12 +17,11 @@ struct CommandParamSpec {
 
 class Parser {
  public:
-  IParam* GetCommand(int argc, char* argv[]);
-  vector<string>& Parse(int argc, char* argv[]);
+  IParam* Parse(const vector<string>& tokens);
 
  private:
-  bool CheckParamValid(const vector<string>& tokens);
-  IParam* GenInvalidCommand() { return new IParam(CMD_TYPE::eInvalidCmd); }
+  bool IsValidCommandStructure(const vector<string>& tokens);
+  IParam* GetInvalidCommand() { return new IParam(CMD_TYPE::eInvalidCmd); }
   IParam* GenCommandParam(const vector<string>& tokens);
 
   const std::unordered_map<string, CommandParamSpec> commandParamSpecs = {
