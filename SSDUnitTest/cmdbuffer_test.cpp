@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 
 #include "../SSD/CommandBufferConfig.h"
@@ -6,128 +7,122 @@
 #include "../SSD/CommandBufferOptimizer.h"
 #include "../SSD/Types.h"
 #include "gmock/gmock.h"
+
 using namespace testing;
 using std::vector;
 
-struct OptimizeTestCase {
-  vector<CommandBufferEntry> input;
-  size_t expected_size;
+class CmdBufferHandlerTestFixture : public Test {
+ protected:
+  CommandBufferHandler handler;
+  const int NOT_AVAILABLE = CommandBufferConfig::NOT_AVAILABLE;
+
+  void SetUp() override { handler.Flush(); }
+
+  void ExpectTryFastReadFail(unsigned int lba) {
+    unsigned int value;
+    bool isSucc = handler.TryFastRead(lba, value);
+    EXPECT_EQ(isSucc, false);
+    EXPECT_EQ(value, NOT_AVAILABLE);
+  }
+
+  void ExpectTryFastReadSucc(unsigned int lba, unsigned int expectedValue) {
+    unsigned int value;
+    bool isSucc = handler.TryFastRead(lba, value);
+    EXPECT_EQ(isSucc, true);
+    EXPECT_EQ(value, expectedValue);
+  }
 };
 
-class CmdBufferParamTestFixture : public TestWithParam<OptimizeTestCase> {
- public:
-  CommandBufferOptimizer cmdBufferOptimizer;
-};
-
-// 공통 검증: data != 0이면 WRITE여야 함
-TEST_P(CmdBufferParamTestFixture, CMD_TYPEIsWriteWhenDataIsNotZero) {
-  const auto& tc = GetParam();
-  for (const auto& cmd : tc.input) {
-    if (cmd.data != 0) {
-      EXPECT_EQ(cmd.cmdType, eWriteCmd);
+TEST_F(CmdBufferHandlerTestFixture, TC00_NeverUsedBuffer_ReadReturnsZero) {
+    for(int lba=0; lba<CommandBufferConfig::MAX_LBA_CNT; lba++) {
+        ExpectTryFastReadFail(lba);
     }
+}
+
+// TC01: Erase된 영역은 0으로 읽혀야 함
+TEST_F(CmdBufferHandlerTestFixture, TC01_EraseRange_ReadReturnsZero) {
+  const int START_LBA = 1, END_LBA = 10;
+  handler.AddErase(START_LBA, END_LBA);
+
+  const int erasedValue = 0;
+  ExpectTryFastReadFail(START_LBA-1);
+  for (int lba = START_LBA; lba <= END_LBA; lba++) {
+    ExpectTryFastReadSucc(lba, erasedValue);
   }
+  ExpectTryFastReadFail(END_LBA+1);
 }
 
-// 공통 검증: WRITE이면 s == e 이어야 함
-TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCMD_TYPEIsWrite) {
-  const auto& tc = GetParam();
-  for (const auto& cmd : tc.input) {
-    if (cmd.cmdType == eWriteCmd) {
-      EXPECT_EQ(cmd.startLba, cmd.endLba);
-    }
+// TC02: Write 후에는 해당 LBA를 정확히 읽을 수 있어야 함
+TEST_F(CmdBufferHandlerTestFixture, TC02_WriteThenRead_ReturnsValue) {
+  const int LBA = 1, DATA = 10;
+  handler.AddWrite(LBA, DATA);
+
+  ExpectTryFastReadFail(LBA-1);
+  ExpectTryFastReadSucc(LBA, DATA);
+  ExpectTryFastReadFail(LBA+1);
+}
+
+// TC03: Write 버퍼가 가득 차면 flush 발생 및 최신값 갱신됨
+TEST_F(CmdBufferHandlerTestFixture, TC03_WriteBufferOverflow_FlushTriggered) {
+  const int SIZE = 5;
+  const int LBAS[SIZE] = {1, 2, 3, 4, 5};
+  const int DATA[SIZE] = {11, 12, 13, 14, 15};
+  for (int i = 0; i < SIZE; i++) {
+    handler.AddWrite(LBAS[i], DATA[i]);
   }
-}
 
-// 공통 검증: ERASE이면 data == 0 이어야 함
-TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCMD_TYPEIsErase) {
-  const auto& tc = GetParam();
-  for (const auto& cmd : tc.input) {
-    if (cmd.cmdType == eEraseCmd) {
-      EXPECT_EQ(cmd.data, 0);
-    }
+  const int FIRST_LBA = LBAS[0];
+  const int LAST_LBA = LBAS[SIZE - 1];
+
+  ExpectTryFastReadFail(FIRST_LBA - 1);
+  for (int i = 0; i < SIZE; i++) {
+    ExpectTryFastReadSucc(LBAS[i], DATA[i]);
   }
-}
+  ExpectTryFastReadFail(LAST_LBA + 1);
 
-// 공통 검증: cmds 길이는 5 이하
-TEST_P(CmdBufferParamTestFixture, CmdsVectorSizeLessThanEqual5) {
-  const auto& tc = GetParam();
-  EXPECT_LE(tc.input.size(), 5);
-}
-
-// 최적화 결과 확인(예시)
-TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
-  const auto& tc = GetParam();
-
-  puts("Input:");
-  for (const auto& cmd : tc.input) cmd.Print();
-
-  puts("Output:");
-  vector<CommandBufferEntry> result = cmdBufferOptimizer.Optimize(tc.input);
-  for (const auto& intv : result) intv.Print();
-
-  EXPECT_EQ(result.size(), tc.expected_size);
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    CmdTestCases, CmdBufferParamTestFixture,
-    Values(OptimizeTestCase{{{eEraseCmd, 1, 10, 0},
-                             {eWriteCmd, 9, 9, 2},
-                             {eWriteCmd, 7, 7, 2},
-                             {eWriteCmd, 8, 8, 1},
-                             {eEraseCmd, 4, 6, 0}},
-                            4},
-           OptimizeTestCase{{{eWriteCmd, 20, 20, 1},
-                             {eWriteCmd, 21, 21, 2},
-                             {eWriteCmd, 20, 20, 3}},
-                            2},
-           OptimizeTestCase{{{eWriteCmd, 1, 1, 1}, {eWriteCmd, 1, 1, 1}}, 1}));
-
-class CmdBufferHandlerFixture : public Test {
- public:
-  CommandBufferHandler cmdBufferHandler;
-
-  void SetUp() { cmdBufferHandler.Flush(); }
-};
-
-TEST_F(CmdBufferHandlerFixture, TC06_E1_10_FR0FR1) {
-  cmdBufferHandler.AddErase(1, 10);
-  unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
-  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
-
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 0);
-}
-
-TEST_F(CmdBufferHandlerFixture, TC07_W1_10_FR0FR1) {
-  cmdBufferHandler.AddWrite(1, 10);
-  unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
-  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
-
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 10);
-}
-
-TEST_F(CmdBufferHandlerFixture, TC08_Write5More_FR0FR1) {
-  cmdBufferHandler.Flush();
-  cmdBufferHandler.AddWrite(1, 10);
-  cmdBufferHandler.AddWrite(2, 11);
-  cmdBufferHandler.AddWrite(3, 12);
-  cmdBufferHandler.AddWrite(4, 13);
-  cmdBufferHandler.AddWrite(5, 14);
-  unsigned int value = 0;
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
-  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);
-
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 10);
-
-  std::vector<CommandBufferEntry> cmds = cmdBufferHandler.AddWrite(1, 20);
-  for (int i = 0; i < cmds.size(); i++) {
-    std::cout << cmds[i].ToString() << "\n";
+  const int OLD_LBA = FIRST_LBA;
+  const int NEW_DATA = DATA[SIZE - 1] + 5;  // 11~15가 아닌 값
+  auto flushed_cmds = handler.AddWrite(OLD_LBA, NEW_DATA);
+#ifdef DEBUG_PRINT
+  for (const auto& cmd : flushed_cmds) {
+    std::cout << cmd.ToString() << "\n";
   }
-  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
-  EXPECT_EQ(value, 20);
+#endif
+
+  EXPECT_EQ(flushed_cmds.size(), 5);
+
+  ExpectTryFastReadFail(0);
+  ExpectTryFastReadSucc(OLD_LBA, NEW_DATA);
+  for (int i = 1; i < SIZE; i++) {
+    ExpectTryFastReadFail(LBAS[i]);
+  }
+  ExpectTryFastReadFail(6);
+}
+
+TEST_F(CmdBufferHandlerTestFixture, TC04_Optimize_ReducesCommandCount) {
+  handler.AddErase(1, 10);
+  handler.AddWrite(9, 2);
+  handler.AddWrite(7, 2);
+  handler.AddWrite(8, 1);
+  handler.AddErase(4, 2);
+
+  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 4);
+}
+
+TEST_F(CmdBufferHandlerTestFixture, TC05_Optimize_Overwrite1) {
+  handler.AddWrite(1, 1);
+  handler.AddWrite(1, 1);
+
+  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 1);
+}
+
+TEST_F(CmdBufferHandlerTestFixture, TC06_Optimize_Overwrite2) {
+  handler.AddWrite(20, 1);
+  handler.AddWrite(21, 2);
+  handler.AddWrite(20, 3);
+
+  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 2);
 }

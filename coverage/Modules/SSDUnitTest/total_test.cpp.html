@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>total_test.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include &lt;gmock/gmock.h&gt;
+#include &lt;gtest/gtest.h&gt;
+
+#include &lt;fstream&gt;
+#include &lt;sstream&gt;
+#include &lt;string&gt;
+
+#include "../SSD/CommandBufferHandler.h"
+#include "../SSD/CommandFactory.h"
+#include "../SSD/FileDriver.h"
+#include "../SSD/Parser.h"
+#include "../SSD/SSD.h"
+
+class SSDTest : public ::testing::Test {
+ public:
+  IParam* MakeParam(CMD_TYPE etype, unsigned int param1 = 0,
+                    unsigned int param2 = 0) {
+    LBA lbaObj = {param1};
+    DATA dataObj = {param2};
+    SIZE_E sizeObj = {param2};
+    switch (etype) {
+      case eReadCmd:
+        return new ReadParam(CMD_TYPE::eReadCmd, lbaObj);
+        break;
+      case eWriteCmd:
+        return new WriteParam(CMD_TYPE::eWriteCmd, lbaObj, dataObj);
+        break;
+      case eEraseCmd:
+        return new EraseParam(CMD_TYPE::eEraseCmd, lbaObj, sizeObj);
+        break;
+      case eFlushCmd:
+        return new FlushParam(CMD_TYPE::eFlushCmd);
+        break;
+      default:
+        return new IParam(CMD_TYPE::eInvalidCmd);
+        break;
+    }
+  }
+
+  std::string readOutputFile() {
+    std::ifstream file(READ_OUTPUT_FILE_NAME);
+    std::string content((std::istreambuf_iterator&lt;char&gt;(file)),
+                        std::istreambuf_iterator&lt;char&gt;());
+    return content;
+  }
+
+  SSD* ssd;
+
+<span style = "background-color:#dfd">  void SetUp() override {
+    FileDriver* fileDriver = FileDriver::GetInstance();
+    CommandFactory* commandFactory = CommandFactory::GetInstance();
+    CommandBufferHandler* bufferHandler = CommandBufferHandler::GetInstance();</span>
+
+<span style = "background-color:#dfd">    ssd = &amp;SSD::GetInstance(fileDriver, bufferHandler, commandFactory);
+  }</span>
+
+ protected:
+  const unsigned int TEST_LBA = 5;
+  const unsigned int TEST_DATA = 0x12345678;
+  const unsigned int ERASE_DATA = 0;
+  const std::string READ_OUTPUT_FILE_NAME = "ssd_output.txt";
+};
+
+<span style = "background-color:#dfd">TEST_F(SSDTest, Flush) {</span>
+  // Write
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eWriteCmd, TEST_LBA, TEST_DATA));</span>
+
+  // Read
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eReadCmd, TEST_LBA));</span>
+
+  // Flush
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eFlushCmd));</span>
+
+  // Check cache
+<span style = "background-color:#dfd">  unsigned int cached = ssd-&gt;GetCachedData(TEST_LBA);
+  EXPECT_EQ(cached, TEST_DATA);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SSDTest, Write_6times_check_flush) {</span>
+  // Write
+<span style = "background-color:#dfd">  for (int i = 0; i &lt; 6; i++) {
+    ssd-&gt;Run(MakeParam(eWriteCmd, i, 0xFFFFFFFF));</span>
+  }
+
+  // Check cache
+<span style = "background-color:#dfd">}</span>
+
+<span style = "background-color:#dfd">TEST_F(SSDTest, DIABLED_WriteAndRead_CachedData) {</span>
+  // Write
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eWriteCmd, TEST_LBA, TEST_DATA));</span>
+
+  // Read
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eReadCmd, TEST_LBA));</span>
+
+  // Check cache
+<span style = "background-color:#dfd">  unsigned int cached = ssd-&gt;GetCachedData(TEST_LBA);
+  EXPECT_EQ(cached, TEST_DATA);
+}</span>
+//
+<span style = "background-color:#dfd">TEST_F(SSDTest, WriteAndEraseAndRead_CachedData) {</span>
+  // Write
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eWriteCmd, TEST_LBA, TEST_DATA));</span>
+
+  // Read
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eReadCmd, TEST_LBA));</span>
+
+  // Check cache
+<span style = "background-color:#dfd">  unsigned int cached = ssd-&gt;GetCachedData(TEST_LBA);
+  EXPECT_EQ(cached, TEST_DATA);</span>
+
+  // Erase
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eEraseCmd, TEST_LBA, 1));</span>
+
+  // Read
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eReadCmd, TEST_LBA));</span>
+
+  // Check cache
+<span style = "background-color:#dfd">  cached = ssd-&gt;GetCachedData(TEST_LBA);
+  EXPECT_EQ(cached, ERASE_DATA);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SSDTest, ReadCommand_InvalidLBA) {</span>
+  // Read
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eReadCmd, 140));</span>
+
+<span style = "background-color:#dfd">  string output = readOutputFile();</span>
+
+<span style = "background-color:#dfd">  EXPECT_EQ(output, "ERROR\n");
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(SSDTest, Run_InvalidCommandType) {</span>
+  // Write
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eWriteCmd, TEST_LBA, TEST_DATA));</span>
+  // Read
+<span style = "background-color:#dfd">  unsigned int before = ssd-&gt;GetCachedData(TEST_LBA);</span>
+
+  // ì ìì ì¼ë¡ ì²ë¦¬íì§ ëª»íë©´ ë´ë¶ì ì¼ë¡ "Invalid command" ì¶ë ¥
+  // ìì¸ë ë°ìíì§ ìì¼ë, ìºììë ë³í ìì
+<span style = "background-color:#dfd">  ssd-&gt;Run(MakeParam(eInvalidCmd, TEST_LBA));</span>
+
+<span style = "background-color:#dfd">  unsigned int after = ssd-&gt;GetCachedData(TEST_LBA);
+  EXPECT_EQ(before, after);
+}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

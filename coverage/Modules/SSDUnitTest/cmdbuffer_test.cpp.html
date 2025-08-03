@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>cmdbuffer_test.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include &lt;vector&gt;
+
+#include "../SSD/CommandBufferConfig.h"
+#include "../SSD/CommandBufferEntry.h"
+#include "../SSD/CommandBufferHandler.h"
+#include "../SSD/CommandBufferOptimizer.h"
+#include "../SSD/Types.h"
+#include "gmock/gmock.h"
+using namespace testing;
+using std::vector;
+
+struct OptimizeTestCase {
+  vector&lt;CommandBufferEntry&gt; input;
+  size_t expected_size;
+};
+
+class CmdBufferParamTestFixture : public TestWithParam&lt;OptimizeTestCase&gt; {
+ public:
+  CommandBufferOptimizer cmdBufferOptimizer;
+};
+
+// ê³µíµ ê²ì¦: data != 0ì´ë©´ WRITEì¬ì¼ í¨
+<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, CMD_TYPEIsWriteWhenDataIsNotZero) {
+  const auto&amp; tc = GetParam();
+  for (const auto&amp; cmd : tc.input) {
+    if (cmd.data != 0) {
+      EXPECT_EQ(cmd.cmdType, eWriteCmd);</span>
+    }
+  }
+<span style = "background-color:#dfd">}</span>
+
+// ê³µíµ ê²ì¦: WRITEì´ë©´ s == e ì´ì´ì¼ í¨
+<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, LengthIsOneWhenCMD_TYPEIsWrite) {
+  const auto&amp; tc = GetParam();
+  for (const auto&amp; cmd : tc.input) {
+    if (cmd.cmdType == eWriteCmd) {
+      EXPECT_EQ(cmd.startLba, cmd.endLba);</span>
+    }
+  }
+<span style = "background-color:#dfd">}</span>
+
+// ê³µíµ ê²ì¦: ERASEì´ë©´ data == 0 ì´ì´ì¼ í¨
+<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, DataIsZeroWhenCMD_TYPEIsErase) {
+  const auto&amp; tc = GetParam();
+  for (const auto&amp; cmd : tc.input) {
+    if (cmd.cmdType == eEraseCmd) {
+      EXPECT_EQ(cmd.data, 0);</span>
+    }
+  }
+<span style = "background-color:#dfd">}</span>
+
+// ê³µíµ ê²ì¦: cmds ê¸¸ì´ë 5 ì´í
+<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, CmdsVectorSizeLessThanEqual5) {
+  const auto&amp; tc = GetParam();
+  EXPECT_LE(tc.input.size(), 5);
+}</span>
+
+// ìµì í ê²°ê³¼ íì¸(ìì)
+<span style = "background-color:#dfd">TEST_P(CmdBufferParamTestFixture, OptimizeResultMatchesExpectedSize) {
+  const auto&amp; tc = GetParam();</span>
+
+<span style = "background-color:#dfd">  puts("Input:");
+  for (const auto&amp; cmd : tc.input) cmd.Print();</span>
+
+<span style = "background-color:#dfd">  puts("Output:");
+  vector&lt;CommandBufferEntry&gt; result = cmdBufferOptimizer.Optimize(tc.input);
+  for (const auto&amp; intv : result) intv.Print();</span>
+
+<span style = "background-color:#dfd">  EXPECT_EQ(result.size(), tc.expected_size);
+}</span>
+
+<span style = "background-color:#dfd">INSTANTIATE_TEST_SUITE_P(</span>
+    CmdTestCases, CmdBufferParamTestFixture,
+    Values(OptimizeTestCase{{{eEraseCmd, 1, 10, 0},
+                             {eWriteCmd, 9, 9, 2},
+                             {eWriteCmd, 7, 7, 2},
+                             {eWriteCmd, 8, 8, 1},
+                             {eEraseCmd, 4, 6, 0}},
+                            4},
+           OptimizeTestCase{{{eWriteCmd, 20, 20, 1},
+                             {eWriteCmd, 21, 21, 2},
+                             {eWriteCmd, 20, 20, 3}},
+                            2},
+<span style = "background-color:#dfd">           OptimizeTestCase{{{eWriteCmd, 1, 1, 1}, {eWriteCmd, 1, 1, 1}}, 1}));</span>
+
+class CmdBufferHandlerFixture : public Test {
+ public:
+  CommandBufferHandler cmdBufferHandler;
+
+<span style = "background-color:#dfd">  void SetUp() { cmdBufferHandler.Flush(); }</span>
+};
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerFixture, TC06_E1_10_FR0FR1) {
+  cmdBufferHandler.AddErase(1, 10);
+  unsigned int value = 0;
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);</span>
+
+<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 0);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerFixture, TC07_W1_10_FR0FR1) {
+  cmdBufferHandler.AddWrite(1, 10);
+  unsigned int value = 0;
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);</span>
+
+<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 10);
+}</span>
+
+<span style = "background-color:#dfd">TEST_F(CmdBufferHandlerFixture, TC08_Write5More_FR0FR1) {
+  cmdBufferHandler.Flush();
+  cmdBufferHandler.AddWrite(1, 10);
+  cmdBufferHandler.AddWrite(2, 11);
+  cmdBufferHandler.AddWrite(3, 12);
+  cmdBufferHandler.AddWrite(4, 13);
+  cmdBufferHandler.AddWrite(5, 14);
+  unsigned int value = 0;
+  EXPECT_EQ(cmdBufferHandler.TryFastRead(0, value), false);
+  EXPECT_EQ(value, CommandBufferConfig::NOT_AVAILABLE);</span>
+
+<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 10);</span>
+
+<span style = "background-color:#dfd">  std::vector&lt;CommandBufferEntry&gt; cmds = cmdBufferHandler.AddWrite(1, 20);
+  for (int i = 0; i &lt; cmds.size(); i++) {
+    std::cout &lt;&lt; cmds[i].ToString() &lt;&lt; "\n";</span>
+  }
+<span style = "background-color:#dfd">  EXPECT_EQ(cmdBufferHandler.TryFastRead(1, value), true);
+  EXPECT_EQ(value, 20);
+}</span></pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>
