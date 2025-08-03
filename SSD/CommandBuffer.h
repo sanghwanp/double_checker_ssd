@@ -10,8 +10,9 @@
 class CommandBuffer {
  public:
   std::vector<CommandBufferEntry> LoadCmdsFromBuffer() const;
-  void WriteCmdsToBuffer(const std::vector<CommandBufferEntry> &cmds);
-  void FlushBuffer();
+  void WriteCmdsToBufferFiles(const std::vector<CommandBufferEntry> &cmds);
+
+  void DeleteAllFilesInBufferDir();
 
  private:
   std::ifstream ifs;
@@ -21,7 +22,7 @@ class CommandBuffer {
       const std::filesystem::path &dirPath) const;
 
   bool MatchCmdBufFilename(const std::string &filename) const;
-
+  void SaveCmdBufferfile(int fileNumber, const CommandBufferEntry& cmd);
   CommandBufferEntry MakeCmdBufEntry(const std::string &filename) const;
   unsigned int GetOrderFromCmdBufFilename(const std::string &filename) const;
 
@@ -35,5 +36,7 @@ class CommandBuffer {
   }
 
   const std::regex cmdBufFileRegexPattern{
-      R"(^(\d+)_(W|E)_(\d+)_(\d+)_(\d+)\.cmdbuf$)"};
+      R"(([1-5])_(.*))"};
+  const std::regex cmdRegexPattern{
+  R"(^[1-5]_([EW])_(\d+)_(\d+)_?(\d+))" };
 };

@@ -3,21 +3,28 @@
 
 using std::vector;
 
+void CommandBufferHandler::InitCommandBufferEntry()
+{
+    vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
+    commandBuffer.DeleteAllFilesInBufferDir();
+    commandBuffer.WriteCmdsToBufferFiles(savedCmds);
+}
+
 vector<CommandBufferEntry> CommandBufferHandler::AddWrite(unsigned int lba,
                                                           unsigned int data) {
   CommandBufferEntry newCmd(eWriteCmd, lba, lba,
                                     static_cast<unsigned long long>(data));
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.FlushBuffer();
+  commandBuffer.DeleteAllFilesInBufferDir();
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
-    commandBuffer.WriteCmdsToBuffer({ newCmd });
+    commandBuffer.WriteCmdsToBufferFiles({ newCmd });
     return savedCmds;
   } else {  // 일반적인 Case
     savedCmds.push_back(newCmd);
     vector<CommandBufferEntry> optimizedCmds =
         commandBufferOptimizer.Optimize(savedCmds);
-    commandBuffer.WriteCmdsToBuffer(optimizedCmds);
+    commandBuffer.WriteCmdsToBufferFiles(optimizedCmds);
     return {};
   }
 }
@@ -38,15 +45,15 @@ vector<CommandBufferEntry> CommandBufferHandler::AddErase(unsigned int lba,
   CommandBufferEntry newCmd(eEraseCmd, startLba, endLba, 0ULL);
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.FlushBuffer();
+  commandBuffer.DeleteAllFilesInBufferDir();
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
-    commandBuffer.WriteCmdsToBuffer({newCmd});
+    commandBuffer.WriteCmdsToBufferFiles({newCmd});
     return savedCmds;
   } else {  // 일반적인 Case
     savedCmds.push_back(newCmd);
     vector<CommandBufferEntry> optimizedCmds =
         commandBufferOptimizer.Optimize(savedCmds);
-    commandBuffer.WriteCmdsToBuffer(optimizedCmds);
+    commandBuffer.WriteCmdsToBufferFiles(optimizedCmds);
     return {};
   }
 }
@@ -67,7 +74,7 @@ bool CommandBufferHandler::TryFastRead(unsigned int lba,
 
 std::vector<CommandBufferEntry> CommandBufferHandler::Flush() {
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.FlushBuffer();
+  commandBuffer.DeleteAllFilesInBufferDir();
   return savedCmds;
 }
 

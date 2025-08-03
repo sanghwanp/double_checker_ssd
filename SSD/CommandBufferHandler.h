@@ -16,7 +16,7 @@ class CommandBufferHandler {
   std::vector<CommandBufferEntry> AddWrite(unsigned int lba, unsigned int data);
   std::vector<CommandBufferEntry> AddErase(unsigned int lba, int delta);
   bool TryFastRead(unsigned int lba, unsigned int &out_value) const;
-
+  void InitCommandBufferEntry();
   std::vector<CommandBufferEntry> Flush();
 
  private:
