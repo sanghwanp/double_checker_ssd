@@ -57,7 +57,6 @@ bool CommandBufferHandler::TryFastRead(unsigned int lba,
       return true;
     }
   }
-  out_value = static_cast<unsigned int>(CommandBufferConfig::NOT_AVAILABLE);
   return false;
 }
 

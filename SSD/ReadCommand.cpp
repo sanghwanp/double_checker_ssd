@@ -31,16 +31,16 @@ void ReadCommand::Read() {
 
 #if (USING_COMMAND_BUFFER == 1)
   ReadCommandBuffer(data);
-#else
-  ReadDataBuffer(data);
 #endif
+  ReadDataBuffer(data);
 
   fileDriver->StoreOutput(data);
 }
 
 void ReadCommand::ReadCommandBuffer(unsigned int& data) {
-  if (!bufferHandler->TryFastRead(readParam->lba.val, data)) data = 0;
-  fileDriver->SetBufferData(readParam->lba.val, data);
+  if (bufferHandler->TryFastRead(readParam->lba.val, data)) {
+    fileDriver->SetBufferData(readParam->lba.val, data);
+  }
 }
 
 void ReadCommand::ReadDataBuffer(unsigned int& data) {

@@ -37,12 +37,13 @@ bool EraseCommand::CheckPrecondition() {
   return true;
 }
 void EraseCommand::SaveCommandBuffer() {
-  if (bufferHandler->IsBufferFull()) {
-    std::unique_ptr<ICommand> flushCmd = factory->CreateFlushCommand();
-    flushCmd->Execute((IParam*)eraseParam);
+  std::vector<CommandBufferEntry> entry =
+      bufferHandler->AddErase(eraseParam->lba.val, eraseParam->size.val);
+  for (auto item : entry) {
+    for (unsigned int lba = item.startLba; lba <= item.endLba; lba++) {
+      fileDriver->SetBufferData(lba, item.data);
+    }
   }
-
-  bufferHandler->AddErase(eraseParam->lba.val, eraseParam->size.val);
 }
 
 void EraseCommand::SaveDataBuffer() {
