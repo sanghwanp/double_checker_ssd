@@ -364,6 +364,39 @@ TEST_F(CmdBufferHandlerTestFixture, TC16_Optimize_Case7) {
 }
 #endif
 
+TEST_F(CmdBufferHandlerTestFixture, TC17_Optimize_Case8) {
+  //$ ./SSD F
+  //$ ./SSD W 1 0x10
+  //$ ./SSD W 2 0x10
+  //$ ./SSD W 3 0x10
+  //$ ./SSD W 4 0x10
+  //$ ./SSD W 5 0x10
+  handler.Flush();
+  handler.AddWrite(1, 0x10);
+  handler.AddWrite(2, 0x10);
+  handler.AddWrite(3, 0x10);
+  handler.AddWrite(4, 0x10);
+  handler.AddWrite(5, 0x10);
+
+  auto cmds = handler.Flush();
+  EXPECT_EQ(cmds.size(), 5);
+
+  sort(cmds.begin(), cmds.end(),
+       [&](const CommandBufferEntry &lhs,
+           const CommandBufferEntry &rhs) -> bool {
+         if (lhs.startLba == rhs.startLba) {
+           return lhs.endLba < rhs.endLba;
+         }
+         return lhs.startLba < rhs.startLba;
+       });
+
+  EXPECT_EQ(cmds[0].startLba, 1);
+  EXPECT_EQ(cmds[1].startLba, 2);
+  EXPECT_EQ(cmds[2].startLba, 3);
+  EXPECT_EQ(cmds[3].startLba, 4);
+  EXPECT_EQ(cmds[4].startLba, 5);
+}
+
 #if 1  // Etc. - code coverage를 채우기 위한 Test
 TEST(CommandBufferEntry, TC16_ForCodeCoverage) {
   EXPECT_THROW(
