@@ -14,6 +14,8 @@ void SSD::Run(vector<string> args) {
   IParam *cmd;
   cmd = parser.Parse(args);
   if (!ExecuteCommand(cmd)) fileDriver->StoreError();
+  if (cmd->eCmd == eInvalidCmd || !ExecuteCommand(cmd))
+    fileDriver->StoreError();
 }
 
 bool SSD::ExecuteCommand(IParam* param) {
