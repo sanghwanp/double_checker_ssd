@@ -39,11 +39,15 @@ bool EraseCommand::CheckPrecondition() {
 void EraseCommand::SaveCommandBuffer() {
   std::vector<CommandBufferEntry> entry =
       bufferHandler->AddErase(eraseParam->lba.val, eraseParam->size.val);
+
+  if (entry.empty()) return;
+
   for (auto item : entry) {
     for (unsigned int lba = item.startLba; lba <= item.endLba; lba++) {
       fileDriver->SetBufferData(lba, item.data);
     }
   }
+  fileDriver->StoreData();
 }
 
 void EraseCommand::SaveDataBuffer() {
