@@ -24,7 +24,8 @@ inline bool IsDec(const string& str) {
 }
 
 inline bool IsHex(const string& str) {
-  if (str.size() < 3 || str.substr(0, 2) != "0x") return false;
+  if (str.size() < 3 || str.substr(0, 2) != "0x" || str.size() > 8)
+    return false;
   for (size_t i = 2; i < str.size(); ++i) {
     if (!isxdigit(str[i])) return false;
   }
