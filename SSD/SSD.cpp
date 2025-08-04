@@ -11,8 +11,7 @@ SSD::SSD()
       commandFactory(CommandFactory::GetInstance()) {}
 
 void SSD::Run(vector<string> args) {
-  IParam *cmd;
-  cmd = parser.Parse(args);
+  IParam *cmd = parser.Parse(args);
   if (cmd->eCmd == eInvalidCmd || !ExecuteCommand(cmd))
     fileDriver->StoreError();
 }

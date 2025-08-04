@@ -36,11 +36,14 @@ void WriteCommand::SaveCommandBuffer() {
   std::vector<CommandBufferEntry> entry =
       bufferHandler->AddWrite(writeParam->lba.val, writeParam->data.val);
 
+  if (entry.empty()) return;
+
   for (auto item : entry) {
     for (unsigned int lba = item.startLba; lba <= item.endLba; lba++) {
       fileDriver->SetBufferData(lba, item.data);
     }
   }
+  fileDriver->StoreData();
 }
 
 void WriteCommand::SaveDataBuffer() {
