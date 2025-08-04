@@ -33,12 +33,14 @@ bool WriteCommand::CheckPrecondition() {
 }
 
 void WriteCommand::SaveCommandBuffer() {
-  if (bufferHandler->IsBufferFull()) {
-    auto flushCmd = factory->CreateFlushCommand();
-    flushCmd->Execute((IParam*)writeParam);
-  }
+  std::vector<CommandBufferEntry> entry =
+      bufferHandler->AddWrite(writeParam->lba.val, writeParam->data.val);
 
-  bufferHandler->AddWrite(writeParam->lba.val, writeParam->data.val);
+  for (auto item : entry) {
+    for (unsigned int lba = item.startLba; lba <= item.endLba; lba++) {
+      fileDriver->SetBufferData(lba, item.data);
+    }
+  }
 }
 
 void WriteCommand::SaveDataBuffer() {
