@@ -24,6 +24,7 @@ std::unique_ptr<ICommand> CommandFactory::GetCommand(CMD_TYPE cmdType) {
       command = CreateFlushCommand();
       break;
     default:
+      command = nullptr;
       break;
   }
   return command;

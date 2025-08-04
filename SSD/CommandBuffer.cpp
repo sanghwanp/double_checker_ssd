@@ -1,9 +1,9 @@
 #include "CommandBuffer.h"
 
+#include <iostream>
 #include <map>
 #include <string>
 #include <string_view>
-#include <iostream>
 
 std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
   static std::map<int, CommandBufferEntry> result_map;
@@ -11,10 +11,11 @@ std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
 
   std::filesystem::path curDirPath(GetAndMakeCmdBufferDirPath());
   std::vector<std::filesystem::path> cmdBufFiles = GetCmdbufFiles(curDirPath);
-  for (const std::filesystem::path & cmdBufFile : cmdBufFiles) {
+  for (const std::filesystem::path& cmdBufFile : cmdBufFiles) {
     std::string filename = cmdBufFile.filename().string();
-    if (!MatchCmdBufFilename(filename)) continue;
+    if (!MatchCmdBufNormalFilename(filename)) continue;
     int order = GetOrderFromCmdBufFilename(filename);
+    if (order >= CommandBufferConfig::MAX_BUFFER) continue;
     result_map[order] = MakeCmdBufEntry(filename);
   }
 
@@ -27,7 +28,7 @@ std::vector<CommandBufferEntry> CommandBuffer::LoadCmdsFromBuffer() const {
 
 void CommandBuffer::WriteCmdsToBuffer(
     const std::vector<CommandBufferEntry>& cmds) {
-  FlushBuffer();
+  FlushBuffer(false);
   std::string filename, filepath, order;
   for (int i = 0; i < cmds.size(); i++) {
     const CommandBufferEntry& cmd = cmds[i];
@@ -38,15 +39,38 @@ void CommandBuffer::WriteCmdsToBuffer(
     ofs.open(filepath);
     ofs.close();
   }
+  for (int i = cmds.size(); i < CommandBufferConfig::MAX_BUFFER; i++) {
+    order = std::to_string(i);
+    filename = order + "_Empty" +
+               CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
+    filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
+    ofs.open(filepath);
+    ofs.close();
+  }
 }
 
-void CommandBuffer::FlushBuffer() {
+void CommandBuffer::FlushBuffer(bool isEnabledMakeEmptyFile) {
   std::string_view cmdBufDirPath = GetAndMakeCmdBufferDirPath();
   auto cmdBufFiles = GetCmdbufFiles(std::filesystem::path(cmdBufDirPath));
+  std::string filename;
   for (auto cmdBufFile : cmdBufFiles) {
-    std::string filename = cmdBufFile.filename().u8string();
-    if (!MatchCmdBufFilename(filename)) continue;
-    std::filesystem::remove(cmdBufFile);
+    filename = cmdBufFile.filename().u8string();
+    if (MatchCmdBufNormalFilename(filename) ||
+        MatchCmdBufEmptyFilename(filename)) {
+      std::filesystem::remove(cmdBufFile);
+    }
+  }
+
+  if(isEnabledMakeEmptyFile) {
+      std::string order, filepath;
+      for(int i = 0; i < CommandBufferConfig::MAX_BUFFER; i++) {
+          order = std::to_string(i);
+          filename = order + "_Empty" +
+              CommandBufferConfig::COMMAND_BUFFER_FILEEXTENSION.data();
+          filepath = std::string(GetAndMakeCmdBufferDirPath()) + filename;
+          ofs.open(filepath);
+          ofs.close();
+      }
   }
 }
 
@@ -72,14 +96,20 @@ std::vector<std::filesystem::path> CommandBuffer::GetCmdbufFiles(
   return cmdbufFiles;
 }
 
-bool CommandBuffer::MatchCmdBufFilename(const std::string& filename) const {
-  return std::regex_match(filename, cmdBufFileRegexPattern);
+bool CommandBuffer::MatchCmdBufNormalFilename(
+    const std::string& filename) const {
+  return std::regex_match(filename, cmdBufFileNormalRegexPattern);
+}
+
+bool CommandBuffer::MatchCmdBufEmptyFilename(
+    const std::string& filename) const {
+  return std::regex_match(filename, cmdBufFileEmptyRegexPattern);
 }
 
 unsigned int CommandBuffer::GetOrderFromCmdBufFilename(
     const std::string& filename) const {
   std::smatch match;
-  std::regex_match(filename, match, cmdBufFileRegexPattern);
+  std::regex_match(filename, match, cmdBufFileNormalRegexPattern);
 
   unsigned int order = static_cast<unsigned int>(std::stoul(match[1].str()));
   return order;
@@ -88,7 +118,7 @@ unsigned int CommandBuffer::GetOrderFromCmdBufFilename(
 CommandBufferEntry CommandBuffer::MakeCmdBufEntry(
     const std::string& filename) const {
   std::smatch match;
-  std::regex_match(filename, match, cmdBufFileRegexPattern);
+  std::regex_match(filename, match, cmdBufFileNormalRegexPattern);
 
   std::string cmdTypeStr = match[2].str();
   CMD_TYPE cmdType;

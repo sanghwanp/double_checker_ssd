@@ -10,7 +10,7 @@ vector<CommandBufferEntry> CommandBufferHandler::AddWrite(unsigned int lba,
                             static_cast<unsigned long long>(data));
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.FlushBuffer();
+  commandBuffer.FlushBuffer(false);
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
     commandBuffer.WriteCmdsToBuffer({newCmd});
     return savedCmds;
@@ -33,7 +33,7 @@ vector<CommandBufferEntry> CommandBufferHandler::AddErase(unsigned int lba,
   CommandBufferEntry newCmd(eEraseCmd, startLba, endLba, 0ULL);
 
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.FlushBuffer();
+  commandBuffer.FlushBuffer(false);
   if (IsFullCmds(savedCmds)) {  // Buffer가 꽉 찬 경우
     commandBuffer.WriteCmdsToBuffer({newCmd});
     return savedCmds;
@@ -63,7 +63,7 @@ bool CommandBufferHandler::TryFastRead(unsigned int lba,
 
 std::vector<CommandBufferEntry> CommandBufferHandler::Flush() {
   vector<CommandBufferEntry> savedCmds = commandBuffer.LoadCmdsFromBuffer();
-  commandBuffer.FlushBuffer();
+  commandBuffer.FlushBuffer(true);
   return savedCmds;
 }
 
